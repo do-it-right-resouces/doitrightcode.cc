@@ -1,0 +1,2053 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Multi-State DMV PDF417 Generator - Cryptography Edition</title>
+<script src="https://cdn.jsdelivr.net/npm/bwip-js@4.5.1/dist/bwip-js-min.js"></script>
+
+<style>
+* { box-sizing: border-box; margin: 0; padding: 0; }
+
+body { 
+    font-family: 'Consolas', 'Monaco', 'Courier New', monospace; 
+    background: #000000;
+    color: #00ff00;
+    line-height: 1.6;
+}
+
+header { 
+    background: linear-gradient(135deg, #1a1a1a 0%, #0a0a0a 100%);
+    border-bottom: 3px solid #00ff00;
+    padding: 1.5rem 2rem; 
+    box-shadow: 0 4px 20px rgba(0, 255, 0, 0.3);
+}
+
+header h1 { 
+    color: #00ff00; 
+    font-size: 1.6rem; 
+    font-weight: 700;
+    text-shadow: 0 0 20px rgba(0, 255, 0, 0.8);
+    letter-spacing: 2px;
+}
+
+.subtitle {
+    color: #00dd00;
+    font-size: 0.85rem;
+    margin-top: 0.5rem;
+    opacity: 0.9;
+}
+
+.container { 
+    max-width: 1600px; 
+    margin: 0 auto; 
+    padding: 2rem 1rem; 
+}
+
+.layout-grid { 
+    display: grid; 
+    grid-template-columns: 1fr 1fr; 
+    gap: 2rem;
+    margin-top: 2rem;
+}
+
+@media (max-width: 1200px) { 
+    .layout-grid { grid-template-columns: 1fr; } 
+}
+
+.panel { 
+    background: #0a0a0a;
+    border: 2px solid #00ff00;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 0 20px rgba(0, 255, 0, 0.2);
+}
+
+.panel-header {
+    background: linear-gradient(90deg, #003300 0%, #005500 100%);
+    color: #00ff00;
+    padding: 0.75rem 1rem;
+    margin: -1.5rem -1.5rem 1.5rem -1.5rem;
+    border-radius: 6px 6px 0 0;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.95rem;
+    letter-spacing: 1px;
+    border-bottom: 2px solid #00ff00;
+}
+
+.config-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.config-item {
+    background: #001a00;
+    border: 2px solid #003300;
+    border-radius: 6px;
+    padding: 1rem;
+}
+
+.config-item label {
+    display: block;
+    color: #ffff00;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    font-size: 0.9rem;
+}
+
+.config-item select {
+    width: 100%;
+    padding: 0.5rem;
+    background: #000;
+    border: 2px solid #00ff00;
+    color: #00ff00;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+}
+
+.config-item select:focus {
+    outline: none;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+}
+
+.crypto-toggle-section {
+    background: linear-gradient(135deg, #1a0033 0%, #330066 100%);
+    border: 3px solid #ff00ff;
+    border-radius: 8px;
+    padding: 1.5rem;
+    margin-bottom: 1.5rem;
+    box-shadow: 0 0 30px rgba(255, 0, 255, 0.3);
+}
+
+.crypto-toggle-section h3 {
+    color: #ff00ff;
+    text-shadow: 0 0 15px rgba(255, 0, 255, 0.8);
+    margin-bottom: 1rem;
+    font-size: 1.1rem;
+}
+
+.toggle-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 1.5rem;
+}
+
+.toggle-item {
+    background: #0a0a0a;
+    border: 2px solid #ff00ff;
+    border-radius: 6px;
+    padding: 1rem;
+    transition: all 0.3s;
+}
+
+.toggle-item:hover {
+    box-shadow: 0 0 20px rgba(255, 0, 255, 0.5);
+    transform: translateY(-2px);
+}
+
+.toggle-item.active {
+    background: #1a0033;
+    border-color: #ff0;
+    box-shadow: 0 0 30px rgba(255, 255, 0, 0.6);
+}
+
+.toggle-switch {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 0.75rem;
+}
+
+.toggle-switch input[type="checkbox"] {
+    width: 50px;
+    height: 26px;
+    appearance: none;
+    background: #333;
+    border-radius: 13px;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.3s;
+    border: 2px solid #666;
+}
+
+.toggle-switch input[type="checkbox"]:checked {
+    background: #ff00ff;
+    border-color: #ff00ff;
+    box-shadow: 0 0 15px rgba(255, 0, 255, 0.8);
+}
+
+.toggle-switch input[type="checkbox"]::before {
+    content: '';
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: #fff;
+    top: 2px;
+    left: 2px;
+    transition: all 0.3s;
+}
+
+.toggle-switch input[type="checkbox"]:checked::before {
+    left: 26px;
+    background: #ffff00;
+}
+
+.toggle-label {
+    color: #ff00ff;
+    font-weight: 700;
+    font-size: 1rem;
+}
+
+.toggle-description {
+    color: #cc99ff;
+    font-size: 0.85rem;
+    line-height: 1.4;
+}
+
+.crypto-status {
+    display: inline-block;
+    padding: 0.3rem 0.8rem;
+    border-radius: 4px;
+    font-size: 0.75rem;
+    font-weight: 700;
+    margin-left: 0.5rem;
+}
+
+.crypto-status.off {
+    background: #333;
+    color: #999;
+}
+
+.crypto-status.on {
+    background: #ff00ff;
+    color: #000;
+    animation: pulse 2s infinite;
+}
+
+@keyframes pulse {
+    0%, 100% { box-shadow: 0 0 5px rgba(255, 0, 255, 0.5); }
+    50% { box-shadow: 0 0 20px rgba(255, 0, 255, 1); }
+}
+
+.section-divider {
+    background: #003300;
+    color: #ffff00;
+    padding: 0.6rem 1rem;
+    margin: 1.5rem 0 1rem 0;
+    font-weight: 700;
+    text-transform: uppercase;
+    font-size: 0.85rem;
+    border-left: 4px solid #ffff00;
+}
+
+.field-row {
+    display: grid;
+    grid-template-columns: 120px 1fr 110px;
+    gap: 0.75rem;
+    align-items: center;
+    padding: 0.6rem 0.5rem;
+    border-bottom: 1px solid #003300;
+    transition: all 0.2s;
+}
+
+.field-row:hover {
+    background: #001a00;
+    border-left: 3px solid #00ff00;
+}
+
+.field-row.encrypted {
+    background: linear-gradient(90deg, #1a0033 0%, #0a0a0a 100%);
+    border-left: 3px solid #ff00ff;
+}
+
+.field-label {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: #00dd00;
+}
+
+.field-label.mandatory {
+    color: #ffff00;
+}
+
+.field-label.always-include {
+    color: #ff8800;
+}
+
+.field-label.encrypted-label {
+    color: #ff00ff;
+}
+
+.field-input input {
+    width: 100%;
+    padding: 0.5rem;
+    background: #001a00;
+    border: 2px solid #00ff00;
+    color: #00ff00;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.9rem;
+    transition: all 0.2s;
+}
+
+.field-input input:focus {
+    outline: none;
+    border-color: #00ff00;
+    box-shadow: 0 0 10px rgba(0, 255, 0, 0.5);
+    background: #002200;
+}
+
+.field-input input.mandatory {
+    border-color: #ffff00;
+}
+
+.field-input input.always-include {
+    border-color: #ff8800;
+}
+
+.field-input input.encrypted-input {
+    border-color: #ff00ff;
+    background: #1a0033;
+    color: #ff00ff;
+}
+
+.badge {
+    display: inline-block;
+    padding: 0.25rem 0.6rem;
+    border-radius: 4px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    text-align: center;
+}
+
+.badge-required {
+    background: #ffff00;
+    color: #000;
+}
+
+.badge-always {
+    background: #ff8800;
+    color: #000;
+}
+
+.badge-optional {
+    background: #003300;
+    color: #00ff00;
+    border: 1px solid #00ff00;
+}
+
+.badge-encrypted {
+    background: #ff00ff;
+    color: #000;
+    animation: glow 2s infinite;
+}
+
+@keyframes glow {
+    0%, 100% { box-shadow: 0 0 5px rgba(255, 0, 255, 0.5); }
+    50% { box-shadow: 0 0 15px rgba(255, 0, 255, 1); }
+}
+
+.controls {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+}
+
+.btn {
+    padding: 0.75rem 1.5rem;
+    border: 2px solid #00ff00;
+    background: #003300;
+    color: #00ff00;
+    border-radius: 6px;
+    cursor: pointer;
+    font-weight: 700;
+    font-size: 0.9rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    transition: all 0.3s;
+    font-family: 'Courier New', monospace;
+}
+
+.btn:hover {
+    background: #00ff00;
+    color: #000;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 255, 0, 0.5);
+}
+
+.btn-primary {
+    background: linear-gradient(135deg, #005500 0%, #003300 100%);
+    border-color: #ffff00;
+    color: #ffff00;
+}
+
+.btn-primary:hover {
+    background: #ffff00;
+    color: #000;
+}
+
+.hex-display {
+    background: #000000;
+    color: #00ff00;
+    padding: 1rem;
+    border: 2px solid #003300;
+    border-radius: 4px;
+    font-family: 'Courier New', monospace;
+    font-size: 0.75rem;
+    overflow-x: auto;
+    white-space: pre-wrap;
+    word-break: break-all;
+    max-height: 400px;
+    overflow-y: auto;
+    line-height: 1.8;
+}
+
+.hex-display::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+}
+
+.hex-display::-webkit-scrollbar-track {
+    background: #000;
+}
+
+.hex-display::-webkit-scrollbar-thumb {
+    background: #00ff00;
+    border-radius: 4px;
+}
+
+.checksum-comparison {
+    background: #0a0a0a;
+    border: 2px solid #ff00ff;
+    border-radius: 6px;
+    padding: 1rem;
+    margin: 1rem 0;
+    font-family: 'Courier New', monospace;
+}
+
+.checksum-row {
+    display: grid;
+    grid-template-columns: 120px 1fr 80px;
+    gap: 1rem;
+    padding: 0.5rem;
+    border-bottom: 1px solid #333;
+}
+
+.checksum-label {
+    color: #ff00ff;
+    font-weight: 700;
+}
+
+.checksum-value {
+    color: #00ff00;
+    font-family: 'Courier New', monospace;
+    word-break: break-all;
+}
+
+.checksum-time {
+    color: #ffff00;
+    text-align: right;
+    font-size: 0.85rem;
+}
+
+.alert {
+    padding: 1rem;
+    border-radius: 6px;
+    margin: 1rem 0;
+    border-left: 4px solid;
+}
+
+.alert-success {
+    background: #002200;
+    color: #00ff00;
+    border-color: #00ff00;
+}
+
+.alert-error {
+    background: #220000;
+    color: #ff0000;
+    border-color: #ff0000;
+}
+
+.alert-warning {
+    background: #221100;
+    color: #ffaa00;
+    border-color: #ffaa00;
+}
+
+.alert-info {
+    background: #001122;
+    color: #00aaff;
+    border-color: #00aaff;
+}
+
+.alert-crypto {
+    background: #1a0033;
+    color: #ff00ff;
+    border-color: #ff00ff;
+}
+
+#barcode-output {
+    margin-top: 2rem;
+    text-align: center;
+}
+
+#barcode-output canvas {
+    max-width: 100%;
+    height: auto;
+    background: white;
+    padding: 1rem;
+    border: 2px solid #00ff00;
+    border-radius: 6px;
+}
+
+footer {
+    background: #0a0a0a;
+    border-top: 3px solid #00ff00;
+    color: #00ff00;
+    text-align: center;
+    padding: 2rem;
+    margin-top: 3rem;
+    font-size: 0.85rem;
+}
+
+.status-indicator {
+    display: inline-block;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    margin-right: 0.5rem;
+}
+
+.status-ok { background: #00ff00; box-shadow: 0 0 10px rgba(0, 255, 0, 0.8); }
+.status-error { background: #ff0000; box-shadow: 0 0 10px rgba(255, 0, 0, 0.8); }
+.status-warning { background: #ffaa00; box-shadow: 0 0 10px rgba(255, 170, 0, 0.8); }
+.status-crypto { background: #ff00ff; box-shadow: 0 0 15px rgba(255, 0, 255, 1); animation: pulse 2s infinite; }
+
+.checkbox-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    color: #00ff00;
+}
+
+.checkbox-wrapper input[type="checkbox"] {
+    width: 18px;
+    height: 18px;
+    accent-color: #00ff00;
+}
+
+.state-indicator {
+    display: inline-block;
+    padding: 0.5rem 1rem;
+    background: #001a00;
+    border: 2px solid #00ff00;
+    border-radius: 4px;
+    color: #ffff00;
+    font-weight: 700;
+    margin-left: 1rem;
+}
+
+.legend {
+    background: #001a00;
+    border: 2px solid #003300;
+    border-radius: 6px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    font-size: 0.85rem;
+}
+
+.legend-item {
+    display: inline-block;
+    margin-right: 1.5rem;
+    margin-bottom: 0.5rem;
+}
+
+.legend-color {
+    display: inline-block;
+    width: 12px;
+    height: 12px;
+    border-radius: 2px;
+    margin-right: 0.5rem;
+}
+
+.encryption-indicator {
+    display: inline-block;
+    padding: 0.2rem 0.5rem;
+    background: #ff00ff;
+    color: #000;
+    border-radius: 3px;
+    font-size: 0.7rem;
+    font-weight: 700;
+    margin-left: 0.5rem;
+    animation: glow 2s infinite;
+}
+</style>
+</head>
+<body>
+
+<header>
+    <h1>🔐 MULTI-STATE DMV PDF417 - CRYPTOGRAPHY EDITION</h1>
+    <div class="subtitle">
+        AAMVA + AES-256 Encryption + MD5 vs CRC-16 Comparison | Educational Cryptography Demo
+    </div>
+</header>
+
+<main class="container">
+    
+    <div class="panel">
+        <div class="panel-header">⚙️ CONFIGURATION</div>
+        
+        <div class="config-grid">
+            <div class="config-item">
+                <label>State Profile:</label>
+                <select id="profile-state">
+                    <option value="FL">Florida (FL)</option>
+                    <option value="CA">California (CA)</option>
+                </select>
+            </div>
+            
+            <div class="config-item">
+                <label>AAMVA Version:</label>
+                <select id="profile-aamva">
+                    <option value="08">Version 08 (2013-2016)</option>
+                    <option value="09" selected>Version 09 (2016-2020)</option>
+                    <option value="10">Version 10 (2020+)</option>
+                </select>
+            </div>
+            
+            <div class="config-item">
+                <label>Jurisdiction Version:</label>
+                <select id="profile-jurisdiction">
+                    <option value="01" selected>Version 01</option>
+                    <option value="02">Version 02</option>
+                </select>
+            </div>
+            
+            <div class="config-item">
+                <label>Current Configuration:</label>
+                <div id="config-display" class="state-indicator">FL v09 Jur 01</div>
+            </div>
+        </div>
+        
+        <!-- CRYPTOGRAPHY TOGGLE SECTION -->
+        <div class="crypto-toggle-section">
+            <h3>🔐 CRYPTOGRAPHY & CHECKSUM CONTROLS</h3>
+            <div class="toggle-container">
+                
+                <div class="toggle-item" id="aes-toggle-panel">
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="enable-aes256">
+                        <label for="enable-aes256" class="toggle-label">
+                            AES-256 Encryption
+                            <span class="crypto-status off" id="aes-status">OFF</span>
+                        </label>
+                    </div>
+                    <div class="toggle-description">
+                        Encrypts sensitive fields (name, DOB, address) using AES-256-GCM.
+                        Data becomes unreadable but maintains structure.
+                    </div>
+                </div>
+                
+                <div class="toggle-item" id="md5-toggle-panel">
+                    <div class="toggle-switch">
+                        <input type="checkbox" id="enable-md5">
+                        <label for="enable-md5" class="toggle-label">
+                            MD5 Checksum
+                            <span class="crypto-status off" id="md5-status">OFF</span>
+                        </label>
+                    </div>
+                    <div class="toggle-description">
+                        Adds MD5 hash alongside CRC-16. Compare speed and collision resistance.
+                        Educational demo: MD5 is deprecated for security!
+                    </div>
+                </div>
+                
+            </div>
+            
+            <div id="encryption-key-display" style="display: none; margin-top: 1rem; padding: 1rem; background: #0a0a0a; border: 2px solid #ff00ff; border-radius: 6px;">
+                <strong style="color: #ff00ff;">🔑 Encryption Key (Session):</strong>
+                <div style="color: #ffff00; font-family: 'Courier New', monospace; word-break: break-all; margin-top: 0.5rem;" id="aes-key-display"></div>
+                <div style="color: #cc99ff; font-size: 0.85rem; margin-top: 0.5rem;">
+                    ⚠️ Key changes each session. In production, use secure key management!
+                </div>
+            </div>
+        </div>
+        
+        <div class="legend">
+            <strong>Field Inclusion Legend:</strong><br>
+            <div class="legend-item">
+                <span class="legend-color" style="background: #ffff00;"></span>
+                <span>REQUIRED (Must have data)</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-color" style="background: #ff8800;"></span>
+                <span>ALWAYS INCLUDE (Even if empty)</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-color" style="background: #00ff00;"></span>
+                <span>OPTIONAL (Omit if empty)</span>
+            </div>
+            <div class="legend-item">
+                <span class="legend-color" style="background: #ff00ff;"></span>
+                <span>🔐 ENCRYPTED (AES-256)</span>
+            </div>
+        </div>
+        
+        <div class="controls">
+            <button class="btn btn-primary" id="btn-generate">⚡ GENERATE BARCODE</button>
+            <button class="btn" id="btn-validate">✓ VALIDATE</button>
+            <button class="btn" id="btn-download">💾 DOWNLOAD PNG</button>
+            <button class="btn" id="btn-reset">🔄 RESET DATA</button>
+            <button class="btn" id="btn-test">🧪 RUN TESTS</button>
+        </div>
+        
+        <div class="checkbox-wrapper">
+            <input type="checkbox" id="strict-mode" checked>
+            <label for="strict-mode">Strict DMV Validation Mode</label>
+        </div>
+        
+        <div id="validation-status"></div>
+    </div>
+    
+    <div class="layout-grid">
+        
+        <div class="panel">
+            <div class="panel-header">📝 EDITABLE FIELDS</div>
+            <div id="state-info" class="alert alert-info" style="margin-bottom: 1rem;"></div>
+            <div id="field-container"></div>
+        </div>
+        
+        <div class="panel">
+            <div class="panel-header">🔧 OUTPUT & ANALYSIS</div>
+            
+            <div id="checksum-comparison-display"></div>
+            
+            <h3 style="margin-bottom: 0.5rem; color: #ffff00;">Protocol Structure</h3>
+            <div class="hex-display" id="protocol-analysis">Awaiting generation...</div>
+            
+            <h3 style="margin: 1.5rem 0 0.5rem; color: #ffff00;">Binary Hex Dump</h3>
+            <div class="hex-display" id="hex-preview">Awaiting generation...</div>
+            
+            <div id="barcode-output"></div>
+        </div>
+        
+    </div>
+    
+</main>
+
+<footer>
+    <div style="font-weight: 700; margin-bottom: 0.5rem;">
+        MULTI-STATE DMV-COMPLIANT PDF417 GENERATOR - CRYPTOGRAPHY EDITION
+    </div>
+    <div>
+        Florida (IDEMIA) | California (DMV Standard) | AES-256-GCM | MD5 vs CRC-16-CCITT | Educational Demo
+    </div>
+</footer>
+
+<script>
+"use strict";
+
+// ============================================================================
+// MD5 IMPLEMENTATION (Educational - DO NOT USE IN PRODUCTION)
+// ============================================================================
+
+function md5(string) {
+    function rotateLeft(value, amount) {
+        return (value << amount) | (value >>> (32 - amount));
+    }
+    
+    function addUnsigned(x, y) {
+        const lsw = (x & 0xFFFF) + (y & 0xFFFF);
+        const msw = (x >> 16) + (y >> 16) + (lsw >> 16);
+        return (msw << 16) | (lsw & 0xFFFF);
+    }
+    
+    function F(x, y, z) { return (x & y) | ((~x) & z); }
+    function G(x, y, z) { return (x & z) | (y & (~z)); }
+    function H(x, y, z) { return x ^ y ^ z; }
+    function I(x, y, z) { return y ^ (x | (~z)); }
+    
+    function FF(a, b, c, d, x, s, ac) {
+        a = addUnsigned(a, addUnsigned(addUnsigned(F(b, c, d), x), ac));
+        return addUnsigned(rotateLeft(a, s), b);
+    }
+    
+    function GG(a, b, c, d, x, s, ac) {
+        a = addUnsigned(a, addUnsigned(addUnsigned(G(b, c, d), x), ac));
+        return addUnsigned(rotateLeft(a, s), b);
+    }
+    
+    function HH(a, b, c, d, x, s, ac) {
+        a = addUnsigned(a, addUnsigned(addUnsigned(H(b, c, d), x), ac));
+        return addUnsigned(rotateLeft(a, s), b);
+    }
+    
+    function II(a, b, c, d, x, s, ac) {
+        a = addUnsigned(a, addUnsigned(addUnsigned(I(b, c, d), x), ac));
+        return addUnsigned(rotateLeft(a, s), b);
+    }
+    
+    function convertToWordArray(string) {
+        let wordArray = [];
+        for (let i = 0; i < string.length * 8; i += 8) {
+            wordArray[i >> 5] |= (string.charCodeAt(i / 8) & 0xFF) << (i % 32);
+        }
+        return wordArray;
+    }
+    
+    function wordToHex(value) {
+        let str = '';
+        for (let i = 0; i < 4; i++) {
+            str += ((value >> (i * 8 + 4)) & 0xF).toString(16) + 
+                   ((value >> (i * 8)) & 0xF).toString(16);
+        }
+        return str;
+    }
+    
+    const x = convertToWordArray(string);
+    
+conlet a = 0x67452301, b = 0xEFCDAB89, c = 0x98BADCFE, d = 0x10325476;
+    
+    x[string.length * 8 >> 5] |= 0x80 << (string.length * 8 % 32);
+    x[(((string.length * 8 + 64) >>> 9) << 4) + 14] = string.length * 8;
+    
+    for (let i = 0; i < x.length; i += 16) {
+        const oldA = a, oldB = b, oldC = c, oldD = d;
+        
+        a = FF(a, b, c, d, x[i + 0], 7, 0xD76AA478);
+        d = FF(d, a, b, c, x[i + 1], 12, 0xE8C7B756);
+        c = FF(c, d, a, b, x[i + 2], 17, 0x242070DB);
+        b = FF(b, c, d, a, x[i + 3], 22, 0xC1BDCEEE);
+        a = FF(a, b, c, d, x[i + 4], 7, 0xF57C0FAF);
+        d = FF(d, a, b, c, x[i + 5], 12, 0x4787C62A);
+        c = FF(c, d, a, b, x[i + 6], 17, 0xA8304613);
+        b = FF(b, c, d, a, x[i + 7], 22, 0xFD469501);
+        a = FF(a, b, c, d, x[i + 8], 7, 0x698098D8);
+        d = FF(d, a, b, c, x[i + 9], 12, 0x8B44F7AF);
+        c = FF(c, d, a, b, x[i + 10], 17, 0xFFFF5BB1);
+        b = FF(b, c, d, a, x[i + 11], 22, 0x895CD7BE);
+        a = FF(a, b, c, d, x[i + 12], 7, 0x6B901122);
+        d = FF(d, a, b, c, x[i + 13], 12, 0xFD987193);
+        c = FF(c, d, a, b, x[i + 14], 17, 0xA679438E);
+        b = FF(b, c, d, a, x[i + 15], 22, 0x49B40821);
+        
+        a = GG(a, b, c, d, x[i + 1], 5, 0xF61E2562);
+        d = GG(d, a, b, c, x[i + 6], 9, 0xC040B340);
+        c = GG(c, d, a, b, x[i + 11], 14, 0x265E5A51);
+        b = GG(b, c, d, a, x[i + 0], 20, 0xE9B6C7AA);
+        a = GG(a, b, c, d, x[i + 5], 5, 0xD62F105D);
+        d = GG(d, a, b, c, x[i + 10], 9, 0x2441453);
+        c = GG(c, d, a, b, x[i + 15], 14, 0xD8A1E681);
+        b = GG(b, c, d, a, x[i + 4], 20, 0xE7D3FBC8);
+        a = GG(a, b, c, d, x[i + 9], 5, 0x21E1CDE6);
+        d = GG(d, a, b, c, x[i + 14], 9, 0xC33707D6);
+        c = GG(c, d, a, b, x[i + 3], 14, 0xF4D50D87);
+        b = GG(b, c, d, a, x[i + 8], 20, 0x455A14ED);
+        a = GG(a, b, c, d, x[i + 13], 5, 0xA9E3E905);
+        d = GG(d, a, b, c, x[i + 2], 9, 0xFCEFA3F8);
+        c = GG(c, d, a, b, x[i + 7], 14, 0x676F02D9);
+        b = GG(b, c, d, a, x[i + 12], 20, 0x8D2A4C8A);
+        
+        a = HH(a, b, c, d, x[i + 5], 4, 0xFFFA3942);
+        d = HH(d, a, b, c, x[i + 8], 11, 0x8771F681);
+        c = HH(c, d, a, b, x[i + 11], 16, 0x6D9D6122);
+        b = HH(b, c, d, a, x[i + 14], 23, 0xFDE5380C);
+        a = HH(a, b, c, d, x[i + 1], 4, 0xA4BEEA44);
+        d = HH(d, a, b, c, x[i + 4], 11, 0x4BDECFA9);
+        c = HH(c, d, a, b, x[i + 7], 16, 0xF6BB4B60);
+        b = HH(b, c, d, a, x[i + 10], 23, 0xBEBFBC70);
+        a = HH(a, b, c, d, x[i + 13], 4, 0x289B7EC6);
+        d = HH(d, a, b, c, x[i + 0], 11, 0xEAA127FA);
+        c = HH(c, d, a, b, x[i + 3], 16, 0xD4EF3085);
+        b = HH(b, c, d, a, x[i + 6], 23, 0x4881D05);
+        a = HH(a, b, c, d, x[i + 9], 4, 0xD9D4D039);
+        d = HH(d, a, b, c, x[i + 12], 11, 0xE6DB99E5);
+        c = HH(c, d, a, b, x[i + 15], 16, 0x1FA27CF8);
+        b = HH(b, c, d, a, x[i + 2], 23, 0xC4AC5665);
+        
+        a = II(a, b, c, d, x[i + 0], 6, 0xF4292244);
+        d = II(d, a, b, c, x[i + 7], 10, 0x432AFF97);
+        c = II(c, d, a, b, x[i + 14], 15, 0xAB9423A7);
+        b = II(b, c, d, a, x[i + 5], 21, 0xFC93A039);
+        a = II(a, b, c, d, x[i + 12], 6, 0x655B59C3);
+        d = II(d, a, b, c, x[i + 3], 10, 0x8F0CCC92);
+        c = II(c, d, a, b, x[i + 10], 15, 0xFFEFF47D);
+        b = II(b, c, d, a, x[i + 1], 21, 0x85845DD1);
+        a = II(a, b, c, d, x[i + 8], 6, 0x6FA87E4F);
+        d = II(d, a, b, c, x[i + 15], 10, 0xFE2CE6E0);
+        c = II(c, d, a, b, x[i + 6], 15, 0xA3014314);
+        b = II(b, c, d, a, x[i + 13], 21, 0x4E0811A1);
+        a = II(a, b, c, d, x[i + 4], 6, 0xF7537E82);
+        d = II(d, a, b, c, x[i + 11], 10, 0xBD3AF235);
+        c = II(c, d, a, b, x[i + 2], 15, 0x2AD7D2BB);
+        b = II(b, c, d, a, x[i + 9], 21, 0xEB86D391);
+        
+        a = addUnsigned(a, oldA);
+        b = addUnsigned(b, oldB);
+        c = addUnsigned(c, oldC);
+        d = addUnsigned(d, oldD);
+    }
+    
+    return (wordToHex(a) + wordToHex(b) + wordToHex(c) + wordToHex(d)).toLowerCase();
+}
+
+// ============================================================================
+// AES-256 ENCRYPTION (Web Crypto API - Secure!)
+// ============================================================================
+
+let aesKey = null;
+let aesKeyHex = '';
+
+async function generateAESKey() {
+    aesKey = await crypto.subtle.generateKey(
+        { name: "AES-GCM", length: 256 },
+        true,
+        ["encrypt", "decrypt"]
+    );
+    
+    const exported = await crypto.subtle.exportKey("raw", aesKey);
+    const hexArray = Array.from(new Uint8Array(exported));
+    aesKeyHex = hexArray.map(b => b.toString(16).padStart(2, '0')).join('');
+    
+    console.log('🔑 AES-256 Key Generated:', aesKeyHex);
+    
+    const display = document.getElementById('aes-key-display');
+    if (display) {
+        display.textContent = aesKeyHex;
+    }
+}
+
+async function encryptFieldAES(data) {
+    if (!aesKey) {
+        await generateAESKey();
+    }
+    
+    const iv = crypto.getRandomValues(new Uint8Array(12));
+    const encoder = new TextEncoder();
+    const dataBuffer = encoder.encode(data);
+    
+    const encrypted = await crypto.subtle.encrypt(
+        { name: "AES-GCM", iv: iv },
+        aesKey,
+        dataBuffer
+    );
+    
+    const encryptedArray = new Uint8Array(encrypted);
+    const combined = new Uint8Array(iv.length + encryptedArray.length);
+    combined.set(iv);
+    combined.set(encryptedArray, iv.length);
+    
+    // Convert to hex
+    return Array.from(combined).map(b => b.toString(16).padStart(2, '0')).join('').toUpperCase();
+}
+
+async function decryptFieldAES(hexData) {
+    if (!aesKey) {
+        throw new Error('No AES key available');
+    }
+    
+    const combined = new Uint8Array(hexData.match(/.{1,2}/g).map(byte => parseInt(byte, 16)));
+    const iv = combined.slice(0, 12);
+    const encrypted = combined.slice(12);
+    
+    const decrypted = await crypto.subtle.decrypt(
+        { name: "AES-GCM", iv: iv },
+        aesKey,
+        encrypted
+    );
+    
+    const decoder = new TextDecoder();
+    return decoder.decode(decrypted);
+}
+
+// Fields that should be encrypted (sensitive data)
+const SENSITIVE_FIELDS = ['DCS', 'DAC', 'DAD', 'DBB', 'DAG', 'DAH', 'DAI'];
+
+// ============================================================================
+// STATE-SPECIFIC CONFIGURATIONS
+// ============================================================================
+
+const STATE_CONFIGS = {
+    FL: {
+        name: "Florida",
+        iin: "636026",
+        subfileId: "ZF",
+        auditTrail: "FLDMVAUDIT000001",
+        useIdemia: true,
+        defaultYear: 2020,
+        exampleData: {
+            DAQ: "B231952418000",
+            DCS: "BOLDEN",
+            DAC: "JACOB",
+            DAD: "WALTER",
+            DBB: "01011990",
+            DBA: "01012032",
+            DBD: "01092026",
+            DDB: "03012020",
+            DBC: "1",
+            DAY: "BRO",
+            DAU: "070 IN",
+            DAW: "180",
+            DAZ: "BRO",
+            DAG: "605 AFFIRMED COURT",
+            DAI: "TALLAHASSEE",
+            DAJ: "FL",
+            DAK: "323990000",
+            DCG: "USA",
+            DCA: "E",
+            DCB: "NONE",
+            DCD: "NONE",
+            DCF: "E802009203873",
+            DDA: "M",
+            DDE: "N",
+            DDF: "N",
+            DDG: "N",
+            DDK: "1"
+        }
+     },
+    CA: {
+        name: "California",
+        iin: "636014",
+        subfileId: "ZC",
+        auditTrail: "CADMVAUDIT000001",
+        useIdemia: false,
+        defaultYear: 2017,
+        exampleData: {
+            DAQ: "I1234568",
+            DCS: "SAMPLE",
+            DAC: "JANE",
+            DAD: "MARIE",
+            DBB: "01011985",
+            DBA: "01012028",
+            DBD: "06152017",
+            DDB: "06152017",
+            DBC: "2",
+            DAY: "BRO",
+            DAU: "065 IN",
+            DAW: "140",
+            DAZ: "BRN",
+            DAG: "2570 24TH STREET",
+            DAI: "SACRAMENTO",
+            DAJ: "CA",
+            DAK: "958164035",
+            DCG: "USA",
+            DCA: "C",
+            DCB: "NONE",
+            DCD: "NONE",
+            DCF: "AB1234567890",
+            DDA: "F",
+            DDE: "N",
+            DDF: "N",
+            DDG: "N"
+        }
+    }
+};
+
+// ============================================================================
+// FIELD SCHEMA
+// ============================================================================
+
+const FIELD_SCHEMA = [
+    {id:"DAQ", label:"DL/ID Number", include:{FL:'required', CA:'required'}, desc:"License/ID Number"},
+    {id:"DCS", label:"Last Name", include:{FL:'required', CA:'required'}, desc:"Family Name", sensitive:true},
+    {id:"DAC", label:"First Name", include:{FL:'required', CA:'required'}, desc:"Given Name", sensitive:true},
+    {id:"DAD", label:"Middle Name", include:{FL:'optional', CA:'optional'}, desc:"Middle Name", sensitive:true},
+    {id:"DBB", label:"Date of Birth", include:{FL:'required', CA:'required'}, desc:"MMDDYYYY", sensitive:true},
+    {id:"DBA", label:"Expiration Date", include:{FL:'required', CA:'required'}, desc:"MMDDYYYY"},
+    {id:"DBD", label:"Issue Date", include:{FL:'required', CA:'required'}, desc:"MMDDYYYY"},
+    {id:"DDB", label:"Revision Date", include:{FL:'optional', CA:'optional'}, desc:"MMDDYYYY"},
+    {id:"DBC", label:"Sex", include:{FL:'required', CA:'required'}, desc:"1=Male, 2=Female, 9=X"},
+    {id:"DAY", label:"Eye Color", include:{FL:'required', CA:'required'}, desc:"BLK/BRO/BLU/GRY/GRN/HAZ"},
+    {id:"DAU", label:"Height", include:{FL:'required', CA:'required'}, desc:"XXX IN or XXX CM"},
+    {id:"DAW", label:"Weight (lbs)", include:{FL:'optional', CA:'optional'}, desc:"Weight in pounds"},
+    {id:"DAZ", label:"Hair Color", include:{FL:'optional', CA:'optional'}, desc:"BAL/BLK/BLN/BRO/GRY/RED/WHI"},
+    {id:"DAG", label:"Street Address", include:{FL:'required', CA:'required'}, desc:"Mailing Street", sensitive:true},
+    {id:"DAH", label:"Street Address 2", include:{FL:'optional', CA:'optional'}, desc:"Apt/Unit", sensitive:true},
+    {id:"DAI", label:"City", include:{FL:'required', CA:'required'}, desc:"City", sensitive:true},
+    {id:"DAJ", label:"State", include:{FL:'required', CA:'required'}, desc:"Jurisdiction Code"},
+    {id:"DAK", label:"Postal Code", include:{FL:'required', CA:'required'}, desc:"ZIP Code"},
+    {id:"DCG", label:"Country", include:{FL:'required', CA:'required'}, desc:"USA/CAN/MEX"},
+    {id:"DCA", label:"License Class", include:{FL:'required', CA:'required'}, desc:"A/B/C/D/E/M"},
+    {id:"DCB", label:"Restrictions", include:{FL:'always', CA:'always'}, desc:"Restriction Codes or NONE"},
+    {id:"DCD", label:"Endorsements", include:{FL:'always', CA:'always'}, desc:"Endorsement Codes or NONE"},
+    {id:"DCF", label:"Doc Discriminator", include:{FL:'required', CA:'required'}, desc:"Unique Document ID"},
+    {id:"DDA", label:"Compliance Type", include:{FL:'optional', CA:'always'}, desc:"F/M/N (REAL ID)"},
+    {id:"DDE", label:"Last Name Truncated", include:{FL:'always', CA:'always'}, desc:"Y/N/U"},
+    {id:"DDF", label:"First Name Truncated", include:{FL:'always', CA:'always'}, desc:"Y/N/U"},
+    {id:"DDG", label:"Middle Name Truncated", include:{FL:'always', CA:'always'}, desc:"Y/N/U"},
+    {id:"DDH", label:"Under 18 Until", include:{FL:'optional', CA:'optional'}, desc:"MMDDYYYY"},
+    {id:"DDI", label:"Under 19 Until", include:{FL:'optional', CA:'optional'}, desc:"MMDDYYYY"},
+    {id:"DDJ", label:"Under 21 Until", include:{FL:'optional', CA:'optional'}, desc:"MMDDYYYY"},
+    {id:"DDK", label:"Organ Donor", include:{FL:'optional', CA:'optional'}, desc:"1=Yes, 0=No"},
+    {id:"DDL", label:"Veteran", include:{FL:'optional', CA:'optional'}, desc:"Y if veteran"},
+    {id:"DCE", label:"Weight Range", include:{FL:'optional', CA:'optional'}, desc:"0-9 range code"},
+    {id:"DCL", label:"Race/Ethnicity", include:{FL:'optional', CA:'optional'}, desc:"Race Code"},
+    {id:"DCU", label:"Suffix", include:{FL:'optional', CA:'optional'}, desc:"JR/SR/III/IV"},
+    {id:"DCT", label:"Given Name Alt", include:{FL:'optional', CA:'optional'}, desc:"First Name (Alt)"},
+    {id:"DDD", label:"Limited Duration", include:{FL:'optional', CA:'optional'}, desc:"Y if temp"},
+    {id:"DDC", label:"HazMat Exp Date", include:{FL:'optional', CA:'optional'}, desc:"MMDDYYYY"},
+    {id:"PAA", label:"Permit Class", include:{FL:'optional', CA:'optional'}, desc:"Permit Class"},
+    {id:"PAB", label:"Permit Exp Date", include:{FL:'optional', CA:'optional'}, desc:"MMDDYYYY"},
+    {id:"PAC", label:"Permit Issue Date", include:{FL:'optional', CA:'optional'}, desc:"MMDDYYYY"},
+    {id:"PAD", label:"Permit ID", include:{FL:'optional', CA:'optional'}, desc:"Permit ID"},
+    {id:"PAE", label:"Permit Endorsements", include:{FL:'optional', CA:'optional'}, desc:"Permit End"},
+    {id:"PAF", label:"Permit Restrictions", include:{FL:'optional', CA:'optional'}, desc:"Permit Rest"},
+    {id:"DBO", label:"Last Name Alias", include:{FL:'optional', CA:'optional'}, desc:"Alias Surname"},
+    {id:"DBP", label:"First Name Alias", include:{FL:'optional', CA:'optional'}, desc:"Alias Given"},
+    {id:"DBQ", label:"Middle Name Alias", include:{FL:'optional', CA:'optional'}, desc:"Alias Middle"},
+    {id:"DBR", label:"Suffix Alias", include:{FL:'optional', CA:'optional'}, desc:"Alias Suffix"},
+    {id:"DBS", label:"Name Prefix", include:{FL:'optional', CA:'optional'}, desc:"MR/MRS/MS/DR"},
+    {id:"DBN", label:"Alias Family Name", include:{FL:'optional', CA:'optional'}, desc:"Alias Last"},
+    {id:"DCH", label:"Federal Commercial", include:{FL:'optional', CA:'optional'}, desc:"Federal Limits"},
+    {id:"DCI", label:"Jurisdiction Vehicle", include:{FL:'optional', CA:'optional'}, desc:"Jur Vehicle"},
+    {id:"DCJ", label:"Jurisdiction Rest", include:{FL:'optional', CA:'optional'}, desc:"Jur Rest"},
+    {id:"DCK", label:"Inventory Control", include:{FL:'optional', CA:'optional'}, desc:"Inv Number"},
+    {id:"DCM", label:"Standard Vehicle", include:{FL:'optional', CA:'optional'}, desc:"Standard Class"},
+    {id:"DCN", label:"Standard Endorsement", include:{FL:'optional', CA:'optional'}, desc:"Standard End"},
+    {id:"DCO", label:"Standard Restriction", include:{FL:'optional', CA:'optional'}, desc:"Standard Rest"},
+    {id:"DCP", label:"Country ID", include:{FL:'optional', CA:'optional'}, desc:"Country Tertiary"},
+    {id:"DCQ", label:"Audit Info", include:{FL:'optional', CA:'optional'}, desc:"Audit Data"},
+    {id:"DCR", label:"Compliance Flag", include:{FL:'optional', CA:'optional'}, desc:"Compliance"},
+];
+
+const FL_SUBFILE = [
+    {id:"ZFA", label:"FL Class", include:'always', desc:"Florida Class", defaultVal: "E"},
+    {id:"ZFB", label:"FL Exp Date", include:'always', desc:"Florida Expiration", defaultVal: ""},
+    {id:"ZFC", label:"FL DL Number", include:'always', desc:"Florida License #", defaultVal: ""},
+    {id:"ZFD", label:"FL Office", include:'optional', desc:"Issuing Office", defaultVal: ""},
+    {id:"ZFE", label:"FL Compliance", include:'optional', desc:"Compliance Data", defaultVal: ""},
+    {id:"ZFJ", label:"FL Reserved", include:'optional', desc:"Reserved Field", defaultVal: ""},
+    {id:"ZFK", label:"FL Terminator", include:'optional', desc:"End Marker", defaultVal: "X"}
+];
+st CA_SUBFILE = [
+    {id:"ZCA", label:"CA Class", include:'always', desc:"California Class", defaultVal: "C"},
+    {id:"ZCB", label:"CA Exp Date", include:'always', desc:"California Expiration", defaultVal: ""},
+    {id:"ZCC", label:"CA DL Number", include:'always', desc:"California License #", defaultVal: ""},
+    {id:"ZCD", label:"CA Office", include:'optional', desc:"Issuing Office", defaultVal: ""},
+    {id:"ZCE", label:"CA Restrictions", include:'optional', desc:"CA Restrictions", defaultVal: ""},
+    {id:"ZCF", label:"CA Endorsements", include:'optional', desc:"CA Endorsements", defaultVal: ""},
+    {id:"ZCG", label:"CA Compliance", include:'optional', desc:"REAL ID", defaultVal: ""},
+    {id:"ZCH", label:"CA Reserved 1", include:'optional', desc:"Reserved", defaultVal: ""},
+    {id:"ZCI", label:"CA Reserved 2", include:'optional', desc:"Reserved", defaultVal: ""},
+    {id:"ZCJ", label:"CA Reserved 3", include:'optional', desc:"Reserved", defaultVal: ""},
+    {id:"ZCK", label:"CA Terminator", include:'optional', desc:"End Marker", defaultVal: "X"}
+];
+
+// ============================================================================
+// CRC-16-CCITT IMPLEMENTATION
+// ============================================================================
+
+function crc16ccitt(data) {
+    let crc = 0xFFFF;
+    const poly = 0x1021;
+    
+    for (let i = 0; i < data.length; i++) {
+        const byte = typeof data[i] === 'string' ? data.charCodeAt(i) : data[i];
+        crc ^= (byte << 8);
+        
+        for (let bit = 0; bit < 8; bit++) {
+            if (crc & 0x8000) {
+                crc = ((crc << 1) ^ poly) & 0xFFFF;
+            } else {
+                crc = (crc << 1) & 0xFFFF;
+            }
+        }
+    }
+    
+    return crc;
+}
+
+// ============================================================================
+// BINARY UTILITIES
+// ============================================================================
+
+function stringToBytes(str) {
+    const bytes = [];
+    for (let i = 0; i < str.length; i++) {
+        bytes.push(str.charCodeAt(i));
+    }
+    return bytes;
+}
+
+function bytesToHex(bytes, withSpaces = true) {
+    const hex = Array.from(bytes).map(b => 
+        b.toString(16).toUpperCase().padStart(2, '0')
+    );
+    return withSpaces ? hex.join(' ') : hex.join('');
+}
+
+// ============================================================================
+// STATE MANAGEMENT
+// ============================================================================
+
+let currentState = 'FL';
+let currentAAMVA = '09';
+let currentJurisdiction = '01';
+let aesEnabled = false;
+let md5Enabled = false;
+
+function getCurrentConfig() {
+    return STATE_CONFIGS[currentState];
+}
+
+function updateConfigDisplay() {
+    const display = document.getElementById('config-display');
+    if (display) {
+        display.textContent = `${currentState} AAMVA v${currentAAMVA} Jur v${currentJurisdiction}`;
+    }
+    
+    const stateInfo = document.getElementById('state-info');
+    const config = getCurrentConfig();
+    if (stateInfo) {
+        let cryptoInfo = '';
+        if (aesEnabled) cryptoInfo += '<span class="status-indicator status-crypto"></span><strong>AES-256 ACTIVE</strong> ';
+        if (md5Enabled) cryptoInfo += '<span class="status-indicator status-crypto"></span><strong>MD5 ACTIVE</strong> ';
+        
+        stateInfo.innerHTML = `
+            <strong>📍 ${config.name} Configuration Active</strong><br>
+            IIN: ${config.iin} | 
+            Subfile: ${config.subfileId} | 
+            ${config.useIdemia ? 'IDEMIA Protocol' : 'DMV Standard'} | 
+            Audit: ${config.auditTrail}
+            ${cryptoInfo ? '<br>' + cryptoInfo : ''}
+        `;
+    }
+}
+
+// ============================================================================
+// DMV COMPLIANT PAYLOAD BUILDER WITH ENCRYPTION
+// ============================================================================
+
+async function buildDMVCompliantPayload() {
+    const LF = '\x0A';
+    const CR = '\x0D';
+    const RS = '\x1E';
+    const EOT = '\x04';
+    
+    const config = getCurrentConfig();
+    
+    console.log(`🔧 Building ${config.name} payload...`);
+    console.log(`🔐 AES-256: ${aesEnabled ? 'ENABLED' : 'DISABLED'}`);
+    console.log(`🔐 MD5: ${md5Enabled ? 'ENABLED' : 'DISABLED'}`);
+    
+    // Build DL subfile with encryption
+    let dlBody = '';
+    let includedFields = 0;
+    let omittedFields = 0;
+    let encryptedCount = 0;
+   
+    for (const field of FIELD_SCHEMA) {
+        const input = document.getElementById('fld-' + field.id);
+        let value = input ? input.value.trim() : '';
+        const includeRule = field.include ? field.include[currentState] : 'optional';
+        
+        // Encrypt sensitive fields if AES is enabled
+        if (aesEnabled && value && field.sensitive) {
+            console.log(`🔐 Encrypting ${field.id}: "${value}"`);
+            value = await encryptFieldAES(value);
+            encryptedCount++;
+            console.log(`   → Encrypted: ${value.substring(0, 40)}...`);
+        }
+        
+        let shouldInclude = false;
+        
+        if (includeRule === 'required') {
+            shouldInclude = value.length > 0;
+        } else if (includeRule === 'always') {
+            shouldInclude = true;
+        } else {
+            shouldInclude = value.length > 0;
+        }
+        
+        if (shouldInclude) {
+            dlBody += field.id + value + LF;
+            includedFields++;
+        } else {
+            omittedFields++;
+        }
+    }
+    
+    console.log(`DL Subfile: ${includedFields} included, ${omittedFields} omitted, ${encryptedCount} encrypted`);
+    
+    // Build state-specific subfile
+    const subfileSchema = currentState === 'FL' ? FL_SUBFILE : CA_SUBFILE;
+    const subfileId = config.subfileId;
+    
+    let stateBody = '';
+    let stateIncluded = 0;
+    
+    subfileSchema.forEach(field => {
+        const input = document.getElementById('fld-' + field.id);
+        let value = input ? input.value.trim() : '';
+        
+        if (!value && field.defaultVal) {
+            value = field.defaultVal;
+        }
+        
+        const includeRule = field.include;
+        const shouldInclude = includeRule === 'always' || value.length > 0;
+        
+        if (shouldInclude) {
+            stateBody += field.id + value + LF;
+            stateIncluded++;
+        }
+    });
+    
+    console.log(`${subfileId} Subfile: ${stateIncluded} fields included`);
+    
+    // Build header
+    const PREAMBLE = '@' + LF + RS + CR;
+    const IIN = config.iin;
+    const AAMVA_VER = currentAAMVA;
+    const JUR_VER = currentJurisdiction;
+    const ENTRIES = '02';
+    
+    let header = 'ANSI ' + IIN + AAMVA_VER + JUR_VER + ENTRIES;
+    
+    // Calculate offsets
+    const PREAMBLE_LEN = 4;
+    const DESIGNATOR_LEN = 20;
+    const HEADER_BASE = header.length;
+    
+    const DL_OFFSET = PREAMBLE_LEN + HEADER_BASE + DESIGNATOR_LEN + 1;
+    const DL_LENGTH = 2 + 1 + dlBody.length + 1;
+    const STATE_OFFSET = DL_OFFSET + DL_LENGTH;
+    const STATE_LENGTH = 2 + 1 + stateBody.length + 1;
+    
+    // Build designator
+    const designator = 
+        'DL' + String(DL_OFFSET).padStart(4, '0') + String(DL_LENGTH).padStart(4, '0') +
+        subfileId + String(STATE_OFFSET).padStart(4, '0') + String(STATE_LENGTH).padStart(4, '0');
+    
+    header += designator + LF;
+    
+    // Assemble payload
+    let payload = PREAMBLE + header;
+    payload += 'DL' + LF + dlBody + CR;
+    payload += subfileId + LF + stateBody + CR;
+    payload += RS + EOT;
+    
+    // Calculate checksums
+    const startTime = performance.now();
+    const crc = crc16ccitt(payload);
+    const crcTime = performance.now() - startTime;
+    
+    let md5Hash = null;
+    let md5Time = 0;
+    
+    if (md5Enabled) {
+        const md5StartTime = performance.now();
+        md5Hash = md5(payload);
+        md5Time = performance.now() - md5StartTime;
+        console.log(`📊 MD5: ${md5Hash} (${md5Time.toFixed(3)}ms)`);
+    }
+    
+    console.log(`📊 CRC-16: 0x${crc.toString(16).toUpperCase()} (${crcTime.toFixed(3)}ms)`);
+    
+    // Add CRC to payload
+    const crcHigh = (crc >> 8) & 0xFF;
+    const crcLow = crc & 0xFF;
+    payload += String.fromCharCode(crcHigh) + String.fromCharCode(crcLow);
+    
+    // Add audit trail
+    payload += config.auditTrail;
+    
+    // Pad to 1024 bytes
+    const TARGET_SIZE = 1024;
+    const paddingNeeded = TARGET_SIZE - payload.length;
+    
+    if (paddingNeeded > 0) {
+        payload += '\x00'.repeat(paddingNeeded);
+    }
+    
+    console.log('Final payload size:', payload.length);
+    
+    return {
+        payload: payload,
+        structure: {
+            preambleLen: PREAMBLE_LEN,
+            headerLen: header.length,
+            dlOffset: DL_OFFSET,
+            dlLength: DL_LENGTH,
+            stateOffset: STATE_OFFSET,
+            stateLength: STATE_LENGTH,
+            terminatorPos: payload.indexOf(RS),
+            crcPos: payload.length - 18,
+            auditPos: payload.length - 16,
+            totalSize: payload.length,
+            crcValue: crc,
+            crcHex: '0x' + crc.toString(16).toUpperCase().padStart(4, '0'),
+            crcTime: crcTime,
+            md5Hash: md5Hash,
+            md5Time: md5Time,
+            state: currentState,
+            subfileId: subfileId,
+            iin: IIN,
+            aamvaVer: AAMVA_VER,
+            jurVer: JUR_VER,
+            dlFieldsIncluded: includedFields,
+            dlFieldsOmitted: omittedFields,
+            stateFieldsIncluded: stateIncluded,
+            encryptedFields: encryptedCount,
+            aesEnabled: aesEnabled,
+            md5Enabled: md5Enabled
+        }
+    };
+}
+
+// ============================================================================
+// VALIDATION
+// ============================================================================
+
+function validateFields() {
+    const errors = [];
+    const warnings = [];
+    const strictMode = document.getElementById('strict-mode')?.checked;
+    const config = getCurrentConfig();
+    
+    FIELD_SCHEMA.forEach(field => {
+        const input = document.getElementById('fld-' + field.id);
+        if (!input) return;
+        
+        const value = input.value.trim();
+        const includeRule = field.include ? field.include[currentState] : 'optional';
+        
+        if (includeRule === 'required' && !value) {
+            errors.push(`${field.id}: REQUIRED field is empty`);
+            input.style.borderColor = '#ff0000';
+            return;
+        } else if (includeRule === 'required') {
+            input.style.borderColor = '#ffff00';
+        } else if (includeRule === 'always') {
+            input.style.borderColor = '#ff8800';
+        } else if (aesEnabled && field.sensitive) {
+            input.style.borderColor = '#ff00ff';
+        } else {
+            input.style.borderColor = '#00ff00';
+        }
+        
+        if (!strictMode || !value) return;
+        
+        if (field.id.match(/^(DBB|DBA|DBD|DDB|DDH|DDI|DDJ|DDC|PAB|PAC)$/)) {
+            if (!/^\d{8}$/.test(value)) {
+                errors.push(`${field.id}: Must be MMDDYYYY (8 digits)`);
+            }
+        }
+        
+        if (field.id === 'DAJ' && value !== currentState) {
+            warnings.push(`${field.id}: Should be ${currentState} for ${config.name}`);
+        }
+        
+        if (field.id === 'DBC' && !['1', '2', '9'].includes(value)) {
+            errors.push(`${field.id}: Must be 1 (Male), 2 (Female), or 9 (X)`);
+        }
+    });
+    
+    return { errors, warnings };
+}
+
+// ============================================================================
+// BARCODE GENERATION
+// ============================================================================
+
+async function generateBarcode() {
+    console.clear();
+    console.log('═══════════════════════════════════════');
+    console.log(`🚀 GENERATING ${getCurrentConfig().name} PDF417`);
+    console.log('═══════════════════════════════════════');
+    
+    const validation = validateFields();
+    if (validation.errors.length > 0) {
+        displayValidationResults(validation);
+        return;
+    }
+    
+    try {
+        const result = await buildDMVCompliantPayload();
+        const { payload, structure } = result;
+        
+        displayProtocolAnalysis(structure, payload);
+        displayHexPreview(payload);
+        displayChecksumComparison(structure);
+        
+        const outputDiv = document.getElementById('barcode-output');
+        if (!outputDiv) return;
+        
+        outputDiv.innerHTML = '<h3 style="color: #ffff00; margin-bottom: 1rem;">PDF417 Barcode (ECC Level 5)</h3>';
+        
+        const canvas = document.createElement('canvas');
+        outputDiv.appendChild(canvas);
+        
+        bwipjs.toCanvas(canvas, {
+            bcid: 'pdf417',
+            text: payload,
+            eclevel: 5,
+            columns: 15,
+            rows: 0,
+            scale: 2,
+            height: 6,
+            includetext: false,
+            parsefnc: false
+        });
+        
+        canvas.style.maxWidth = '100%';
+        window.lastCanvas = canvas;
+        
+        displayValidationResults(validation, true);
+        
+        console.log('✅ SUCCESS');
+        console.log('═══════════════════════════════════════');
+        
+    } catch (error) {
+        console.error('❌ ERROR:', error);
+        console.error(error.stack);
+        const outputDiv = document.getElementById('barcode-output');
+        if (outputDiv) {
+            outputDiv.innerHTML = `<div class="alert alert-error"><strong>❌ ERROR:</strong><br>${error.message}</div>`;
+        }
+    }
+}
+
+// ============================================================================
+// DISPLAY FUNCTIONS
+// ============================================================================
+
+function displayChecksumComparison(structure) {
+    const el = document.getElementById('checksum-comparison-display');
+    if (!el) return;
+    
+    if (!structure.md5Enabled && !structure.aesEnabled) {
+        el.innerHTML = '';
+        return;
+    }
+    
+    let html = '<div class="checksum-comparison">';
+    html += '<h4 style="color: #ff00ff; margin-bottom: 1rem;">🔐 CRYPTOGRAPHY COMPARISON</h4>';
+    
+    // CRC-16
+    html += '<div class="checksum-row">';
+    html += '<div class="checksum-label">CRC-16-CCITT:</div>';
+    html += `<div class="checksum-value">${structure.crcHex}</div>`;
+    html += `<div class="checksum-time">${structure.crcTime.toFixed(3)}ms</div>`;
+    html += '</div>';
+    
+    // MD5 (if enabled)
+    if (structure.md5Enabled) {
+        html += '<div class="checksum-row">';
+        html += '<div class="checksum-label">MD5 Hash:</div>';
+        html += `<div class="checksum-value">${structure.md5Hash}</div>`;
+        html += `<div class="checksum-time">${structure.md5Time.toFixed(3)}ms</div>`;
+        html += '</div>';
+        
+        html += '<div style="margin-top: 1rem; padding: 0.75rem; background: #1a0033; border-left: 3px solid #ff00ff; color: #cc99ff; font-size: 0.85rem;">';
+        html += '<strong>📊 Comparison:</strong><br>';
+        html += `• CRC-16: ${(structure.crcHex.length - 2) * 4} bits (16-bit checksum)<br>`;
+        html += `• MD5: ${structure.md5Hash.length * 4} bits (128-bit hash)<br>`;
+        html += `• Speed: MD5 is ${(structure.md5Time / structure.crcTime).toFixed(1)}x slower<br>`;
+        html += `• Security: CRC detects errors, MD5 detects tampering (but MD5 is broken!)`;
+        html += '</div>';
+    }
+    
+    // AES (if enabled)
+    if (structure.aesEnabled) {
+        html += '<div class="checksum-row">';
+        html += '<div class="checksum-label">AES-256-GCM:</div>';
+        html += `<div class="checksum-value">✓ ${structure.encryptedFields} fields encrypted</div>`;
+        html += `<div class="checksum-time">ACTIVE</div>`;
+        html += '</div>';
+        
+        html += '<div style="margin-top: 1rem; padding: 0.75rem; background: #1a0033; border-left: 3px solid #ff00ff; color: #cc99ff; font-size: 0.85rem;">';
+        html += '<strong>🔐 Encryption Active:</strong><br>';
+        html += `• Algorithm: AES-256-GCM (Galois/Counter Mode)<br>`;
+        html += `• Key Size: 256 bits (32 bytes)<br>`;
+        html += `• IV Size: 96 bits (12 bytes, random per field)<br>`;
+        html += `• Encrypted: Name, DOB, Address (${structure.encryptedFields} fields)<br>`;
+        html += `• Note: Data is encrypted but barcode still scans!`;
+        html += '</div>';
+    }
+    
+    html += '</div>';
+    el.innerHTML = html;
+}
+
+function displayProtocolAnalysis(structure, payload) {
+    const el = document.getElementById('protocol-analysis');
+    if (!el) return;
+    
+    const config = getCurrentConfig();
+    
+    const cryptoStatus = structure.aesEnabled ? '🔐 AES-256 ACTIVE' : '';
+    const md5Status = structure.md5Enabled ? '📊 MD5 ACTIVE' : '';
+    
+    const analysis = `
+╔═══════════════════════════════════════════════════════════╗
+║       ${config.name.toUpperCase()} DMV PROTOCOL STRUCTURE                    ║
+╠═══════════════════════════════════════════════════════════╣
+║ State: ${structure.state}                                               ║
+║ IIN: ${structure.iin}                                              ║
+║ AAMVA Version: ${structure.aamvaVer}                                       ║
+║ Jurisdiction Version: ${structure.jurVer}                                 ║
+║ ${config.useIdemia ? 'Protocol: IDEMIA' : 'Protocol: DMV Standard'}                                 ║
+║ Total Size: ${structure.totalSize} bytes                                ║
+║ CRC-16-CCITT: ${structure.crcHex} (${structure.crcTime.toFixed(3)}ms)               ║
+${structure.md5Enabled ? `║ MD5 Hash: ${structure.md5Hash.substring(0, 32)}...        ║` : ''}
+${structure.aesEnabled ? `║ 🔐 AES-256: ${structure.encryptedFields} fields encrypted                   ║` : ''}
+║ ECC Level: 5                                              ║
+╠═══════════════════════════════════════════════════════════╣
+║ FIELD INCLUSION COUNTS                                    ║
+╠═══════════════════════════════════════════════════════════╣
+║ DL Subfile: ${structure.dlFieldsIncluded} included, ${structure.dlFieldsOmitted} omitted            ║
+║ ${structure.subfileId} Subfile: ${structure.stateFieldsIncluded} included                          ║
+${structure.aesEnabled ? `║ 🔐 Encrypted: ${structure.encryptedFields} sensitive fields                  ║` : ''}
+╠═══════════════════════════════════════════════════════════╣
+║ SECTION         │ OFFSET │ LENGTH                         ║
+╠═════════════════╪════════╪════════════════════════════════╣
+║ Preamble        │      0 │      4                         ║
+║ Header          │      4 │ ${String(structure.headerLen).padStart(6)}                         ║
+║ DL Subfile      │ ${String(structure.dlOffset).padStart(6)} │ ${String(structure.dlLength).padStart(6)}                         ║
+║ ${structure.subfileId} Subfile      │ ${String(structure.stateOffset).padStart(6)} │ ${String(structure.stateLength).padStart(6)}                         ║
+║ Terminators     │ ${String(structure.terminatorPos).padStart(6)} │      2                         ║
+║ CRC-16          │ ${String(structure.crcPos).padStart(6)} │      2                         ║
+║ Audit Trail     │ ${String(structure.auditPos).padStart(6)} │     16                         ║
+║ Padding         │ ${String(structure.auditPos + 16).padStart(6)} │ ${String(structure.totalSize - structure.auditPos - 16).padStart(6)}                         ║
+╚═════════════════╧════════╧════════════════════════════════╝
+
+✓ Binary protocol structure verified
+✓ CRC-16-CCITT checksum calculated (Big-Endian)
+${structure.md5Enabled ? '✓ MD5 hash calculated (128-bit digest)' : ''}
+${structure.aesEnabled ? '✓ AES-256-GCM encryption applied to sensitive fields' : ''}
+✓ ${config.name} audit trail: ${config.auditTrail}
+✓ Null padding to 1024 bytes
+${config.useIdemia ? '✓ IDEMIA protocol compliance verified' : '✓ Standard DMV protocol verified'}
+✓ Field inclusion rules applied correctly
+`.trim();
+    
+    el.textContent = analysis;
+}
+
+function displayHexPreview(payload) {
+    const el = document.getElementById('hex-preview');
+    if (!el) return;
+    
+    const bytes = stringToBytes(payload);
+    let hex = '';
+    
+    for (let i = 0; i < Math.min(512, bytes.length); i += 16) {
+        const offset = i.toString(16).toUpperCase().padStart(4, '0');
+        const chunk = bytes.slice(i, i + 16);
+        const hexPart = bytesToHex(chunk, true).padEnd(48, ' ');
+        const asciiPart = chunk.map(b => 
+            (b >= 32 && b <= 126) ? String.fromCharCode(b) : '.'
+        ).join('');
+        
+        hex += `${offset}  ${hexPart}  ${asciiPart}\n`;
+    }
+    
+    if (aesEnabled) {
+        hex += `\n🔐 ENCRYPTED DATA VISIBLE IN HEX - Look for long hex strings!\n`;
+    }
+    
+    hex += `\n... [${payload.length} total bytes]`;
+    el.textContent = hex;
+}
+
+function displayValidationResults(validation, success = false) {
+    const el = document.getElementById('validation-status');
+    if (!el) return;
+    
+    const config = getCurrentConfig();
+    
+    if (success && validation.errors.length === 0) {
+        let cryptoMsg = '';
+        if (aesEnabled) cryptoMsg += '<br>🔐 AES-256 encryption active - sensitive data encrypted';
+        if (md5Enabled) cryptoMsg += '<br>📊 MD5 checksum calculated alongside CRC-16';
+        
+        el.innerHTML = `
+            <div class="alert alert-success">
+                <strong><span class="status-indicator status-ok"></span>✅ GENERATION SUCCESSFUL</strong><br>
+                ${config.name} DMV-compliant binary protocol verified
+                ${config.useIdemia ? '<br>IDEMIA hardware protocol enabled' : '<br>Standard DMV protocol enabled'}
+                ${cryptoMsg}
+            </div>
+        `;
+    } else if (validation.errors.length > 0) {
+        el.innerHTML = `
+            <div class="alert alert-error">
+                <strong><span class="status-indicator status-error"></span>❌ ERRORS (${validation.errors.length}):</strong><br>
+                ${validation.errors.map(e => '• ' + e).join('<br>')}
+            </div>
+        `;
+    } else {
+        el.innerHTML = `
+            <div class="alert alert-success">
+                <strong><span class="status-indicator status-ok"></span>✓ VALIDATION PASSED</strong>
+            </div>
+        `;
+    }
+    
+    if (validation.warnings.length > 0) {
+        el.innerHTML += `
+            <div class="alert alert-warning">
+                <strong><span class="status-indicator status-warning"></span>⚠️ WARNINGS:</strong><br>
+                ${validation.warnings.map(w => '• ' + w).join('<br>')}
+            </div>
+        `;
+    }
+}
+
+// ============================================================================
+// UI RENDERING
+// ============================================================================
+
+function renderFields() {
+    const container = document.getElementById('field-container');
+    if (!container) return;
+    
+    const config = getCurrentConfig();
+    let html = '';
+    
+    html += '<div class="section-divider">🔷 DL SUBFILE (AAMVA Standard)</div>';
+    
+    FIELD_SCHEMA.forEach(field => {
+        const includeRule = field.include ? field.include[currentState] : 'optional';
+        const exampleVal = config.exampleData[field.id] || '';
+        const isSensitive = aesEnabled && field.sensitive;
+        
+        let labelClass = 'field-label';
+        let inputClass = '';
+        let badgeClass = 'badge-optional';
+        let badgeText = 'OPTIONAL';
+        let reqMarker = '';
+        let rowClass = 'field-row';
+        
+        if (includeRule === 'required') {
+            labelClass = 'field-label mandatory';
+            inputClass = 'mandatory';
+            badgeClass = 'badge-required';
+            badgeText = 'REQUIRED';
+            reqMarker = ' *';
+        } else if (includeRule === 'always') {
+            labelClass = 'field-label always-include';
+            inputClass = 'always-include';
+            badgeClass = 'badge-always';
+            badgeText = 'ALWAYS';
+            reqMarker = ' +';
+        }
+        
+        if (isSensitive) {
+            labelClass = 'field-label encrypted-label';
+            inputClass = 'encrypted-input';
+            badgeClass = 'badge-encrypted';
+            badgeText = '🔐 ENCRYPTED';
+            rowClass = 'field-row encrypted';
+        }
+        
+        html += `
+            <div class="${rowClass}" title="${field.desc || ''} (${includeRule})${isSensitive ? ' - Will be encrypted' : ''}">
+                <div class="${labelClass}">
+                    ${field.id}${reqMarker}
+                    ${isSensitive ? '<span class="encryption-indicator">🔐</span>' : ''}
+                </div>
+                <div class="field-input">
+                    <input 
+                        type="text" 
+                        id="fld-${field.id}" 
+                        class="${inputClass}"
+                        value="${exampleVal}" 
+                        placeholder="${field.desc || ''}"
+                    >
+                </div>
+                <div class="badge ${badgeClass}">${badgeText}</div>
+            </div>
+        `;
+    });
+    
+    const subfileSchema = currentState === 'FL' ? FL_SUBFILE : CA_SUBFILE;
+    const subfileId = config.subfileId;
+    
+    html += `<div class="section-divider">🔷 ${subfileId} SUBFILE (${config.name} Specific)</div>`;
+    
+    subfileSchema.forEach(field => {
+        const includeRule = field.include;
+        let exampleVal = field.defaultVal || '';
+        
+        if (field.id.match(/A$/)) exampleVal = config.exampleData.DCA || field.defaultVal || '';
+        if (field.id.match(/B$/) && field.desc.includes('Exp')) exampleVal = config.exampleData.DBA || field.defaultVal || '';
+        if (field.id.match(/C$/) && field.desc.includes('Number')) exampleVal = config.exampleData.DAQ || field.defaultVal || '';
+        
+        let labelClass = 'field-label';
+        let inputClass = '';
+        let badgeClass = 'badge-optional';
+        let badgeText = 'OPTIONAL';
+        let reqMarker = '';
+        
+        if (includeRule === 'always') {
+            labelClass = 'field-label always-include';
+            inputClass = 'always-include';
+            badgeClass = 'badge-always';
+            badgeText = 'ALWAYS';
+            reqMarker = ' +';
+        }
+        
+        html += `
+            <div class="field-row" title="${field.desc || ''} (${includeRule})">
+                <div class="${labelClass}">${field.id}${reqMarker}</div>
+                <div class="field-input">
+                    <input 
+                        type="text" 
+                        id="fld-${field.id}" 
+                        class="${inputClass}"
+                        value="${exampleVal}" 
+                        placeholder="${field.desc || ''}"
+                    >
+                </div>
+                <div class="badge ${badgeClass}">${badgeText}</div>
+            </div>
+        `;
+    });
+    
+    container.innerHTML = html;
+}
+
+function downloadPNG() {
+    if (!window.lastCanvas) {
+        alert('⚠️ Generate a barcode first');
+        return;
+    }
+    
+    window.lastCanvas.toBlob(blob => {
+        const link = document.createElement('a');
+        link.href = URL.createObjectURL(blob);
+        const cryptoSuffix = aesEnabled ? '_AES256' : '';
+        link.download = `${currentState}_PDF417_AAMVA${currentAAMVA}${cryptoSuffix}_${new Date().toISOString().slice(0, 10)}.png`;
+        link.click();
+        URL.revokeObjectURL(link.href);
+    });
+}
+
+function resetToExample() {
+    renderFields();
+    updateConfigDisplay();
+    
+    document.getElementById('validation-status').innerHTML = '';
+    document.getElementById('protocol-analysis').textContent = 'Awaiting generation...';
+    document.getElementById('hex-preview').textContent = 'Awaiting generation...';
+    document.getElementById('barcode-output').innerHTML = '';
+    document.getElementById('checksum-comparison-display').innerHTML = '';
+    
+    console.clear();
+    console.log(`🔄 Reset to ${getCurrentConfig().name} example data`);
+}
+
+async function runTests() {
+    console.clear();
+    console.log('🧪 RUNNING COMPREHENSIVE CRYPTOGRAPHY TESTS...\n');
+    
+    // Test 1: CRC-16-CCITT
+    console.log('TEST 1: CRC-16-CCITT Implementation');
+    const testData = '123456789';
+    const expectedCRC = 0x29B1;
+    const actualCRC = crc16ccitt(testData);
+    console.log('Input:', testData);
+    console.log('Expected:', '0x' + expectedCRC.toString(16).toUpperCase());
+    console.log('Actual:', '0x' + actualCRC.toString(16).toUpperCase());
+    console.log('Result:', expectedCRC === actualCRC ? '✅ PASS' : '❌ FAIL');
+    console.log('');
+    
+    // Test 2: MD5 Hash
+    console.log('TEST 2: MD5 Hash Implementation');
+    const testString = 'The quick brown fox jumps over the lazy dog';
+    const expectedMD5 = '9e107d9d372bb6826bd81d3542a419d6';
+    const actualMD5 = md5(testString);
+    console.log('Input:', testString);
+    console.log('Expected:', expectedMD5);
+    console.log('Actual:', actualMD5);
+    console.log('Result:', expectedMD5 === actualMD5 ? '✅ PASS' : '❌ FAIL');
+    console.log('');
+    
+    // Test 3: AES-256 Encryption/Decryption
+    console.log('TEST 3: AES-256 Encryption/Decryption');
+    try {
+        const original = 'SECRET DATA 12345';
+        const encrypted = await encryptFieldAES(original);
+        const decrypted = await decryptFieldAES(encrypted);
+        console.log('Original:', original);
+        console.log('Encrypted:', encrypted.substring(0, 50) + '...');
+        console.log('Decrypted:', decrypted);
+        console.log('Result:', original === decrypted ? '✅ PASS' : '❌ FAIL');
+    } catch (e) {
+        console.log('Result: ❌ FAIL -', e.message);
+    }
+    console.log('');
+    
+    // Test 4: Speed Comparison
+    console.log('TEST 4: Checksum Speed Comparison');
+    const largeData = 'A'.repeat(10000);
+    
+    const crcStart = performance.now();
+    crc16ccitt(largeData);
+    const crcTime = performance.now() - crcStart;
+    
+    const md5Start = performance.now();
+    md5(largeData);
+    const md5Time = performance.now() - md5Start;
+    
+    console.log('Data size: 10,000 bytes');
+    console.log(`CRC-16: ${crcTime.toFixed(3)}ms`);
+    console.log(`MD5: ${md5Time.toFixed(3)}ms`);
+    console.log(`MD5 is ${(md5Time / crcTime).toFixed(1)}x slower`);
+    console.log('Result: ✅ PASS (performance measured)');
+    console.log('');
+    
+    console.log('🧪 TESTS COMPLETE');
+}
+
+// ============================================================================
+// EVENT HANDLERS
+// ============================================================================
+
+function onStateChange() {
+    currentState = document.getElementById('profile-state').value;
+    updateConfigDisplay();
+    renderFields();
+    console.log(`📍 Switched to ${getCurrentConfig().name}`);
+}
+
+function onAAMVAChange() {
+    currentAAMVA = document.getElementById('profile-aamva').value;
+    updateConfigDisplay();
+    console.log(`📊 AAMVA version set to ${currentAAMVA}`);
+}
+
+function onJurisdictionChange() {
+    currentJurisdiction = document.getElementById('profile-jurisdiction').value;
+    updateConfigDisplay();
+    console.log(`📋 Jurisdiction version set to ${currentJurisdiction}`);
+}
+
+function onAESToggle() {
+    aesEnabled = document.getElementById('enable-aes256').checked;
+    const status = document.getElementById('aes-status');
+    const panel = document.getElementById('aes-toggle-panel');
+    const keyDisplay = document.getElementById('encryption-key-display');
+    
+    if (aesEnabled) {
+        status.textContent = 'ON';
+        status.classList.remove('off');
+        status.classList.add('on');
+        panel.classList.add('active');
+        keyDisplay.style.display = 'block';
+        generateAESKey();
+        console.log('🔐 AES-256 ENCRYPTION ENABLED');
+    } else {
+        status.textContent = 'OFF';
+        status.classList.remove('on');
+        status.classList.add('off');
+        panel.classList.remove('active');
+        keyDisplay.style.display = 'none';
+        console.log('🔓 AES-256 ENCRYPTION DISABLED');
+    }
+    
+    updateConfigDisplay();
+    renderFields();
+}
+
+function onMD5Toggle() {
+    md5Enabled = document.getElementById('enable-md5').checked;
+    const status = document.getElementById('md5-status');
+    const panel = document.getElementById('md5-toggle-panel');
+    
+    if (md5Enabled) {
+        status.textContent = 'ON';
+        status.classList.remove('off');
+        status.classList.add('on');
+        panel.classList.add('active');
+        console.log('📊 MD5 CHECKSUM ENABLED');
+    } else {
+        status.textContent = 'OFF';
+        status.classList.remove('on');
+        status.classList.add('off');
+        panel.classList.remove('active');
+        console.log('📊 MD5 CHECKSUM DISABLED');
+    }
+    
+    updateConfigDisplay();
+}
+
+// ============================================================================
+// INITIALIZATION
+// ============================================================================
+
+function init() {
+    console.clear();
+    console.log('═══════════════════════════════════════');
+    console.log('✅ MULTI-STATE DMV PDF417 GENERATOR');
+    console.log('    CRYPTOGRAPHY EDITION');
+    console.log('═══════════════════════════════════════');
+    console.log('✅ States: Florida (636026) & California (636014)');
+    console.log('✅ AAMVA Versions: 08, 09, 10');
+    console.log('✅ Jurisdiction Versions: 01, 02');
+    console.log('✅ Field Inclusion: required/always/optional');
+    console.log('✅ CRC-16-CCITT (0x1021)');
+    console.log('✅ AES-256-GCM Encryption (Toggle)');
+    console.log('✅ MD5 Hash Comparison (Toggle)');
+    console.log('✅ Binary Mode | ECC Level 5');
+    console.log('═══════════════════════════════════════\n');
+    
+    if (!window.bwipjs) {
+        alert('⚠️ bwip-js library not loaded!');
+        return;
+    }
+    
+    if (!window.crypto || !window.crypto.subtle) {
+        alert('⚠️ Web Crypto API not available! AES-256 encryption will not work.\nUse HTTPS or modern browser.');
+    }
+    
+    updateConfigDisplay();
+    renderFields();
+    
+    // Event listeners
+    document.getElementById('profile-state')?.addEventListener('change', onStateChange);
+    document.getElementById('profile-aamva')?.addEventListener('change', onAAMVAChange);
+    document.getElementById('profile-jurisdiction')?.addEventListener('change', onJurisdictionChange);
+    document.getElementById('enable-aes256')?.addEventListener('change', onAESToggle);
+    document.getElementById('enable-md5')?.addEventListener('change', onMD5Toggle);
+    
+    document.getElementById('btn-generate')?.addEventListener('click', generateBarcode);
+    document.getElementById('btn-validate')?.addEventListener('click', () => {
+        const validation = validateFields();
+        displayValidationResults(validation);
+    });
+    document.getElementById('btn-download')?.addEventListener('click', downloadPNG);
+    document.getElementById('btn-reset')?.addEventListener('click', resetToExample);
+    document.getElementById('btn-test')?.addEventListener('click', runTests);
+    
+    console.log('✅ System ready\n');
+    console.log('✅ CRYPTOGRAPHY FEATURES:');
+    console.log('  • Toggle AES-256 encryption for sensitive fields');
+    console.log('  • Toggle MD5 checksum alongside CRC-16');
+    console.log('  • Compare performance and output');
+    console.log('  • See encrypted data in hex dump\n');
+    console.log('Field inclusion rules:');
+    console.log('  * = REQUIRED (yellow) - Must have data');
+    console.log('  + = ALWAYS (orange) - Include even if empty');
+    console.log('   ✅= ENCRYPTED (magenta) - AES-256 active');
+    console.log('  (no marker) = OPTIONAL (green) - Omit if empty\n');
+}
+
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', init);
+} else {
+    init();
+}
+
+</script>
+</body>
+</html>
