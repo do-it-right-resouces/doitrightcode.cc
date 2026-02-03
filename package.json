@@ -1,0 +1,12 @@
+{
+"name": "aamva-spec-engine",
+"version": "1.0.0",
+"description": "Government-compliant AAMVA PDF417 Generator",
+"main": "focus.html",
+"scripts": {
+"start": "npx serve ."
+},
+"dependencies": {
+"serve": "^14.2.0"
+}
+}
