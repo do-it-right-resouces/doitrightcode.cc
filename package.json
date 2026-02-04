@@ -2,7 +2,7 @@
 "name": "aamva-spec-engine",
 "version": "1.0.0",
 "description": "Government-compliant AAMVA PDF417 Generator",
-"main": "focus.html",
+"main": "index.html",
 "scripts": {
 "start": "npx serve ."
 },

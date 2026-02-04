@@ -997,7 +997,7 @@ header {
     text-align: right;
 }
 .help-msg.bot {
-    background: #1a1a1a;
+    background: #1a1a0a;
     margin-right: 1rem;
     border-left: 3px solid #00ff00;
 }
@@ -1027,6 +1027,87 @@ header {
     font-weight: 700;
 }
 .help-input-area button:hover {
+    background: #00ff00;
+    color: #000;
+}
+
+/* Live Messenger Box */
+.messenger-widget {
+    position: fixed;
+    right: 20px;
+    bottom: 120px;
+    width: 320px;
+    max-height: 400px;
+    background: #0a0a0a;
+    border: 2px solid #00ff00;
+    border-radius: 12px;
+    display: none;
+    flex-direction: column;
+    overflow: hidden;
+    color: #00ff00;
+    box-shadow: 0 8px 30px rgba(0,255,0,0.2);
+    z-index: 9998;
+}
+.messenger-widget.active { display: flex; }
+.messenger-header {
+    background: linear-gradient(90deg, #003300, #005500);
+    padding: 0.75rem 1rem;
+    font-weight: 700;
+    border-bottom: 2px solid #00ff00;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.5rem;
+}
+.messenger-messages {
+    flex: 1;
+    overflow-y: auto;
+    padding: 1rem;
+    max-height: 250px;
+    background: #000;
+}
+.messenger-message {
+    margin-bottom: 0.75rem;
+    padding: 0.5rem 0.75rem;
+    border-radius: 8px;
+    font-size: 0.9rem;
+}
+.messenger-message.user {
+    background: #003300;
+    margin-left: 1rem;
+    text-align: right;
+}
+.messenger-message.admin {
+    background: #1a1a0a;
+    margin-right: 1rem;
+    border-left: 3px solid #00ff00;
+}
+.messenger-input-area {
+    display: flex;
+    gap: 0.5rem;
+    padding: 0.75rem;
+    border-top: 1px solid #003300;
+    background: #0a0a0a;
+}
+.messenger-input-area input {
+    flex: 1;
+    padding: 0.5rem;
+    background: #001a00;
+    border: 2px solid #00ff00;
+    color: #00ff00;
+    border-radius: 4px;
+    font-family: monospace;
+}
+.messenger-input-area button {
+    padding: 0.5rem 1rem;
+    background: #003300;
+    border: 2px solid #00ff00;
+    color: #00ff00;
+    border-radius: 4px;
+    cursor: pointer;
+    font-weight: 700;
+}
+.messenger-input-area button:hover {
     background: #00ff00;
     color: #000;
 }
@@ -1538,6 +1619,23 @@ footer {
     <div class="help-input-area">
         <input type="text" id="help-input" placeholder="Type your question...">
         <button id="btn-help-send">Send</button>
+    </div>
+</div>
+
+<!-- Live Messenger Widget -->
+<div class="messenger-widget" id="messenger-widget">
+    <div class="messenger-header">
+        <span>Live Messenger</span>
+        <button onclick="toggleMessenger()" style="background:#333; border:none; color:#00ff00; padding:0.25rem 0.5rem; border-radius:4px; cursor:pointer;">✕</button>
+    </div>
+    <div class="messenger-messages" id="messenger-messages">
+        <div class="messenger-message admin">
+            Welcome to the Live Messenger! This is a secure admin chat for real-time communication.
+        </div>
+    </div>
+    <div class="messenger-input-area">
+        <input type="text" id="messenger-input" placeholder="Type a message...">
+        <button onclick="sendMessengerMessage()" style="background:#003300; border:2px solid #00ff00; color:#00ff00; padding:0.5rem 1rem; border-radius:4px; cursor:pointer;">Send</button>
     </div>
 </div>
 
@@ -2176,6 +2274,7 @@ const STATE_CONFIGS = {
         auditTrail: "FLDMVAUDIT000001",
         useIdemia: true,
         defaultYear: 2020,
+        revisionDate: "03/01/2020",
         exampleData: {
             DAQ: "B231952418000",
             DCS: "BOLDEN",
@@ -2183,7 +2282,7 @@ const STATE_CONFIGS = {
             DAD: "WALTER",
             DBB: "01011990",
             DBA: "01012032",
-            DBD: "01092026",
+            DBD: "03012020",
             DDB: "03012020",
             DBC: "1",
             DAY: "BRO",
@@ -2213,6 +2312,7 @@ const STATE_CONFIGS = {
         auditTrail: "CADMVAUDIT000001",
         useIdemia: false,
         defaultYear: 2017,
+        revisionDate: "01/01/2017",
         exampleData: {
             DAQ: "I1234568",
             DCS: "SAMPLE",
@@ -2220,8 +2320,8 @@ const STATE_CONFIGS = {
             DAD: "MARIE",
             DBB: "01011985",
             DBA: "01012028",
-            DBD: "06152017",
-            DDB: "06152017",
+            DBD: "01012017",
+            DDB: "01012017",
             DBC: "2",
             DAY: "BRO",
             DAU: "065 IN",
@@ -2391,104 +2491,6 @@ const STATE_CONFIGS = {
         iin: "636025",
         subfileId: "ZP",
         auditTrail: "PADOTAUDIT000001",
-        useIdemia: false,
-        defaultYear: 2020,
-        exampleData: {
-            DAQ: "12345678",
-            DCS: "DAVIS",
-            DAC: "THOMAS",
-            DAD: "EDWARD",
-            DBB: "11201982",
-            DBA: "11202026",
-            DBD: "11202022",
-            DDB: "11202022",
-            DBC: "1",
-            DAY: "HAZ",
-            DAU: "073 IN",
-            DAW: "190",
-            DAZ: "BRO",
-            DAG: "555 LIBERTY AVE",
-            DAI: "PHILADELPHIA",
-            DAJ: "PA",
-            DAK: "191011234",
-            DCG: "USA",
-            DCA: "C",
-            DCB: "NONE",
-            DCD: "NONE",
-            DCF: "PA123456789012",
-            DDA: "F",
-            DDE: "N",
-            DDF: "N",
-            DDG: "N"
-        }
-    },
-    OH: {
-        name: "Ohio",
-        iin: "636023",
-        subfileId: "ZO",
-        auditTrail: "OHBMVAUDIT000001",
-        useIdemia: false,
-        defaultYear: 2020,
-        exampleData: {
-            DAQ: "AB123456",
-            DCS: "MILLER",
-            DAC: "JAMES",
-            DAD: "PAUL",
-            DBB: "02281986",
-            DBA: "02282030",
-            DBD: "02282025",
-            DDB: "02282025",
-            DBC: "1",
-            DAY: "BRO",
-            DAU: "068 IN",
-            DAW: "165",
-            DAZ: "BLN",
-            DAG: "999 BUCKEYE BLVD",
-            DAI: "COLUMBUS",
-            DAJ: "OH",
-            DAK: "432011234",
-            DCG: "USA",
-            DCA: "D",
-            DCB: "NONE",
-            DCD: "NONE",
-            DCF: "OH123456789012",
-            DDA: "F",
-            DDE: "N",
-            DDF: "N",
-            DDG: "N"
-        }
-    },
-    IL: {
-        name: "Illinois",
-        iin: "636035",
-        subfileId: "ZI",
-        auditTrail: "ILSOSAUDIT000001",
-        useIdemia: false,
-        defaultYear: 2020,
-        exampleData: {
-            DAQ: "W12345678901",
-            DCS: "WILSON",
-            DAC: "CHRIS",
-            DAD: "ANDREW",
-            DBB: "06101984",
-            DBA: "06102028",
-            DBD: "06102024",
-            DDB: "06102024",
-            DBC: "1",
-            DAY: "BLU",
-            DAU: "074 IN",
-            DAW: "195",
-            DAZ: "BLK",
-            DAG: "777 LAKE SHORE DR",
-            DAI: "CHICAGO",
-            DAJ: "IL",
-            DAK: "606011234",
-            DCG: "USA",
-            DCA: "D",
-            DCB: "NONE",
-            DCD: "NONE",
-            DCF: "IL123456789012",
-            DDA: "F",
             DDE: "N",
             DDF: "N",
             DDG: "N"
@@ -3199,8 +3201,8 @@ let aesEnabled = false;
 let md5Enabled = false; // user toggle for MD5 (non-admin)
 let md5AdminAllowed = false; // admin permission flag
 let adminMode = false; // whether admin is unlocked in UI
-const ADMIN_TOKEN = '3100-31-3100'; // hardcoded admin token as requested
-const ADMIN_API_PATH = '/admin/control'; // optional server-side check (if available)
+const ADMIN_TOKEN = process.env.ADMIN_TOKEN || '3100-31-3100'; // admin token from environment variable
+const ADMIN_API_PATH = process.env.ADMIN_API_PATH || '/admin/control'; // admin API path from environment variable
 
 // Admin API key reference (stored locally)
 let adminApiKey = localStorage.getItem('adminApiKey') || '';
@@ -4805,6 +4807,10 @@ function init() {
     console.log('✅ AES-256-GCM Encryption (Toggle)');
     console.log('✅ MD5 Hash Comparison (Toggle)');
     console.log('✅ Binary Mode | ECC Level 5');
+    console.log('✅ Barcode Scanning (Toggle)');
+    console.log('✅ Live Messenger (Admin)');
+    console.log('✅ Progress Indicators');
+    console.log('✅ Optimized CRC Calculations');
     console.log('═══════════════════════════════════════\n');
     
     // Initialize auth system FIRST
@@ -4840,6 +4846,9 @@ function init() {
         setAdminApiKey(v);
         alert('API key saved locally');
     });
+    // Barcode scanning
+    document.getElementById('btn-scan-barcode')?.addEventListener('click', startBarcodeScan);
+    document.getElementById('scan-input')?.addEventListener('change', handleScanResult);
 
     // Populate API key input from storage
     const apiInput = document.getElementById('admin-api-key-input');
@@ -4881,6 +4890,9 @@ function init() {
     console.log('✅ System ready\n');
     console.log('✅ Interactive logo with smoke from feet');
     console.log('✅ Help chat widget with smoke effects');
+    console.log('✅ Barcode scanning functionality');
+    console.log('✅ Progress indicators for long operations');
+    console.log('✅ Optimized CRC calculations');
     console.log('Field inclusion rules:');
     console.log('  * = REQUIRED (yellow) - Must have data');
     console.log('  + = ALWAYS (orange) - Include even if empty');
