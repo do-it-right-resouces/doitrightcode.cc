@@ -9,7 +9,7 @@ const ROOT = process.cwd();
 function createStaticServer(root, port) {
   return http.createServer((req, res) => {
     let reqPath = decodeURIComponent(req.url.split('?')[0]);
-    if (reqPath === '/') reqPath = '/federal.html';
+    if (reqPath === '/') reqPath = '/index.html';
     const fsPath = path.join(root, reqPath);
     fs.readFile(fsPath, (err, data) => {
       if (err) {
@@ -72,10 +72,10 @@ function createStaticServer(root, port) {
   });
 
   try {
-    await page.goto(`http://localhost:${PORT}/federal.html`, { waitUntil: 'networkidle2', timeout: 30000 });
+    await page.goto(`http://localhost:${PORT}/index.html`, { waitUntil: 'networkidle2', timeout: 30000 });
 
     // Wait for init to run
-    await page.waitForTimeout(1000);
+    await new Promise(resolve => setTimeout(resolve, 1000));
 
     // Run tests
     console.log('Invoking runTests() in the page...');
@@ -91,9 +91,9 @@ function createStaticServer(root, port) {
           const out = [];
           console.log = (...args) => { out.push(args.join(' ')); oldLog.apply(console, args); };
 
-          // run tests and resolve in 6s
+          // run tests and resolve in 12s (allows all 10 tests including CA 2017 and FL 2020 IDEMIA compliance tests to complete)
           runTests();
-          setTimeout(() => { console.log = oldLog; resolve({ ok: true, output: out }); }, 6000);
+          setTimeout(() => { console.log = oldLog; resolve({ ok: true, output: out }); }, 12000);
         } catch (e) {
           resolve({ ok: false, reason: e.message });
         }
