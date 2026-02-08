@@ -211,13 +211,13 @@ body::before {
 
 /* Glass Morphism Panels */
 .panel { 
-    background: var(--glass);
-    backdrop-filter: blur(25px) saturate(200%);
-    -webkit-backdrop-filter: blur(25px) saturate(200%);
-    border: 1px solid var(--glass-border);
+    background: rgba(255, 255, 255, 0.02);
+    backdrop-filter: blur(10px) saturate(150%);
+    -webkit-backdrop-filter: blur(10px) saturate(150%);
+    border: 1px solid rgba(255, 255, 255, 0.05);
     border-radius: 16px;
     padding: 1.5rem;
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.8), inset 0 0 32px rgba(255,255,255,0.02);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.6), inset 0 0 32px rgba(255,255,255,0.01);
     position: relative;
     overflow: hidden;
 }
@@ -845,13 +845,13 @@ body::before {
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    width: 80vh;
-    height: 80vh;
+    width: 85vh;
+    height: 85vh;
     background-image: url('assets/logo.png');
     background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
-    opacity: 0.03;
+    opacity: 0.15;
     pointer-events: none;
     z-index: -1;
 }
@@ -987,6 +987,16 @@ html, body, * {
                 ⚠️ Make sure you use the email associated with the account you want credits applied to. Wrong email, no refund.
             </p>
             <input type="email" id="payment-email-input" class="auth-input" placeholder="Confirm Account Email">
+            
+            <div style="margin-top:1rem;">
+                <label style="color:#00ffff; font-size:0.8rem; display:block; margin-bottom:0.5rem;">Promo Code (Optional):</label>
+                <div style="display:flex; gap:0.5rem;">
+                    <input type="text" id="promo-code-input" class="auth-input" placeholder="Enter code" style="margin-top:0; flex:1;">
+                    <button class="btn" onclick="applyPromoCode()" style="padding:0.5rem 1rem; font-size:0.7rem;">Apply</button>
+                </div>
+                <div id="promo-status" style="font-size:0.75rem; margin-top:0.25rem;"></div>
+            </div>
+
             <button class="auth-btn" onclick="savePaymentEmail()">Save & Continue</button>
         </div>
 
@@ -1245,6 +1255,7 @@ html, body, * {
                     <button class="btn admin-tab" onclick="showAdminTab('audit')">📋 Audit Log</button>
                     <button class="btn admin-tab" onclick="showAdminTab('users')">👥 Users</button>
                     <button class="btn admin-tab" onclick="showAdminTab('balances')">💳 Balances</button>
+                    <button class="btn admin-tab" onclick="showAdminTab('promo')">🎟️ Promo Codes</button>
                 </div>
 
                 <div id="secure-content">
@@ -1338,6 +1349,17 @@ html, body, * {
                             <input id="credit-email" placeholder="email" style="padding:0.4rem; flex:1; background:#000; border:2px solid #ff00ff; color:#ff00ff; border-radius:4px;">
                             <input id="credit-amount" placeholder="credits" type="number" style="padding:0.4rem; width:80px; background:#000; border:2px solid #ff00ff; color:#ff00ff; border-radius:4px;">
                             <button class="btn" id="btn-credit" style="background:#330033; border-color:#ff00ff; color:#ff00ff;">💰 Add Credits</button>
+                        </div>
+                    </div>
+
+                    <!-- Promo Code Panel -->
+                    <div id="admin-promo" class="admin-section" style="display:none;">
+                        <h4 style="color:#00ffff;">🎟️ Promo Code Settings</h4>
+                        <div id="promo-list" style="font-family:monospace; color:#00ff00; max-height:200px; overflow-y:auto; background:#001a00; padding:1rem; border-radius:6px; margin-bottom:1rem;"></div>
+                        <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                            <input id="new-promo-code" placeholder="Code (e.g. DoitRight1-31)" style="padding:0.4rem; flex:1; min-width:150px; background:#000; border:2px solid #00ffff; color:#00ffff; border-radius:4px;">
+                            <input id="new-promo-percent" placeholder="Discount %" type="number" style="padding:0.4rem; width:100px; background:#000; border:2px solid #00ffff; color:#00ffff; border-radius:4px;">
+                            <button class="btn" id="btn-create-promo" style="background:#003333; border-color:#00ffff; color:#00ffff;">➕ Add Promo</button>
                         </div>
                     </div>
                 </div>
@@ -1638,6 +1660,7 @@ function loadAdminData() {
     loadBalancesList();
     loadAuditLog();
     loadPaymentStats();
+    loadPromoList();
 }
 
 function loadUsersTable() {
@@ -1990,6 +2013,18 @@ function closePaymentModal() {
 function simulatePayment() {
     // For demo/testing - mark as paid
     if (paymentType === 'barcode') {
+        // Check if promo code was used
+        const promoCode = document.getElementById('promo-code-input')?.value.trim();
+        if (promoCode) {
+            const promos = JSON.parse(localStorage.getItem('dirPromos') || '{}');
+            if (promos[promoCode]) {
+                const usedPromos = JSON.parse(localStorage.getItem('dirUsedPromos') || '{}');
+                const userKey = (currentUser?.email || 'anon') + '_' + promoCode;
+                usedPromos[userKey] = true;
+                localStorage.setItem('dirUsedPromos', JSON.stringify(usedPromos));
+            }
+        }
+
         userCredits += selectedCredits || 1;
         localStorage.setItem('dirCredits_' + currentUser?.email, userCredits.toString());
         alert('✅ Payment confirmed! ' + (selectedCredits || 1) + ' credits added to your account.');
@@ -5241,6 +5276,7 @@ function init() {
     document.getElementById('btn-create-user')?.addEventListener('click', createUser);
     document.getElementById('btn-credit')?.addEventListener('click', creditAccount);
     document.getElementById('btn-send-chat')?.addEventListener('click', sendChatMessage);
+    document.getElementById('btn-create-promo')?.addEventListener('click', createPromoCode);
     
     document.getElementById('btn-generate')?.addEventListener('click', generateBarcode);
     document.getElementById('btn-validate')?.addEventListener('click', () => {
@@ -5305,6 +5341,89 @@ function init() {
     console.log('  + = ALWAYS (orange) - Include even if empty');
     console.log('  🔐 = ENCRYPTED (magenta) - AES-256 active');
     console.log('  (no marker) = OPTIONAL (green) - Omit if empty\n');
+
+    // Initialize default promo if not exists
+    const promos = JSON.parse(localStorage.getItem('dirPromos') || '{}');
+    if (!promos['DoitRight1-31']) {
+        promos['DoitRight1-31'] = { percent: 100, created: Date.now() }; // 100% discount for testing or as requested
+        localStorage.setItem('dirPromos', JSON.stringify(promos));
+    }
+}
+
+// Promo Code Logic
+let activeDiscount = 0;
+
+function loadPromoList() {
+    const promos = JSON.parse(localStorage.getItem('dirPromos') || '{}');
+    const list = document.getElementById('promo-list');
+    if (!list) return;
+    
+    let html = '';
+    Object.entries(promos).forEach(([code, data]) => {
+        html += `<div style="padding:0.3rem 0; border-bottom:1px solid #333; display:flex; justify-content:space-between;">
+            <span>${code} (${data.percent}%)</span>
+            <button class="btn" style="padding:0.1rem 0.4rem; font-size:0.6rem;" onclick="deletePromo('${code}')">🗑️</button>
+        </div>`;
+    });
+    list.innerHTML = html || '<div style="color:#888;">No promo codes found</div>';
+}
+
+function createPromoCode() {
+    const code = document.getElementById('new-promo-code')?.value.trim();
+    const percent = parseInt(document.getElementById('new-promo-percent')?.value);
+    
+    if (!code || isNaN(percent)) { alert('Enter code and percent'); return; }
+    
+    const promos = JSON.parse(localStorage.getItem('dirPromos') || '{}');
+    promos[code] = { percent, created: Date.now() };
+    localStorage.setItem('dirPromos', JSON.stringify(promos));
+    
+    addAuditLog('admin', `Promo code created: ${code} (${percent}%)`);
+    loadPromoList();
+    document.getElementById('new-promo-code').value = '';
+    document.getElementById('new-promo-percent').value = '';
+}
+
+function deletePromo(code) {
+    const promos = JSON.parse(localStorage.getItem('dirPromos') || '{}');
+    delete promos[code];
+    localStorage.setItem('dirPromos', JSON.stringify(promos));
+    loadPromoList();
+}
+
+function applyPromoCode() {
+    const code = document.getElementById('promo-code-input')?.value.trim();
+    const status = document.getElementById('promo-status');
+    if (!code) return;
+    
+    const promos = JSON.parse(localStorage.getItem('dirPromos') || '{}');
+    const promo = promos[code];
+    
+    if (!promo) {
+        status.textContent = '❌ Invalid code';
+        status.style.color = '#ff4444';
+        activeDiscount = 0;
+        return;
+    }
+    
+    // Check one-time use per email/IP
+    const usedPromos = JSON.parse(localStorage.getItem('dirUsedPromos') || '{}');
+    const userKey = (currentUser?.email || 'anon') + '_' + code;
+    
+    if (usedPromos[userKey]) {
+        status.textContent = '❌ Code already used';
+        status.style.color = '#ff4444';
+        activeDiscount = 0;
+        return;
+    }
+    
+    activeDiscount = promo.percent;
+    const newPrice = selectedPrice * (1 - activeDiscount / 100);
+    
+    status.textContent = `✅ Applied! ${promo.percent}% off`;
+    status.style.color = '#00ff88';
+    
+    document.getElementById('payment-amount-display').textContent = '$' + newPrice.toFixed(2) + ' USD';
 }
 
 if (document.readyState === 'loading') {
