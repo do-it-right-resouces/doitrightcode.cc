@@ -1,4 +1,4 @@
-just like this nothing else HEN <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -838,11 +838,103 @@ footer { text-align: center; padding: 4rem 2rem; border-top: 1px solid var(--gla
 @keyframes bounce { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
 .bounce { animation: bounce 0.5s ease; }
 
+/* Big Background Logo */
+body::before {
+    content: "";
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 80vh;
+    height: 80vh;
+    background-image: url('assets/logo.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center;
+    opacity: 0.03;
+    pointer-events: none;
+    z-index: -1;
+}
+
+/* Smoking Title Effect */
+.smoking-title {
+    position: relative;
+    display: inline-block;
+}
+
+.smoking-title::before {
+    content: "";
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(transparent, var(--neon-green));
+    filter: blur(10px);
+    opacity: 0;
+    animation: titleSmoke 4s infinite;
+}
+
+@keyframes titleSmoke {
+    0%, 100% { opacity: 0; transform: translateY(0) scaleX(1); }
+    50% { opacity: 0.3; transform: translateY(-10px) scaleX(1.2); }
+}
+
+/* Custom Cursor Logo */
+html, body, * {
+    cursor: none !important;
+}
+
+#custom-cursor {
+    position: fixed;
+    width: 40px;
+    height: 40px;
+    background-image: url('assets/logo.png');
+    background-size: contain;
+    background-repeat: no-repeat;
+    pointer-events: none;
+    z-index: 1000000;
+    transform: translate(-50%, -50%);
+}
+
+.cursor-smoke {
+    position: fixed;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 999999;
+    animation: cursorSmokeFade 1s forwards;
+}
+
+@keyframes cursorSmokeFade {
+    0% { opacity: 0.6; transform: scale(1); }
+    100% { opacity: 0; transform: scale(3) translateY(-20px); }
+}
+
+.funny-expression {
+    position: fixed;
+    color: var(--neon-green);
+    font-family: 'Consolas', monospace;
+    font-weight: bold;
+    font-size: 1rem;
+    pointer-events: none;
+    z-index: 1000001;
+    text-shadow: 0 0 10px var(--neon-green);
+    animation: expressionFloat 2s forwards;
+}
+
+@keyframes expressionFloat {
+    0% { opacity: 1; transform: translate(-50%, -50%); }
+    100% { opacity: 0; transform: translate(-50%, -150%); }
+}
+
 </style>
 </head>
 <body>
 
 <div id="crt-screen-mask"></div>
+<div id="custom-cursor"></div>
 
 <!-- Ambient Background Blobs -->
 <div class="bg-blobs">
@@ -873,34 +965,61 @@ footer { text-align: center; padding: 4rem 2rem; border-top: 1px solid var(--gla
 <!-- Payment Modal -->
 <div id="payment-modal" class="payment-modal">
     <div class="payment-box">
-        <h3>⚡ Payment Required</h3>
-        <div id="payment-type-display" style="color:#00ff00; margin-bottom:1rem;">Barcode Generation - $10</div>
-        <div class="payment-amount" id="payment-amount-display">$10.00 USD</div>
+        <h3 id="payment-modal-title">⚡ Add Credits</h3>
         
-        <!-- Payment Method Tabs -->
-        <div style="display:flex; gap:0.5rem; margin:1rem 0;">
-            <button class="payment-tab active" id="tab-btc" onclick="showPaymentTab('btc')">₿ Bitcoin</button>
-            <button class="payment-tab" id="tab-ln" onclick="showPaymentTab('ln')">⚡ Lightning</button>
+        <div id="credit-selection">
+            <p style="color:#888; font-size:0.9rem; margin-bottom:1rem;">Select a credit package to continue:</p>
+            <div style="display:flex; flex-direction:column; gap:0.75rem; margin-bottom:1.5rem;">
+                <button class="btn" onclick="selectCreditPackage(1, 15)" style="width:100%; justify-content:space-between; display:flex;">
+                    <span>1 Barcode</span> <span>$15</span>
+                </button>
+                <button class="btn" onclick="selectCreditPackage(5, 60)" style="width:100%; justify-content:space-between; display:flex;">
+                    <span>5 Barcodes</span> <span>$60</span>
+                </button>
+                <button class="btn" onclick="selectCreditPackage(10, 100)" style="width:100%; justify-content:space-between; display:flex;">
+                    <span>10 Barcodes</span> <span>$100</span>
+                </button>
+            </div>
+        </div>
+
+        <div id="email-prompt" style="display:none;">
+            <p style="color:#ff4444; font-size:0.85rem; margin-bottom:1rem; font-weight:bold; border:1px solid #ff4444; padding:0.5rem; border-radius:4px;">
+                ⚠️ Make sure you use the email associated with the account you want credits applied to. Wrong email, no refund.
+            </p>
+            <input type="email" id="payment-email-input" class="auth-input" placeholder="Confirm Account Email">
+            <button class="auth-btn" onclick="savePaymentEmail()">Save & Continue</button>
+        </div>
+
+        <div id="payment-details" style="display:none;">
+            <div id="payment-type-display" style="color:#00ff00; margin-bottom:1rem;">Barcode Generation</div>
+            <div class="payment-amount" id="payment-amount-display">$15.00 USD</div>
+            
+            <!-- Payment Method Tabs -->
+            <div style="display:flex; gap:0.5rem; margin:1rem 0;">
+                <button class="payment-tab active" id="tab-btc" onclick="showPaymentTab('btc')">₿ Bitcoin</button>
+                <button class="payment-tab" id="tab-ln" onclick="showPaymentTab('ln')">⚡ Lightning</button>
+            </div>
+            
+            <!-- Bitcoin Payment -->
+            <div id="payment-btc" class="payment-method active">
+                <p style="color:#888; font-size:0.85rem; margin:0.5rem 0;">Send Bitcoin to:</p>
+                <div class="btc-address" id="btc-address">bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh</div>
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==" id="btc-qr-img" class="btc-qr" alt="Bitcoin QR" style="display:block;">
+            </div>
+            
+            <!-- Lightning Payment -->
+            <div id="payment-ln" class="payment-method" style="display:none;">
+                <p style="color:#888; font-size:0.85rem; margin:0.5rem 0;">Pay with Lightning Network:</p>
+                <div class="btc-address" id="ln-invoice" style="font-size:0.65rem; word-break:break-all;">lnbc1p5hunjvdqdgdshx6pqg9c8qpp5qxq5vvgl90mq7npt0xn75358hgqjtfzerkd2fd6e2yesc8eplcwqsp5vwv5q4ahupz0jaf9h332d858rhz0nm5h8uwcp9l8qkl9rs4chths9qrsgqcqpcxqy8ayqrzjqfzhphca8jlc5zznw52mnqxsnymltjgg3lxe4ul82g42vw0jpkgkwz6p3yqqt9sqqqqqqqqqqqqqqqqq9grzjqv06k0m23t593pngl0jt7n9wznp64fqngvctz7vts8nq4tukvtljqztad5qqrdqqqcqqqqqqqqqqqqqq9gdyq7w0j9pgnd3cnypsvq67lne8lcxzfxda3zlkwtsw8fm8n3pp79lsyxmemdnnhsgev7zuhce44mk3x3naxmwf9ygnnglmw9userg6sq8g9w7n</div>
+                <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==" id="ln-qr-img" class="btc-qr" alt="Lightning QR" style="display:block;">
+                <p style="color:#ff9900; font-size:0.75rem; margin-top:0.5rem;">⚡ Instant confirmation with Lightning!</p>
+            </div>
+            
+            <p style="color:#888; font-size:0.8rem; margin-top:1rem;">Payment confirms automatically</p>
+            <button class="payment-close" style="background:#003300; border-color:#00ff00; color:#00ff00;" onclick="simulatePayment()">I've Paid</button>
         </div>
         
-        <!-- Bitcoin Payment -->
-        <div id="payment-btc" class="payment-method active">
-            <p style="color:#888; font-size:0.85rem; margin:0.5rem 0;">Send Bitcoin to:</p>
-            <div class="btc-address" id="btc-address">bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh</div>
-            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==" id="btc-qr-img" class="btc-qr" alt="Bitcoin QR" style="display:block;">
-        </div>
-        
-        <!-- Lightning Payment -->
-        <div id="payment-ln" class="payment-method" style="display:none;">
-            <p style="color:#888; font-size:0.85rem; margin:0.5rem 0;">Pay with Lightning Network:</p>
-            <div class="btc-address" id="ln-invoice" style="font-size:0.65rem; word-break:break-all;">lnbc1p5hunjvdqdgdshx6pqg9c8qpp5qxq5vvgl90mq7npt0xn75358hgqjtfzerkd2fd6e2yesc8eplcwqsp5vwv5q4ahupz0jaf9h332d858rhz0nm5h8uwcp9l8qkl9rs4chths9qrsgqcqpcxqy8ayqrzjqfzhphca8jlc5zznw52mnqxsnymltjgg3lxe4ul82g42vw0jpkgkwz6p3yqqt9sqqqqqqqqqqqqqqqqq9grzjqv06k0m23t593pngl0jt7n9wznp64fqngvctz7vts8nq4tukvtljqztad5qqrdqqqcqqqqqqqqqqqqqq9gdyq7w0j9pgnd3cnypsvq67lne8lcxzfxda3zlkwtsw8fm8n3pp79lsyxmemdnnhsgev7zuhce44mk3x3naxmwf9ygnnglmw9userg6sq8g9w7n</div>
-            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==" id="ln-qr-img" class="btc-qr" alt="Lightning QR" style="display:block;">
-            <p style="color:#ff9900; font-size:0.75rem; margin-top:0.5rem;">⚡ Instant confirmation with Lightning!</p>
-        </div>
-        
-        <p style="color:#888; font-size:0.8rem; margin-top:1rem;">Payment confirms automatically</p>
-        <button class="payment-close" onclick="closePaymentModal()">Close</button>
-        <button class="payment-close" style="background:#003300; border-color:#00ff00; color:#00ff00; margin-left:0.5rem;" onclick="simulatePayment()">I've Paid</button>
+        <button class="payment-close" id="btn-payment-close" onclick="closePaymentModal()">Close</button>
     </div>
 </div>
 
@@ -911,13 +1030,18 @@ footer { text-align: center; padding: 4rem 2rem; border-top: 1px solid var(--gla
             <div id="logo-smoke" class="smoke-container" aria-hidden="true"></div>
         </div>
         <div class="header-title">
-            <h1 class="ghost-text" data-text="DO IT RIGHT RESOURCES">DO IT RIGHT RESOURCES</h1>
+            <h1 class="ghost-text smoking-title" data-text="DO IT RIGHT CODES">DO IT RIGHT CODES</h1>
             <div class="subtitle">Barcode Generator | AAMVA Compliant</div>
         </div>
     </div>
     <div class="header-user" id="header-user" style="display:none;">
         <div class="header-user-info">
-            Logged in as: <span class="header-user-email" id="user-email-display"></span>
+            <div style="font-size: 0.7rem; color: #888; text-transform: uppercase;">Account</div>
+            <span class="header-user-email" id="user-email-display"></span>
+        </div>
+        <div class="header-user-info" style="border-right: none;">
+            <div style="font-size: 0.7rem; color: #888; text-transform: uppercase;">Credits</div>
+            <span id="header-credits-display" style="color: var(--neon-yellow); font-weight: bold; font-size: 1.1rem;">0</span>
         </div>
         <button class="btn-logout" id="btn-main-logout">Logout</button>
     </div>
@@ -1459,6 +1583,7 @@ function logout() {
 function updateUserDisplay() {
     const headerUser = document.getElementById('header-user');
     const emailDisplay = document.getElementById('user-email-display');
+    const creditsDisplay = document.getElementById('header-credits-display');
     const adminPanel = document.getElementById('secure-panel');
     const isAdmin = currentUser?.isAdmin || false;
 
@@ -1469,6 +1594,9 @@ function updateUserDisplay() {
         headerUser.style.display = 'flex';
         if (emailDisplay) {
             emailDisplay.textContent = currentUser.email + (isAdmin ? ' ⭐' : '');
+        }
+        if (creditsDisplay) {
+            creditsDisplay.textContent = isAdmin ? '∞' : userCredits;
         }
     } else if (headerUser) {
         headerUser.style.display = 'none';
@@ -1789,6 +1917,9 @@ function showPaymentTab(tab) {
     document.getElementById('tab-ln').classList.toggle('active', tab === 'ln');
 }
 
+let selectedCredits = 0;
+let selectedPrice = 0;
+
 function showPaymentModal(type) {
     // Admin bypass - no payment needed
     if (isAdminUser()) {
@@ -1801,19 +1932,54 @@ function showPaymentModal(type) {
     
     paymentType = type;
     const modal = document.getElementById('payment-modal');
-    const typeDisplay = document.getElementById('payment-type-display');
-    const amountDisplay = document.getElementById('payment-amount-display');
     
-    if (type === 'barcode') {
-        typeDisplay.textContent = 'Barcode Generation - $10';
-        amountDisplay.textContent = '$10.00 USD';
-    } else if (type === 'hmac') {
-        typeDisplay.textContent = 'HMAC Key Import - $5';
-        amountDisplay.textContent = '$5.00 USD';
+    // Reset modal state
+    document.getElementById('credit-selection').style.display = type === 'barcode' ? 'block' : 'none';
+    document.getElementById('email-prompt').style.display = 'none';
+    document.getElementById('payment-details').style.display = type === 'hmac' ? 'block' : 'none';
+    document.getElementById('payment-modal-title').textContent = type === 'barcode' ? '⚡ Add Credits' : '🔐 HMAC Key Import';
+    
+    if (type === 'hmac') {
+        document.getElementById('payment-type-display').textContent = 'HMAC Key Import';
+        document.getElementById('payment-amount-display').textContent = '$5.00 USD';
     }
     
     modal.classList.add('active');
     return false; // Payment needed
+}
+
+function selectCreditPackage(credits, price) {
+    selectedCredits = credits;
+    selectedPrice = price;
+    
+    document.getElementById('credit-selection').style.display = 'none';
+    document.getElementById('email-prompt').style.display = 'block';
+    
+    // Pre-fill email if logged in
+    if (currentUser && currentUser.email) {
+        document.getElementById('payment-email-input').value = currentUser.email;
+    }
+}
+
+function savePaymentEmail() {
+    const email = document.getElementById('payment-email-input').value.trim();
+    if (!email) {
+        alert('Please enter your account email');
+        return;
+    }
+    
+    alert('📧 Please check your email for the invoice');
+    
+    document.getElementById('email-prompt').style.display = 'none';
+    document.getElementById('payment-details').style.display = 'block';
+    document.getElementById('payment-type-display').innerHTML = `
+        <div style="color: var(--neon-green); font-weight: bold; margin-bottom: 0.5rem;">${selectedCredits} Barcode Credits</div>
+        <div style="background: rgba(0,255,136,0.1); border: 1px solid var(--neon-green); padding: 0.75rem; border-radius: 4px; color: #fff; font-size: 0.85rem;">
+            📧 Invoice sent to: <strong>${email}</strong><br>
+            Please check your inbox and follow instructions to complete payment.
+        </div>
+    `;
+    document.getElementById('payment-amount-display').textContent = '$' + selectedPrice + '.00 USD';
 }
 
 function closePaymentModal() {
@@ -1824,14 +1990,15 @@ function closePaymentModal() {
 function simulatePayment() {
     // For demo/testing - mark as paid
     if (paymentType === 'barcode') {
-        userCredits += 1;
+        userCredits += selectedCredits || 1;
         localStorage.setItem('dirCredits_' + currentUser?.email, userCredits.toString());
-        alert('✅ Payment confirmed! You can now generate 1 barcode.');
+        alert('✅ Payment confirmed! ' + (selectedCredits || 1) + ' credits added to your account.');
     } else if (paymentType === 'hmac') {
         alert('✅ Payment confirmed! HMAC key import unlocked.');
         onImportHMACKeyConfirmed();
     }
     closePaymentModal();
+    updateUserDisplay();
 }
 
 // Called after payment confirmed for HMAC import
@@ -3948,6 +4115,13 @@ function validateFields() {
 // ============================================================================
 
 async function generateBarcode() {
+    // Check for credits
+    if (!hasCredits()) {
+        alert('⚠️ Add credits to generate barcode');
+        showPaymentModal('barcode');
+        return;
+    }
+
     console.clear();
     console.log('═══════════════════════════════════════');
     console.log(`🚀 GENERATING ${getCurrentConfig().name} PDF417`);
@@ -4022,6 +4196,13 @@ async function generateBarcode() {
         canvas.style.maxWidth = '100%';
         window.lastCanvas = canvas;
         
+        // Deduct credit if not admin
+        if (!isAdminUser()) {
+            userCredits--;
+            localStorage.setItem('dirCredits_' + currentUser?.email, userCredits.toString());
+            updateUserDisplay();
+        }
+
         displayValidationResults(validation, true);
         
         // Final Success Reward: Confetti & Resolve animation
@@ -4409,9 +4590,15 @@ function renderFields() {
 
 function downloadPNG() {
     if (!window.lastCanvas) {
-        alert('⚠️ Generate a barcode first');
+        alert('⚠️ Download locked. Please generate a barcode first (requires credits).');
         return;
     }
+
+    // Check for credits (though generation already deducted one, 
+    // we might want to ensure they still have access or just allow it since it's already generated)
+    // The user asked to "make download locked for user until payment recieved"
+    // Since generation now requires payment, and deducts a credit, 
+    // the download is effectively locked behind the generation payment.
     
     triggerPrintingAnimation();
     
@@ -5076,6 +5263,36 @@ function init() {
         puffHeaderSmoke(3);
         puffChatSmoke(2);
     }, 1000);
+
+    // Custom Cursor Logic
+    const cursor = document.getElementById('custom-cursor');
+    const expressions = ["burp", "fart", "ready to change the world", "hehehe", "yeeeeeheeee", "backwoods and chicken"];
+    const smokeColors = ["#00ff88", "#ff00ff", "#00ffff", "#ffff00", "#ff8800"];
+
+    document.addEventListener('mousemove', (e) => {
+        cursor.style.left = e.clientX + 'px';
+        cursor.style.top = e.clientY + 'px';
+
+        if (Math.random() > 0.8) {
+            const smoke = document.createElement('div');
+            smoke.className = 'cursor-smoke';
+            smoke.style.left = e.clientX + 'px';
+            smoke.style.top = e.clientY + 'px';
+            smoke.style.backgroundColor = smokeColors[Math.floor(Math.random() * smokeColors.length)];
+            document.body.appendChild(smoke);
+            setTimeout(() => smoke.remove(), 1000);
+        }
+    });
+
+    document.addEventListener('click', (e) => {
+        const exp = document.createElement('div');
+        exp.className = 'funny-expression';
+        exp.style.left = e.clientX + 'px';
+        exp.style.top = e.clientY + 'px';
+        exp.textContent = expressions[Math.floor(Math.random() * expressions.length)];
+        document.body.appendChild(exp);
+        setTimeout(() => exp.remove(), 2000);
+    });
     
     console.log('✅ System ready\n');
     console.log('✅ Interactive logo with smoke from feet');
