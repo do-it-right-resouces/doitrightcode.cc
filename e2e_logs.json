@@ -165,7 +165,23 @@
   },
   {
     "type": "console",
-    "text": "Result: ✅ PASS"
+    "text": "✅ CRC-16-CCITT: PASS"
+  },
+  {
+    "type": "console",
+    "text": "❌ CRC-16-CCITT Vector 1: FAIL - Input: \"\" Expected: 0x0 Actual: 0xFFFF"
+  },
+  {
+    "type": "console",
+    "text": "❌ CRC-16-CCITT Vector 2: FAIL - Input: \"A\" Expected: 0x538D Actual: 0xB915"
+  },
+  {
+    "type": "console",
+    "text": "✅ CRC-16-CCITT Vector 3: PASS - Input: \"123456789\" Expected: 0x29B1 Actual: 0x29B1"
+  },
+  {
+    "type": "console",
+    "text": "❌ CRC-16-CCITT Vector 4: FAIL - Input: \"ABCDEFGHIJKLMNOPQRSTUVWXYZ\" Expected: 0xD477 Actual: 0xD8E1"
   },
   {
     "type": "console",
@@ -189,15 +205,23 @@
   },
   {
     "type": "console",
-    "text": "Result: ❌ FAIL"
+    "text": "❌ MD5 Standard Test: FAIL"
   },
   {
     "type": "console",
-    "text": "TEST 2b: MD5 Empty String"
+    "text": "✅ MD5 Vector 1: PASS - Input: \"\" Expected: d41d8cd98f00b204e9800998ecf8427e Actual: d41d8cd98f00b204e9800998ecf8427e"
   },
   {
     "type": "console",
-    "text": "Empty MD5: d41d8cd98f00b204e9800998ecf8427e ✅ PASS"
+    "text": "❌ MD5 Vector 2: FAIL - Input: \"a\" Expected: 0cc175b9c0f1b6a831c399e269772661 Actual: 88d7c6d001048f7196bb9634ecf9c394"
+  },
+  {
+    "type": "console",
+    "text": "❌ MD5 Vector 3: FAIL - Input: \"abc\" Expected: 900150983cd24fb0d6963f7d28e17f72 Actual: 499e9a9e5c15f9d49f5eed268839ab62"
+  },
+  {
+    "type": "console",
+    "text": "❌ MD5 Vector 4: FAIL - Input: \"message digest\" Expected: f96b697d7cb7938d525a2f31aaf161d0 Actual: 0da011bebfacec16eb003f32b7be2796"
   },
   {
     "type": "console",
@@ -205,27 +229,11 @@
   },
   {
     "type": "console",
-    "text": "md5-large: 6.430908203125 ms"
+    "text": "md5-large: 821.137939453125 ms"
   },
   {
     "type": "console",
-    "text": "Big MD5 sample (first 16 chars): 8ecbc65e84131f56"
-  },
-  {
-    "type": "console",
-    "text": ""
-  },
-  {
-    "type": "console",
-    "text": "TEST 3: AES-256 Encryption/Decryption"
-  },
-  {
-    "type": "console",
-    "text": "🔑 AES-256 Key Generated: e0352e118689a74b438e749eb9d58afc7216d74f15f75d854ece76af3bc9cac0"
-  },
-  {
-    "type": "console",
-    "text": "Result: ❌ FAIL - "
+    "text": "❌ MD5 Large Data: FAIL"
   },
   {
     "type": "console",
@@ -233,27 +241,43 @@
   },
   {
     "type": "console",
-    "text": "TEST 4: Checksum Speed Comparison"
+    "text": "TEST 3: AES-256-GCM Encryption/Decryption"
   },
   {
     "type": "console",
-    "text": "Data size: 10,000 bytes"
+    "text": "🔑 AES-256 Key Generated: 5d17605b6db93c917ad643b8bcb52053d467d9999d5460dd0cb267f9cf9a2a6f"
   },
   {
     "type": "console",
-    "text": "CRC-16: 1.100ms"
+    "text": "Original: SECRET DATA 12345"
   },
   {
     "type": "console",
-    "text": "MD5: 0.400ms"
+    "text": "Encrypted: \u001fAE1ADF72BF05BEBE4D6366879DE61197E483025AB790CE813..."
   },
   {
     "type": "console",
-    "text": "MD5 is 0.4x slower"
+    "text": "Decrypted: SECRET DATA 12345"
   },
   {
     "type": "console",
-    "text": "Result: ✅ PASS (performance measured)"
+    "text": "✅ AES-256 Round-trip: PASS"
+  },
+  {
+    "type": "console",
+    "text": "✅ AES-256 Size Test 1: PASS - Size: 1 chars"
+  },
+  {
+    "type": "console",
+    "text": "✅ AES-256 Size Test 2: PASS - Size: 13 chars"
+  },
+  {
+    "type": "console",
+    "text": "✅ AES-256 Size Test 3: PASS - Size: 100 chars"
+  },
+  {
+    "type": "console",
+    "text": "✅ AES-256 Size Test 4: PASS - Size: 1000 chars"
   },
   {
     "type": "console",
@@ -261,7 +285,67 @@
   },
   {
     "type": "console",
-    "text": "TEST 5: Payload CRC & Audit Position Verification"
+    "text": "TEST 4: HMAC-SHA256 Sign & Verify"
+  },
+  {
+    "type": "console",
+    "text": "🔑 HMAC key generated: 4ACFF052B6D358D6BFF962192B0BDC46..."
+  },
+  {
+    "type": "console",
+    "text": "✅ HMAC-SHA256 Sign/Verify: PASS"
+  },
+  {
+    "type": "console",
+    "text": "✅ HMAC Tamper Detection: PASS"
+  },
+  {
+    "type": "console",
+    "text": "🔑 HMAC key generated: 07DB50CC1167E3EE78BAFC3B0FCD5CC1..."
+  },
+  {
+    "type": "console",
+    "text": "✅ HMAC Key Isolation: PASS"
+  },
+  {
+    "type": "console",
+    "text": ""
+  },
+  {
+    "type": "console",
+    "text": "TEST 5: Performance Benchmarks"
+  },
+  {
+    "type": "console",
+    "text": "CRC-16 Performance: 649.5390625 ms"
+  },
+  {
+    "type": "console",
+    "text": "MD5 Performance: 0.486083984375 ms"
+  },
+  {
+    "type": "console",
+    "text": "AES-256 Performance: 290.345947265625 ms"
+  },
+  {
+    "type": "console",
+    "text": "✅ AES-256 Performance: PASS - Completed within timeout"
+  },
+  {
+    "type": "console",
+    "text": "Memory Usage: 3MB used, 6MB allocated"
+  },
+  {
+    "type": "console",
+    "text": "✅ Memory Usage Check: PASS - Heap within limits"
+  },
+  {
+    "type": "console",
+    "text": ""
+  },
+  {
+    "type": "console",
+    "text": "TEST 6: Multi-State PDF417 Generation"
   },
   {
     "type": "console",
@@ -297,167 +381,7 @@
   },
   {
     "type": "console",
-    "text": "CRC from calculation: 0x13D0"
-  },
-  {
-    "type": "console",
-    "text": "CRC extracted from payload: 0x13D0"
-  },
-  {
-    "type": "console",
-    "text": "CRC position check result: ✅ PASS"
-  },
-  {
-    "type": "console",
-    "text": "Expected Audit Trail: FLDMVAUDIT000001"
-  },
-  {
-    "type": "console",
-    "text": "Actual Audit Trail: FLDMVAUDIT000001"
-  },
-  {
-    "type": "console",
-    "text": "Audit trail check result: ✅ PASS"
-  },
-  {
-    "type": "console",
-    "text": ""
-  },
-  {
-    "type": "console",
-    "text": "TEST 6: MD5 Payload Inclusion"
-  },
-  {
-    "type": "console",
-    "text": "📊 MD5 CHECKSUM ENABLED"
-  },
-  {
-    "type": "console",
-    "text": "🔧 Building Florida payload..."
-  },
-  {
-    "type": "console",
-    "text": "🔐 AES-256: DISABLED"
-  },
-  {
-    "type": "console",
-    "text": "🔐 MD5: ENABLED"
-  },
-  {
-    "type": "console",
-    "text": "DL Subfile: 27 included, 32 omitted, 0 encrypted"
-  },
-  {
-    "type": "console",
-    "text": "ZF Subfile: 4 fields included"
-  },
-  {
-    "type": "console",
-    "text": "📊 MD5: 7b4f8f80b5657e59b9ef936c2120dab5 (0.100ms)"
-  },
-  {
-    "type": "console",
-    "text": "📊 CRC-16: 0x13D0 (0.000ms)"
-  },
-  {
-    "type": "console",
-    "text": "📋 Inventory Number (Audit Trail): FLDMVAUDIT000001"
-  },
-  {
-    "type": "console",
-    "text": "Final payload size: 1024"
-  },
-  {
-    "type": "console",
-    "text": "Structure says MD5 enabled: ✅ YES"
-  },
-  {
-    "type": "console",
-    "text": "MD5 present: ✅ YES"
-  },
-  {
-    "type": "console",
-    "text": "📊 MD5 CHECKSUM DISABLED"
-  },
-  {
-    "type": "console",
-    "text": ""
-  },
-  {
-    "type": "console",
-    "text": "TEST 7: HMAC-SHA256 Sign & Verify"
-  },
-  {
-    "type": "console",
-    "text": "🔑 HMAC key generated: 5879B0A9B38303C486A355E87F91B30A..."
-  },
-  {
-    "type": "console",
-    "text": "🔧 Building Florida payload..."
-  },
-  {
-    "type": "console",
-    "text": "🔐 AES-256: DISABLED"
-  },
-  {
-    "type": "console",
-    "text": "🔐 MD5: DISABLED"
-  },
-  {
-    "type": "console",
-    "text": "DL Subfile: 27 included, 32 omitted, 0 encrypted"
-  },
-  {
-    "type": "console",
-    "text": "ZF Subfile: 4 fields included"
-  },
-  {
-    "type": "console",
-    "text": "📊 CRC-16: 0x13D0 (0.000ms)"
-  },
-  {
-    "type": "console",
-    "text": "📋 Inventory Number (Audit Trail): FLDMVAUDIT000001"
-  },
-  {
-    "type": "console",
-    "text": "🔐 HMAC appended: 4B9EE9C4B76B8241426427332F45453B..."
-  },
-  {
-    "type": "console",
-    "text": "Final payload size: 1024"
-  },
-  {
-    "type": "console",
-    "text": "Structure says HMAC enabled: ✅ YES"
-  },
-  {
-    "type": "console",
-    "text": "HMAC present: ✅ YES"
-  },
-  {
-    "type": "console",
-    "text": "HMAC verification (original): ✅ PASS"
-  },
-  {
-    "type": "console",
-    "text": "HMAC tamper detection (should fail): ✅ PASS"
-  },
-  {
-    "type": "console",
-    "text": ""
-  },
-  {
-    "type": "console",
-    "text": "TEST 8: California compliance"
-  },
-  {
-    "type": "console",
-    "text": "CA validation errors: JSHandle@array"
-  },
-  {
-    "type": "console",
-    "text": "CA validation warnings: ✅ NONE"
+    "text": "✅ PDF417 FL Generation: PASS - Subfile: ZF, IIN: 636026"
   },
   {
     "type": "console",
@@ -493,11 +417,223 @@
   },
   {
     "type": "console",
-    "text": "CA subfile ID: ✅ ZC"
+    "text": "✅ PDF417 CA Generation: PASS - Subfile: ZC, IIN: 636014"
   },
   {
     "type": "console",
-    "text": "CA audit trail: ✅ IIN 636014"
+    "text": "🔧 Building Texas payload..."
+  },
+  {
+    "type": "console",
+    "text": "🔐 AES-256: DISABLED"
+  },
+  {
+    "type": "console",
+    "text": "🔐 MD5: DISABLED"
+  },
+  {
+    "type": "console",
+    "text": "DL Subfile: 26 included, 33 omitted, 0 encrypted"
+  },
+  {
+    "type": "console",
+    "text": "ZT Subfile: 7 fields included"
+  },
+  {
+    "type": "console",
+    "text": "📊 CRC-16: 0xAEC3 (0.000ms)"
+  },
+  {
+    "type": "console",
+    "text": "📋 Inventory Number (Audit Trail): FLDMVAUDIT000001"
+  },
+  {
+    "type": "console",
+    "text": "Final payload size: 1024"
+  },
+  {
+    "type": "console",
+    "text": "✅ PDF417 TX Generation: PASS - Subfile: ZT, IIN: 636015"
+  },
+  {
+    "type": "console",
+    "text": "🔧 Building New York payload..."
+  },
+  {
+    "type": "console",
+    "text": "🔐 AES-256: DISABLED"
+  },
+  {
+    "type": "console",
+    "text": "🔐 MD5: DISABLED"
+  },
+  {
+    "type": "console",
+    "text": "DL Subfile: 26 included, 33 omitted, 0 encrypted"
+  },
+  {
+    "type": "console",
+    "text": "ZN Subfile: 6 fields included"
+  },
+  {
+    "type": "console",
+    "text": "📊 CRC-16: 0x2242 (0.000ms)"
+  },
+  {
+    "type": "console",
+    "text": "📋 Inventory Number (Audit Trail): FLDMVAUDIT000001"
+  },
+  {
+    "type": "console",
+    "text": "Final payload size: 1024"
+  },
+  {
+    "type": "console",
+    "text": "✅ PDF417 NY Generation: PASS - Subfile: ZN, IIN: 636001"
+  },
+  {
+    "type": "console",
+    "text": "🔧 Building Illinois payload..."
+  },
+  {
+    "type": "console",
+    "text": "🔐 AES-256: DISABLED"
+  },
+  {
+    "type": "console",
+    "text": "🔐 MD5: DISABLED"
+  },
+  {
+    "type": "console",
+    "text": "DL Subfile: 26 included, 33 omitted, 0 encrypted"
+  },
+  {
+    "type": "console",
+    "text": "ZI Subfile: 5 fields included"
+  },
+  {
+    "type": "console",
+    "text": "📊 CRC-16: 0x948E (0.000ms)"
+  },
+  {
+    "type": "console",
+    "text": "📋 Inventory Number (Audit Trail): FLDMVAUDIT000001"
+  },
+  {
+    "type": "console",
+    "text": "Final payload size: 1024"
+  },
+  {
+    "type": "console",
+    "text": "✅ PDF417 IL Generation: PASS - Subfile: ZI, IIN: 636035"
+  },
+  {
+    "type": "console",
+    "text": "🔧 Building Pennsylvania payload..."
+  },
+  {
+    "type": "console",
+    "text": "🔐 AES-256: DISABLED"
+  },
+  {
+    "type": "console",
+    "text": "🔐 MD5: DISABLED"
+  },
+  {
+    "type": "console",
+    "text": "DL Subfile: 26 included, 33 omitted, 0 encrypted"
+  },
+  {
+    "type": "console",
+    "text": "ZP Subfile: 6 fields included"
+  },
+  {
+    "type": "console",
+    "text": "📊 CRC-16: 0x16F0 (0.000ms)"
+  },
+  {
+    "type": "console",
+    "text": "📋 Inventory Number (Audit Trail): FLDMVAUDIT000001"
+  },
+  {
+    "type": "console",
+    "text": "Final payload size: 1024"
+  },
+  {
+    "type": "console",
+    "text": "✅ PDF417 PA Generation: PASS - Subfile: ZP, IIN: 636025"
+  },
+  {
+    "type": "console",
+    "text": "🔧 Building Ohio payload..."
+  },
+  {
+    "type": "console",
+    "text": "🔐 AES-256: DISABLED"
+  },
+  {
+    "type": "console",
+    "text": "🔐 MD5: DISABLED"
+  },
+  {
+    "type": "console",
+    "text": "DL Subfile: 26 included, 33 omitted, 0 encrypted"
+  },
+  {
+    "type": "console",
+    "text": "ZO Subfile: 5 fields included"
+  },
+  {
+    "type": "console",
+    "text": "📊 CRC-16: 0xFA93 (0.000ms)"
+  },
+  {
+    "type": "console",
+    "text": "📋 Inventory Number (Audit Trail): FLDMVAUDIT000001"
+  },
+  {
+    "type": "console",
+    "text": "Final payload size: 1024"
+  },
+  {
+    "type": "console",
+    "text": "✅ PDF417 OH Generation: PASS - Subfile: ZO, IIN: 636023"
+  },
+  {
+    "type": "console",
+    "text": "🔧 Building Georgia payload..."
+  },
+  {
+    "type": "console",
+    "text": "🔐 AES-256: DISABLED"
+  },
+  {
+    "type": "console",
+    "text": "🔐 MD5: DISABLED"
+  },
+  {
+    "type": "console",
+    "text": "DL Subfile: 26 included, 33 omitted, 0 encrypted"
+  },
+  {
+    "type": "console",
+    "text": "ZG Subfile: 4 fields included"
+  },
+  {
+    "type": "console",
+    "text": "📊 CRC-16: 0xD26 (0.000ms)"
+  },
+  {
+    "type": "console",
+    "text": "📋 Inventory Number (Audit Trail): FLDMVAUDIT000001"
+  },
+  {
+    "type": "console",
+    "text": "Final payload size: 1024"
+  },
+  {
+    "type": "console",
+    "text": "✅ PDF417 GA Generation: PASS - Subfile: ZG, IIN: 636055"
   },
   {
     "type": "console",
@@ -505,7 +641,271 @@
   },
   {
     "type": "console",
-    "text": "TEST 9: California 2017 Revision Date Compliance"
+    "text": "TEST 7: Binary Protocol Structure Validation"
+  },
+  {
+    "type": "console",
+    "text": "🔧 Building Florida payload..."
+  },
+  {
+    "type": "console",
+    "text": "🔐 AES-256: DISABLED"
+  },
+  {
+    "type": "console",
+    "text": "🔐 MD5: DISABLED"
+  },
+  {
+    "type": "console",
+    "text": "DL Subfile: 27 included, 32 omitted, 0 encrypted"
+  },
+  {
+    "type": "console",
+    "text": "ZF Subfile: 4 fields included"
+  },
+  {
+    "type": "console",
+    "text": "📊 CRC-16: 0x13D0 (0.000ms)"
+  },
+  {
+    "type": "console",
+    "text": "📋 Inventory Number (Audit Trail): FLDMVAUDIT000001"
+  },
+  {
+    "type": "console",
+    "text": "Final payload size: 1024"
+  },
+  {
+    "type": "console",
+    "text": "❌ Header Section Offset: FAIL"
+  },
+  {
+    "type": "console",
+    "text": "❌ Data Section Offset: FAIL"
+  },
+  {
+    "type": "console",
+    "text": "❌ CRC Section Offset: FAIL"
+  },
+  {
+    "type": "console",
+    "text": "✅ CRC Position Validation: PASS"
+  },
+  {
+    "type": "console",
+    "text": "❌ Payload Length Validation: FAIL"
+  },
+  {
+    "type": "console",
+    "text": "✅ Record Separator Presence: PASS"
+  },
+  {
+    "type": "console",
+    "text": ""
+  },
+  {
+    "type": "console",
+    "text": "TEST 8: Field Inclusion Rule Compliance"
+  },
+  {
+    "type": "console",
+    "text": "✅ Required Fields Present: PASS - Missing: "
+  },
+  {
+    "type": "console",
+    "text": "🔧 Building Florida payload..."
+  },
+  {
+    "type": "console",
+    "text": "🔐 AES-256: DISABLED"
+  },
+  {
+    "type": "console",
+    "text": "🔐 MD5: DISABLED"
+  },
+  {
+    "type": "console",
+    "text": "DL Subfile: 27 included, 32 omitted, 0 encrypted"
+  },
+  {
+    "type": "console",
+    "text": "ZF Subfile: 4 fields included"
+  },
+  {
+    "type": "console",
+    "text": "📊 CRC-16: 0x13D0 (0.000ms)"
+  },
+  {
+    "type": "console",
+    "text": "📋 Inventory Number (Audit Trail): FLDMVAUDIT000001"
+  },
+  {
+    "type": "console",
+    "text": "Final payload size: 1024"
+  },
+  {
+    "type": "console",
+    "text": "✅ Optional Fields Omitted When Empty: PASS"
+  },
+  {
+    "type": "console",
+    "text": "✅ Always Fields Included: PASS"
+  },
+  {
+    "type": "console",
+    "text": ""
+  },
+  {
+    "type": "console",
+    "text": "TEST 9: AAMVA Version Compatibility"
+  },
+  {
+    "type": "console",
+    "text": "🔧 Building Florida payload..."
+  },
+  {
+    "type": "console",
+    "text": "🔐 AES-256: DISABLED"
+  },
+  {
+    "type": "console",
+    "text": "🔐 MD5: DISABLED"
+  },
+  {
+    "type": "console",
+    "text": "DL Subfile: 27 included, 32 omitted, 0 encrypted"
+  },
+  {
+    "type": "console",
+    "text": "ZF Subfile: 4 fields included"
+  },
+  {
+    "type": "console",
+    "text": "📊 CRC-16: 0xE497 (0.000ms)"
+  },
+  {
+    "type": "console",
+    "text": "📋 Inventory Number (Audit Trail): FLDMVAUDIT000001"
+  },
+  {
+    "type": "console",
+    "text": "Final payload size: 1024"
+  },
+  {
+    "type": "console",
+    "text": "❌ AAMVA v08 Compatibility: FAIL"
+  },
+  {
+    "type": "console",
+    "text": "🔧 Building Florida payload..."
+  },
+  {
+    "type": "console",
+    "text": "🔐 AES-256: DISABLED"
+  },
+  {
+    "type": "console",
+    "text": "🔐 MD5: DISABLED"
+  },
+  {
+    "type": "console",
+    "text": "DL Subfile: 27 included, 32 omitted, 0 encrypted"
+  },
+  {
+    "type": "console",
+    "text": "ZF Subfile: 4 fields included"
+  },
+  {
+    "type": "console",
+    "text": "📊 CRC-16: 0x13D0 (0.000ms)"
+  },
+  {
+    "type": "console",
+    "text": "📋 Inventory Number (Audit Trail): FLDMVAUDIT000001"
+  },
+  {
+    "type": "console",
+    "text": "Final payload size: 1024"
+  },
+  {
+    "type": "console",
+    "text": "❌ AAMVA v09 Compatibility: FAIL"
+  },
+  {
+    "type": "console",
+    "text": "🔧 Building Florida payload..."
+  },
+  {
+    "type": "console",
+    "text": "🔐 AES-256: DISABLED"
+  },
+  {
+    "type": "console",
+    "text": "🔐 MD5: DISABLED"
+  },
+  {
+    "type": "console",
+    "text": "DL Subfile: 27 included, 32 omitted, 0 encrypted"
+  },
+  {
+    "type": "console",
+    "text": "ZF Subfile: 4 fields included"
+  },
+  {
+    "type": "console",
+    "text": "📊 CRC-16: 0xF6B0 (0.100ms)"
+  },
+  {
+    "type": "console",
+    "text": "📋 Inventory Number (Audit Trail): FLDMVAUDIT000001"
+  },
+  {
+    "type": "console",
+    "text": "Final payload size: 1024"
+  },
+  {
+    "type": "console",
+    "text": "❌ AAMVA v10 Compatibility: FAIL"
+  },
+  {
+    "type": "console",
+    "text": ""
+  },
+  {
+    "type": "console",
+    "text": "TEST 10: Inventory Number Format Validation"
+  },
+  {
+    "type": "console",
+    "text": "❌ Inventory Format 1: FAIL - \"123456789\" - Expected: Valid"
+  },
+  {
+    "type": "console",
+    "text": "✅ Inventory Format 2: PASS - \"A12345678\" - Expected: Invalid"
+  },
+  {
+    "type": "console",
+    "text": "✅ Inventory Format 3: PASS - \"1234567890\" - Expected: Invalid"
+  },
+  {
+    "type": "console",
+    "text": "✅ Inventory Format 4: PASS - \"12345678\" - Expected: Invalid"
+  },
+  {
+    "type": "console",
+    "text": "✅ Inventory Format 5: PASS - \"123-456-789\" - Expected: Invalid"
+  },
+  {
+    "type": "console",
+    "text": "❌ Inventory Format 6: FAIL - \"012345678\" - Expected: Valid"
+  },
+  {
+    "type": "console",
+    "text": ""
+  },
+  {
+    "type": "console",
+    "text": "TEST 11: California 2017 Revision Date Compliance"
   },
   {
     "type": "console",
@@ -517,39 +917,23 @@
   },
   {
     "type": "console",
-    "text": "🔑 AES-256 Key Generated: 79c804bedfa633f26e7f14dfb47c8f1e90839bc7bf4b3cf5b996b0bb4329569f"
+    "text": "🔑 AES-256 Key Generated: 9c628bcf3df1350f6f5fe08a0f92d95ae304fc1d5330a08de588159624883ea3"
   },
   {
     "type": "console",
-    "text": "🔑 HMAC key generated: 3D953508839E2A076B4DDEB6255F20DB..."
+    "text": "🔑 HMAC key generated: 1748673121905699A470E9AA19DFB4C6..."
   },
   {
     "type": "console",
-    "text": "CA DDB (Revision Date): 08292017"
+    "text": "✅ CA Revision Date (DDB): PASS"
   },
   {
     "type": "console",
-    "text": "Expected: 08292017"
+    "text": "✅ CA ZCA Auto-populate: PASS"
   },
   {
     "type": "console",
-    "text": "DDB check: ✅ PASS"
-  },
-  {
-    "type": "console",
-    "text": "ZCA (Eye Color): BRN | DAY: BRN"
-  },
-  {
-    "type": "console",
-    "text": "ZCB (Hair Color): BRN | DAZ: BRN"
-  },
-  {
-    "type": "console",
-    "text": "ZCA auto-populate: ✅ PASS"
-  },
-  {
-    "type": "console",
-    "text": "ZCB auto-populate: ✅ PASS"
+    "text": "✅ CA ZCB Auto-populate: PASS"
   },
   {
     "type": "console",
@@ -569,7 +953,7 @@
   },
   {
     "type": "console",
-    "text": "   → Encrypted: \u001fA176724D7443CC76566C1F0CC5ACD7AB7EB9F49..."
+    "text": "   → Encrypted: \u001f912DE6996B77F5D9CCAC8FC9D78803C6A3F34BA..."
   },
   {
     "type": "console",
@@ -577,7 +961,7 @@
   },
   {
     "type": "console",
-    "text": "   → Encrypted: \u001f60522F37D99D2DEBDA41B10EA1EB7A5C273B68B..."
+    "text": "   → Encrypted: \u001f7CDE646EBD65FBA97C52A602BA50CBDB39D7D5C..."
   },
   {
     "type": "console",
@@ -585,7 +969,7 @@
   },
   {
     "type": "console",
-    "text": "   → Encrypted: \u001f3DD2B6B0C504547827192BE75697586A1A6E320..."
+    "text": "   → Encrypted: \u001f366CA83D4B503241833AD8CB94161888D46E571..."
   },
   {
     "type": "console",
@@ -593,7 +977,7 @@
   },
   {
     "type": "console",
-    "text": "   → Encrypted: \u001f3AC6D2907B06C57A04F9167360239A922518F9F..."
+    "text": "   → Encrypted: \u001f81C001904A03DE675ED9DE88F76F79B3D2E53A8..."
   },
   {
     "type": "console",
@@ -601,7 +985,7 @@
   },
   {
     "type": "console",
-    "text": "   → Encrypted: \u001f4040204CE555684087B72B5DEA55CE898D1CE93..."
+    "text": "   → Encrypted: \u001f409D884FCEBC5D0C91DE984EE52427E9FE26035..."
   },
   {
     "type": "console",
@@ -609,7 +993,7 @@
   },
   {
     "type": "console",
-    "text": "   → Encrypted: \u001f02752589BEFD8C6B1D53FBFE20CF108407BADD0..."
+    "text": "   → Encrypted: \u001f4A7E258677220DF3958B385CBB9A968B590E313..."
   },
   {
     "type": "console",
@@ -621,11 +1005,11 @@
   },
   {
     "type": "console",
-    "text": "📊 MD5: eb831dc84da13babbe88ceda80709516 (0.000ms)"
+    "text": "📊 MD5: 4c36cda1c93af2825f1657e3aec2d017 (0.000ms)"
   },
   {
     "type": "console",
-    "text": "📊 CRC-16: 0xF13F (0.100ms)"
+    "text": "📊 CRC-16: 0xD842 (0.000ms)"
   },
   {
     "type": "console",
@@ -633,11 +1017,11 @@
   },
   {
     "type": "console",
-    "text": "📋 Inventory Number (Audit Trail): FLDMVAUDIT000001"
+    "text": "📋 Inventory Number (Audit Trail): 1234567890000000"
   },
   {
     "type": "console",
-    "text": "🔐 HMAC appended: 1F46B6EB4354DD110EB06F37D08266F7..."
+    "text": "🔐 HMAC appended: EB84B2F27A571A787071889DE77E8F1B..."
   },
   {
     "type": "console",
@@ -645,27 +1029,11 @@
   },
   {
     "type": "console",
-    "text": "CA subfile ID: ✅ ZC"
+    "text": "✅ CA Subfile ID: PASS"
   },
   {
     "type": "console",
-    "text": "CA IIN: ✅ 636014"
-  },
-  {
-    "type": "console",
-    "text": "CA AES-256: ✅ ENABLED"
-  },
-  {
-    "type": "console",
-    "text": "CA MD5: ✅ ENABLED"
-  },
-  {
-    "type": "console",
-    "text": "CA HMAC: ✅ ENABLED"
-  },
-  {
-    "type": "console",
-    "text": "CA encrypted fields: 6 fields"
+    "text": "✅ CA IIN: PASS"
   },
   {
     "type": "console",
@@ -677,15 +1045,11 @@
   },
   {
     "type": "console",
-    "text": "TEST 9 Result: ✅ California 2017 compliance verified with full crypto"
-  },
-  {
-    "type": "console",
     "text": ""
   },
   {
     "type": "console",
-    "text": "TEST 10: Florida 2020 IDEMIA Revision Date Compliance"
+    "text": "TEST 12: Florida 2020 IDEMIA Revision Date Compliance"
   },
   {
     "type": "console",
@@ -697,55 +1061,35 @@
   },
   {
     "type": "console",
-    "text": "🔑 AES-256 Key Generated: 2a03a8727c5f1c501b3a4d0d108476f442d3593e9561d5fef72adfd9f580f9ed"
+    "text": "🔑 AES-256 Key Generated: 5e9246f48e86147bc4af46a544faaf792cb28d1a0669014d0698088ee29f7bc3"
   },
   {
     "type": "console",
-    "text": "🔑 HMAC key generated: A0864D05B368710E025C8B03391AFB09..."
+    "text": "🔑 HMAC key generated: 636A4129D24253879D04197C095B7CDE..."
   },
   {
     "type": "console",
-    "text": "FL DDB (Revision Date): 03012020"
+    "text": "✅ FL Revision Date (DDB): PASS"
   },
   {
     "type": "console",
-    "text": "Expected: 03012020"
+    "text": "✅ FL IDEMIA Protocol: PASS"
   },
   {
     "type": "console",
-    "text": "DDB check: ✅ PASS"
+    "text": "✅ FL Subfile ID: PASS"
   },
   {
     "type": "console",
-    "text": "FL useIdemia: ✅ TRUE (IDEMIA Protocol)"
+    "text": "✅ FL ZFA Auto-populate: PASS"
   },
   {
     "type": "console",
-    "text": "FL subfileId: ✅ ZF"
+    "text": "✅ FL ZFB Auto-populate: PASS"
   },
   {
     "type": "console",
-    "text": "ZFA (FL Class): E | DCA: E"
-  },
-  {
-    "type": "console",
-    "text": "ZFB (FL Exp): 01012032 | DBA: 01012032"
-  },
-  {
-    "type": "console",
-    "text": "ZFC (FL DL#): B231952418000 | DAQ: B231952418000"
-  },
-  {
-    "type": "console",
-    "text": "ZFA auto-populate: ✅ PASS"
-  },
-  {
-    "type": "console",
-    "text": "ZFB auto-populate: ✅ PASS"
-  },
-  {
-    "type": "console",
-    "text": "ZFC auto-populate: ✅ PASS"
+    "text": "✅ FL ZFC Auto-populate: PASS"
   },
   {
     "type": "console",
@@ -765,7 +1109,7 @@
   },
   {
     "type": "console",
-    "text": "   → Encrypted: \u001f5ABB9200FA74BABECEDB3C95B581727EB7EB928..."
+    "text": "   → Encrypted: \u001fFD69627AA68BDE2FF1042C7F5248C2BE9DE8B10..."
   },
   {
     "type": "console",
@@ -773,7 +1117,7 @@
   },
   {
     "type": "console",
-    "text": "   → Encrypted: \u001fF7E7DE1879C84A3912197CAE870DB612EBFC5DA..."
+    "text": "   → Encrypted: \u001f3D18C228813D286C1298F2D0A9E38E75E4ADA2D..."
   },
   {
     "type": "console",
@@ -781,7 +1125,7 @@
   },
   {
     "type": "console",
-    "text": "   → Encrypted: \u001fCBFE386352724E1F66BCD18D081970383C7F68D..."
+    "text": "   → Encrypted: \u001fA7299984F45843AED3FA1F4496800FE4BEEC16A..."
   },
   {
     "type": "console",
@@ -789,7 +1133,7 @@
   },
   {
     "type": "console",
-    "text": "   → Encrypted: \u001fE6AA37D98F619537BE439C88967184AAD5A3CC9..."
+    "text": "   → Encrypted: \u001f49EE4DC28F5DCCA0FEA83EA941D6048EF8C7046..."
   },
   {
     "type": "console",
@@ -797,7 +1141,7 @@
   },
   {
     "type": "console",
-    "text": "   → Encrypted: \u001fBF67C39BE3A59319A9CF301D04D8DDF321C3F69..."
+    "text": "   → Encrypted: \u001fCBB561088854D353B164F1A6D6663A1113C9752..."
   },
   {
     "type": "console",
@@ -805,7 +1149,7 @@
   },
   {
     "type": "console",
-    "text": "   → Encrypted: \u001f2E1668F0BD221E633BFBCF217F54905583658A7..."
+    "text": "   → Encrypted: \u001fDD0D730A89D1BBD4BF6475A21DEF551DDB196EC..."
   },
   {
     "type": "console",
@@ -817,11 +1161,11 @@
   },
   {
     "type": "console",
-    "text": "📊 MD5: 8b32a9315248d13bc94589b9ca3ea2ba (0.000ms)"
+    "text": "📊 MD5: f980586ab11e4b38b82a1471bca67d20 (0.100ms)"
   },
   {
     "type": "console",
-    "text": "📊 CRC-16: 0x36C1 (0.000ms)"
+    "text": "📊 CRC-16: 0xC429 (0.000ms)"
   },
   {
     "type": "console",
@@ -829,11 +1173,11 @@
   },
   {
     "type": "console",
-    "text": "📋 Inventory Number (Audit Trail): FLDMVAUDIT000001"
+    "text": "📋 Inventory Number (Audit Trail): 1234567890000000"
   },
   {
     "type": "console",
-    "text": "🔐 HMAC appended: 91029808BA3951262B9367FA44FE5F30..."
+    "text": "🔐 HMAC appended: 5243C674C1FF80FEB24304A91E6C7A47..."
   },
   {
     "type": "console",
@@ -841,23 +1185,7 @@
   },
   {
     "type": "console",
-    "text": "FL IIN: ✅ 636026"
-  },
-  {
-    "type": "console",
-    "text": "FL AES-256: ✅ ENABLED"
-  },
-  {
-    "type": "console",
-    "text": "FL MD5: ✅ ENABLED"
-  },
-  {
-    "type": "console",
-    "text": "FL HMAC: ✅ ENABLED"
-  },
-  {
-    "type": "console",
-    "text": "FL encrypted fields: 6 fields"
+    "text": "✅ FL IIN: PASS"
   },
   {
     "type": "console",
@@ -869,7 +1197,335 @@
   },
   {
     "type": "console",
-    "text": "TEST 10 Result: ✅ Florida 2020 IDEMIA compliance verified with full crypto"
+    "text": ""
+  },
+  {
+    "type": "console",
+    "text": "TEST 13: Generation Speed Benchmark"
+  },
+  {
+    "type": "console",
+    "text": "🔧 Building Florida payload..."
+  },
+  {
+    "type": "console",
+    "text": "🔐 AES-256: DISABLED"
+  },
+  {
+    "type": "console",
+    "text": "🔐 MD5: DISABLED"
+  },
+  {
+    "type": "console",
+    "text": "DL Subfile: 27 included, 32 omitted, 0 encrypted"
+  },
+  {
+    "type": "console",
+    "text": "ZF Subfile: 4 fields included"
+  },
+  {
+    "type": "console",
+    "text": "📊 CRC-16: 0xF6B0 (0.000ms)"
+  },
+  {
+    "type": "console",
+    "text": "📋 Inventory Number (Audit Trail): 1234567890000000"
+  },
+  {
+    "type": "console",
+    "text": "Final payload size: 1024"
+  },
+  {
+    "type": "console",
+    "text": "🔧 Building Florida payload..."
+  },
+  {
+    "type": "console",
+    "text": "🔐 AES-256: DISABLED"
+  },
+  {
+    "type": "console",
+    "text": "🔐 MD5: DISABLED"
+  },
+  {
+    "type": "console",
+    "text": "DL Subfile: 27 included, 32 omitted, 0 encrypted"
+  },
+  {
+    "type": "console",
+    "text": "ZF Subfile: 4 fields included"
+  },
+  {
+    "type": "console",
+    "text": "📊 CRC-16: 0xF6B0 (0.100ms)"
+  },
+  {
+    "type": "console",
+    "text": "📋 Inventory Number (Audit Trail): 1234567890000000"
+  },
+  {
+    "type": "console",
+    "text": "Final payload size: 1024"
+  },
+  {
+    "type": "console",
+    "text": "🔧 Building Florida payload..."
+  },
+  {
+    "type": "console",
+    "text": "🔐 AES-256: DISABLED"
+  },
+  {
+    "type": "console",
+    "text": "🔐 MD5: DISABLED"
+  },
+  {
+    "type": "console",
+    "text": "DL Subfile: 27 included, 32 omitted, 0 encrypted"
+  },
+  {
+    "type": "console",
+    "text": "ZF Subfile: 4 fields included"
+  },
+  {
+    "type": "console",
+    "text": "📊 CRC-16: 0xF6B0 (0.000ms)"
+  },
+  {
+    "type": "console",
+    "text": "📋 Inventory Number (Audit Trail): 1234567890000000"
+  },
+  {
+    "type": "console",
+    "text": "Final payload size: 1024"
+  },
+  {
+    "type": "console",
+    "text": "🔧 Building Florida payload..."
+  },
+  {
+    "type": "console",
+    "text": "🔐 AES-256: DISABLED"
+  },
+  {
+    "type": "console",
+    "text": "🔐 MD5: DISABLED"
+  },
+  {
+    "type": "console",
+    "text": "DL Subfile: 27 included, 32 omitted, 0 encrypted"
+  },
+  {
+    "type": "console",
+    "text": "ZF Subfile: 4 fields included"
+  },
+  {
+    "type": "console",
+    "text": "📊 CRC-16: 0xF6B0 (0.000ms)"
+  },
+  {
+    "type": "console",
+    "text": "📋 Inventory Number (Audit Trail): 1234567890000000"
+  },
+  {
+    "type": "console",
+    "text": "Final payload size: 1024"
+  },
+  {
+    "type": "console",
+    "text": "🔧 Building Florida payload..."
+  },
+  {
+    "type": "console",
+    "text": "🔐 AES-256: DISABLED"
+  },
+  {
+    "type": "console",
+    "text": "🔐 MD5: DISABLED"
+  },
+  {
+    "type": "console",
+    "text": "DL Subfile: 27 included, 32 omitted, 0 encrypted"
+  },
+  {
+    "type": "console",
+    "text": "ZF Subfile: 4 fields included"
+  },
+  {
+    "type": "console",
+    "text": "📊 CRC-16: 0xF6B0 (0.000ms)"
+  },
+  {
+    "type": "console",
+    "text": "📋 Inventory Number (Audit Trail): 1234567890000000"
+  },
+  {
+    "type": "console",
+    "text": "Final payload size: 1024"
+  },
+  {
+    "type": "console",
+    "text": "🔧 Building Florida payload..."
+  },
+  {
+    "type": "console",
+    "text": "🔐 AES-256: DISABLED"
+  },
+  {
+    "type": "console",
+    "text": "🔐 MD5: DISABLED"
+  },
+  {
+    "type": "console",
+    "text": "DL Subfile: 27 included, 32 omitted, 0 encrypted"
+  },
+  {
+    "type": "console",
+    "text": "ZF Subfile: 4 fields included"
+  },
+  {
+    "type": "console",
+    "text": "📊 CRC-16: 0xF6B0 (0.000ms)"
+  },
+  {
+    "type": "console",
+    "text": "📋 Inventory Number (Audit Trail): 1234567890000000"
+  },
+  {
+    "type": "console",
+    "text": "Final payload size: 1024"
+  },
+  {
+    "type": "console",
+    "text": "🔧 Building Florida payload..."
+  },
+  {
+    "type": "console",
+    "text": "🔐 AES-256: DISABLED"
+  },
+  {
+    "type": "console",
+    "text": "🔐 MD5: DISABLED"
+  },
+  {
+    "type": "console",
+    "text": "DL Subfile: 27 included, 32 omitted, 0 encrypted"
+  },
+  {
+    "type": "console",
+    "text": "ZF Subfile: 4 fields included"
+  },
+  {
+    "type": "console",
+    "text": "📊 CRC-16: 0xF6B0 (0.000ms)"
+  },
+  {
+    "type": "console",
+    "text": "📋 Inventory Number (Audit Trail): 1234567890000000"
+  },
+  {
+    "type": "console",
+    "text": "Final payload size: 1024"
+  },
+  {
+    "type": "console",
+    "text": "🔧 Building Florida payload..."
+  },
+  {
+    "type": "console",
+    "text": "🔐 AES-256: DISABLED"
+  },
+  {
+    "type": "console",
+    "text": "🔐 MD5: DISABLED"
+  },
+  {
+    "type": "console",
+    "text": "DL Subfile: 27 included, 32 omitted, 0 encrypted"
+  },
+  {
+    "type": "console",
+    "text": "ZF Subfile: 4 fields included"
+  },
+  {
+    "type": "console",
+    "text": "📊 CRC-16: 0xF6B0 (0.000ms)"
+  },
+  {
+    "type": "console",
+    "text": "📋 Inventory Number (Audit Trail): 1234567890000000"
+  },
+  {
+    "type": "console",
+    "text": "Final payload size: 1024"
+  },
+  {
+    "type": "console",
+    "text": "🔧 Building Florida payload..."
+  },
+  {
+    "type": "console",
+    "text": "🔐 AES-256: DISABLED"
+  },
+  {
+    "type": "console",
+    "text": "🔐 MD5: DISABLED"
+  },
+  {
+    "type": "console",
+    "text": "DL Subfile: 27 included, 32 omitted, 0 encrypted"
+  },
+  {
+    "type": "console",
+    "text": "ZF Subfile: 4 fields included"
+  },
+  {
+    "type": "console",
+    "text": "📊 CRC-16: 0xF6B0 (0.000ms)"
+  },
+  {
+    "type": "console",
+    "text": "📋 Inventory Number (Audit Trail): 1234567890000000"
+  },
+  {
+    "type": "console",
+    "text": "Final payload size: 1024"
+  },
+  {
+    "type": "console",
+    "text": "🔧 Building Florida payload..."
+  },
+  {
+    "type": "console",
+    "text": "🔐 AES-256: DISABLED"
+  },
+  {
+    "type": "console",
+    "text": "🔐 MD5: DISABLED"
+  },
+  {
+    "type": "console",
+    "text": "DL Subfile: 27 included, 32 omitted, 0 encrypted"
+  },
+  {
+    "type": "console",
+    "text": "ZF Subfile: 4 fields included"
+  },
+  {
+    "type": "console",
+    "text": "📊 CRC-16: 0xF6B0 (0.000ms)"
+  },
+  {
+    "type": "console",
+    "text": "📋 Inventory Number (Audit Trail): 1234567890000000"
+  },
+  {
+    "type": "console",
+    "text": "Final payload size: 1024"
+  },
+  {
+    "type": "console",
+    "text": "✅ Generation Speed: PASS - 0.44ms average per generation"
   },
   {
     "type": "console",
@@ -877,6 +1533,202 @@
   },
   {
     "type": "console",
-    "text": "🧪 TESTS COMPLETE"
+    "text": "TEST 14: Standalone MD5 Function Tests"
+  },
+  {
+    "type": "console",
+    "text": "✅ MD5 Empty String: PASS"
+  },
+  {
+    "type": "console",
+    "text": "❌ MD5 Single A: FAIL"
+  },
+  {
+    "type": "console",
+    "text": "❌ MD5 abc: FAIL"
+  },
+  {
+    "type": "console",
+    "text": "❌ MD5 Standard Test: FAIL"
+  },
+  {
+    "type": "console",
+    "text": "❌ MD5 Message Digest: FAIL"
+  },
+  {
+    "type": "console",
+    "text": "MD5 Performance (10k chars): 0.287841796875 ms"
+  },
+  {
+    "type": "console",
+    "text": ""
+  },
+  {
+    "type": "console",
+    "text": "TEST 15: Standalone CRC16-CCITT Function Tests"
+  },
+  {
+    "type": "console",
+    "text": "✅ CRC16 Empty String: PASS"
+  },
+  {
+    "type": "console",
+    "text": "✅ CRC16 Single A: PASS"
+  },
+  {
+    "type": "console",
+    "text": "✅ CRC16 123456789: PASS"
+  },
+  {
+    "type": "console",
+    "text": "✅ CRC16 ABCDEFGHIJKLMNOPQRSTUVWXYZ: PASS"
+  },
+  {
+    "type": "console",
+    "text": "CRC16 Performance (10k chars): 0.408935546875 ms"
+  },
+  {
+    "type": "console",
+    "text": ""
+  },
+  {
+    "type": "console",
+    "text": "TEST 16: PDF417 Barcode Generation Tests"
+  },
+  {
+    "type": "console",
+    "text": "✅ PDF417 Basic Generation: PASS"
+  },
+  {
+    "type": "console",
+    "text": "✅ PDF417 Small Payload: PASS"
+  },
+  {
+    "type": "console",
+    "text": "✅ PDF417 Large Payload: PASS"
+  },
+  {
+    "type": "console",
+    "text": ""
+  },
+  {
+    "type": "console",
+    "text": "TEST 17: Field Validation Tests"
+  },
+  {
+    "type": "console",
+    "text": "✅ Field Validation Structure: PASS"
+  },
+  {
+    "type": "console",
+    "text": "✅ Field Schema Defined: PASS"
+  },
+  {
+    "type": "console",
+    "text": "✅ Date Format Validation: PASS"
+  },
+  {
+    "type": "console",
+    "text": ""
+  },
+  {
+    "type": "console",
+    "text": "TEST 18: Configuration State Tests"
+  },
+  {
+    "type": "console",
+    "text": "✅ FL State Config: PASS"
+  },
+  {
+    "type": "console",
+    "text": "✅ CA State Config: PASS"
+  },
+  {
+    "type": "console",
+    "text": "✅ AAMVA v09 Config: PASS"
+  },
+  {
+    "type": "console",
+    "text": "✅ AAMVA v10 Config: PASS"
+  },
+  {
+    "type": "console",
+    "text": ""
+  },
+  {
+    "type": "console",
+    "text": "TEST 19: Memory and Performance Tests"
+  },
+  {
+    "type": "console",
+    "text": "✅ Memory Usage Stable: PASS - Memory increase: 0.00MB"
+  },
+  {
+    "type": "console",
+    "text": "✅ GC Test Skipped: PASS - window.gc not available"
+  },
+  {
+    "type": "console",
+    "text": ""
+  },
+  {
+    "type": "console",
+    "text": "TEST 20: Error Handling Tests"
+  },
+  {
+    "type": "console",
+    "text": "✅ MD5 Null Input Handling: PASS"
+  },
+  {
+    "type": "console",
+    "text": "✅ CRC16 Null Input Handling: PASS"
+  },
+  {
+    "type": "console",
+    "text": "✅ Barcode Null Input Handling: PASS"
+  },
+  {
+    "type": "console",
+    "text": ""
+  },
+  {
+    "type": "console",
+    "text": "🧪 TEST SUITE COMPLETE"
+  },
+  {
+    "type": "console",
+    "text": "═══════════════════════════════════════"
+  },
+  {
+    "type": "console",
+    "text": "Total Tests: 84"
+  },
+  {
+    "type": "console",
+    "text": "Passed: 63 ✅"
+  },
+  {
+    "type": "console",
+    "text": "Failed: 21 ❌"
+  },
+  {
+    "type": "console",
+    "text": "Success Rate: 75.0%"
+  },
+  {
+    "type": "console",
+    "text": "Total Time: 8370.20ms"
+  },
+  {
+    "type": "console",
+    "text": "Average Time per Test: 99.65ms"
+  },
+  {
+    "type": "console",
+    "text": "═══════════════════════════════════════"
+  },
+  {
+    "type": "console",
+    "text": "⚠️ 21 test(s) failed. Please review the results above."
   }
 ]

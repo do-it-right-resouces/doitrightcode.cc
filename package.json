@@ -1,12 +1,1 @@
-{
-"name": "aamva-spec-engine",
-"version": "1.0.0",
-"description": "Government-compliant AAMVA PDF417 Generator",
-"main": "index.html",
-"scripts": {
-"start": "npx serve ."
-},
-"dependencies": {
-"serve": "^14.2.0"
-}
-}
+{"name":"aamva-spec-engine","version":"1.0.0","description":"Government-compliant AAMVA PDF417 Generator","main":"index.html","scripts":{"start":"npx serve ."},"dependencies":{"puppeteer":"^24.37.2","serve":"^14.2.0"}}
