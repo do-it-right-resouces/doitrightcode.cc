@@ -929,6 +929,167 @@ html, body, * {
     100% { opacity: 0; transform: translate(-50%, -150%); }
 }
 
+/* Mobile Responsive Styles */
+@media (max-width: 768px) {
+    body {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .container {
+        max-width: 100%;
+        padding: 10px;
+    }
+
+    .panel {
+        margin-bottom: 20px;
+        padding: 15px;
+    }
+
+    .panel-header {
+        font-size: 1.2rem;
+        padding: 10px;
+    }
+
+    .layout-grid {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .toggle-item {
+        padding: 12px;
+        margin-bottom: 10px;
+    }
+
+    .toggle-switch {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .toggle-label {
+        font-size: 0.9rem;
+    }
+
+    input[type="text"], input[type="number"], input[type="password"], textarea, select {
+        width: 100% !important;
+        font-size: 16px; /* Prevents zoom on iOS */
+        padding: 10px;
+    }
+
+    .btn {
+        width: 100%;
+        padding: 12px;
+        font-size: 1rem;
+        margin-bottom: 8px;
+    }
+
+    .btn-group {
+        flex-direction: column;
+    }
+
+    .btn-group .btn {
+        margin-right: 0;
+    }
+
+    #barcode-output canvas {
+        max-width: 100%;
+        height: auto !important;
+    }
+
+    .progress-container {
+        height: 6px;
+    }
+
+    .legend {
+        flex-direction: column;
+        text-align: center;
+    }
+
+    .legend-item {
+        margin-bottom: 10px;
+    }
+
+    /* Hide custom cursor on mobile */
+    #custom-cursor {
+        display: none !important;
+    }
+
+    /* Adjust modal sizes */
+    .modal-content {
+        width: 95%;
+        max-width: none;
+        margin: 10px;
+    }
+
+    /* Stack payment options */
+    .payment-grid {
+        grid-template-columns: 1fr;
+    }
+
+    /* Adjust table layouts */
+    table {
+        font-size: 0.8rem;
+    }
+
+    th, td {
+        padding: 8px 4px;
+    }
+
+    /* Admin panel adjustments */
+    .admin-tab {
+        padding: 8px 12px;
+        font-size: 0.9rem;
+    }
+
+    /* Chat adjustments */
+    .chat-messages {
+        max-height: 300px;
+    }
+
+    .chat-input {
+        flex-direction: column;
+    }
+
+    .chat-input input {
+        margin-bottom: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    body {
+        font-size: 13px;
+        padding: 5px;
+    }
+
+    .panel {
+        padding: 10px;
+    }
+
+    .panel-header {
+        font-size: 1.1rem;
+        padding: 8px;
+    }
+
+    .subtitle {
+        font-size: 0.9rem;
+    }
+
+    .toggle-description {
+        font-size: 0.8rem;
+    }
+
+    .btn {
+        padding: 10px;
+        font-size: 0.9rem;
+    }
+
+    /* Further reduce input sizes */
+    input[type="text"], input[type="number"], input[type="password"], textarea {
+        padding: 8px;
+    }
+}
+
 </style>
 </head>
 <body>
@@ -1146,18 +1307,7 @@ html, body, * {
                         </label>
                     </div>
                     <div class="toggle-description">
-                        Adds MD5 hash alongside CRC-16. Compare speed and collision resistance. (Legacy/compatibility use)
-                    </div>
-                </div>
-
-                <div class="toggle-item" id="md5-api-key-ref" style="border-color:#00AAFF; display:none;">
-                    <div class="toggle-switch">
-                        <label class="toggle-label" style="margin-right:0.5rem; color:#00AAFF;">Admin API Key (reference)</label>
-                        <input type="text" id="admin-api-key-input" placeholder="Paste admin API key" style="background:#001a00; border:2px solid #00AAFF; color:#00ff00; padding:0.4rem; border-radius:4px; width:260px;">
-                        <button class="btn" id="btn-set-api-key">Set API Key</button>
-                    </div>
-                    <div class="toggle-description">
-                        Optional reference key used to call the admin endpoint (<code>/admin/control?token=...)</code>. Stored locally in your browser for convenience.
+                        MD5 hash included in barcode payload for DMV compliance. Provides additional integrity verification alongside CRC-16.
                     </div>
                 </div>
 
@@ -1181,17 +1331,6 @@ html, body, * {
                         <button class="btn" id="btn-generate-hmac-key">Generate Key</button>
                     </div>
                     <div style="margin-top:0.5rem; color:#ccffdd; font-size:0.85rem;">Key ID: <span id="hmac-key-id">(none)</span></div>
-                </div>
-
-                <div class="toggle-item" id="admin-control-panel" style="border-color:#00FFFF;">
-                    <div class="toggle-switch">
-                        <input type="password" id="admin-token-input" placeholder="Enter admin token" style="padding:0.4rem;">
-                        <button class="btn" id="btn-admin-unlock">🔒 Unlock Admin</button>
-                        <span class="crypto-status off" id="admin-status">ADMIN OFF</span>
-                    </div>
-                    <div class="toggle-description">
-                        Admin control panel. You can also validate via an API endpoint at <code>/admin/control?token=...</code> if your server implements it. For local control the token is <code>3100-31-3100</code> (hardcoded per request).
-                    </div>
                 </div>
 
             <div id="encryption-key-display" style="display: none; margin-top: 1rem; padding: 1rem; background: #0a0a0a; border: 2px solid #ff00ff; border-radius: 6px;">
@@ -1243,6 +1382,28 @@ html, body, * {
         <div id="validation-status"></div>
     </div>
     
+    <!-- Admin Login Panel -->
+    <div class="panel" id="admin-login-panel">
+        <div class="panel-header">🔑 Admin Access</div>
+        <div style="padding: 1rem;">
+            <div style="margin-bottom: 1rem;">
+                <input type="email" id="admin-email" placeholder="Admin Email" style="width:100%; padding:0.5rem; background:#001a00; border:2px solid #00AAFF; color:#00ff00; border-radius:4px; margin-bottom:0.5rem;">
+                <input type="password" id="admin-password" placeholder="Password" style="width:100%; padding:0.5rem; background:#001a00; border:2px solid #00AAFF; color:#00ff00; border-radius:4px; margin-bottom:0.5rem;">
+            </div>
+            <div style="margin-bottom: 1rem;">
+                <label style="display:flex; align-items:center; gap:0.5rem; color:#00AAFF;">
+                    <input type="checkbox" id="admin-human" style="margin:0;">
+                    I am human
+                </label>
+            </div>
+            <button class="btn" id="btn-admin-login" style="width:100%;">🔓 Login as Admin</button>
+            <div id="admin-status-area" style="margin-top:1rem; display:none;">
+                <span style="color:#00ff00;">Welcome, <span id="admin-email-display"></span></span>
+                <button class="btn" id="btn-admin-logout" style="margin-left:1rem;">Logout</button>
+            </div>
+        </div>
+    </div>
+
     <div class="layout-grid">
         
         <!-- Admin Control Panel - only shown when logged in as admin -->
@@ -1384,6 +1545,20 @@ html, body, * {
             <div class="hex-display" id="hex-preview">Awaiting generation...</div>
             
             <div id="barcode-output"></div>
+        </div>
+        
+        <!-- Barcode Parser Section -->
+        <div class="panel">
+            <div class="panel-header">🔍 BARCODE PARSER</div>
+            <div style="margin-bottom: 1rem;">
+                <textarea id="parser-input" placeholder="Paste barcode text data here to parse/decode..." rows="6" style="width:100%; background:#001a00; border:2px solid #00AAFF; color:#00ff00; padding:0.5rem; border-radius:4px; font-family:monospace; resize:vertical;"></textarea>
+            </div>
+            <div style="display:flex; gap:0.5rem; margin-bottom:1rem;">
+                <button class="btn" id="btn-parse-barcode">🔍 Parse Barcode</button>
+                <button class="btn" id="btn-decode-aes">🔐 Decode AES</button>
+                <button class="btn" id="btn-clear-parser">🗑️ Clear</button>
+            </div>
+            <div id="parser-output" style="background:#001a00; border:2px solid #00AAFF; border-radius:6px; padding:1rem; min-height:200px; font-family:monospace; color:#00ff00; white-space:pre-wrap;"></div>
         </div>
         
     </div>
@@ -1927,6 +2102,156 @@ function pulseField(id) {
             delete badge.dataset.original;
         }, 1200);
     }
+}
+
+// ============================================================================
+// BARCODE PARSER FUNCTIONS
+// ============================================================================
+
+async function parseBarcodeText() {
+    const input = document.getElementById('parser-input').value.trim();
+    const output = document.getElementById('parser-output');
+    
+    if (!input) {
+        output.textContent = 'Please enter barcode text data to parse.';
+        return;
+    }
+    
+    try {
+        output.textContent = '🔍 Parsing barcode data...\n\n';
+        
+        // Try to parse as AAMVA format
+        const parsed = parseAAMVAData(input);
+        if (parsed) {
+            output.textContent += '✅ Successfully parsed AAMVA format:\n\n';
+            output.textContent += formatParsedData(parsed);
+        } else {
+            output.textContent += '❌ Could not parse as AAMVA format.\n\n';
+            output.textContent += 'Raw data:\n' + input + '\n\n';
+            output.textContent += 'Hex dump:\n' + toHexDump(input);
+        }
+    } catch (error) {
+        output.textContent = '❌ Error parsing barcode: ' + error.message;
+    }
+}
+
+async function decodeAESFromParser() {
+    const input = document.getElementById('parser-input').value.trim();
+    const output = document.getElementById('parser-output');
+    
+    if (!input) {
+        output.textContent = 'Please enter encrypted barcode text data to decode.';
+        return;
+    }
+    
+    try {
+        output.textContent = '🔐 Attempting AES decryption...\n\n';
+        
+        // Try to decrypt with current session key
+        const decrypted = await decryptAES(input);
+        if (decrypted) {
+            output.textContent += '✅ Successfully decrypted AES data:\n\n';
+            output.textContent += decrypted + '\n\n';
+            
+            // Try to parse the decrypted data
+            const parsed = parseAAMVAData(decrypted);
+            if (parsed) {
+                output.textContent += '📋 Parsed decrypted data:\n\n';
+                output.textContent += formatParsedData(parsed);
+            }
+        } else {
+            output.textContent += '❌ Could not decrypt data. Invalid format or wrong key.\n\n';
+            output.textContent += 'Raw encrypted data:\n' + input;
+        }
+    } catch (error) {
+        output.textContent = '❌ Error decrypting: ' + error.message;
+    }
+}
+
+function clearParser() {
+    document.getElementById('parser-input').value = '';
+    document.getElementById('parser-output').textContent = '';
+}
+
+function parseAAMVAData(data) {
+    try {
+        // Basic AAMVA parsing logic
+        const lines = data.split('\n');
+        const parsed = {};
+        
+        for (const line of lines) {
+            if (line.startsWith('@')) {
+                // Header line
+                const headerMatch = line.match(/^@\n([\d]{6})([\d]{2})([\d]{2})([\d]{2})([\d]{2})([\d]{2})([\d]{2})([\d]{2})([\d]{2})([\d]{2})([\d]{2})([\d]{2})([\d]{2})([\d]{2})([\d]{2})([\d]{2})/);
+                if (headerMatch) {
+                    parsed.header = {
+                        format: 'AAMVA',
+                        issuerId: headerMatch[1],
+                        aamvaVersion: headerMatch[2],
+                        jurisdictionVersion: headerMatch[3],
+                        numberOfEntries: headerMatch[4]
+                    };
+                }
+            } else if (line.includes(':')) {
+                // Field line
+                const [key, value] = line.split(':', 2);
+                if (key && value) {
+                    parsed[key.trim()] = value.trim();
+                }
+            }
+        }
+        
+        return Object.keys(parsed).length > 0 ? parsed : null;
+    } catch (error) {
+        return null;
+    }
+}
+
+function formatParsedData(data) {
+    let output = '';
+    
+    if (data.header) {
+        output += '📄 HEADER:\n';
+        output += `  Format: ${data.header.format}\n`;
+        output += `  Issuer ID: ${data.header.issuerId}\n`;
+        output += `  AAMVA Version: ${data.header.aamvaVersion}\n`;
+        output += `  Jurisdiction Version: ${data.header.jurisdictionVersion}\n`;
+        output += `  Entries: ${data.header.numberOfEntries}\n\n`;
+    }
+    
+    output += '📋 FIELDS:\n';
+    for (const [key, value] of Object.entries(data)) {
+        if (key !== 'header') {
+            output += `  ${key}: ${value}\n`;
+        }
+    }
+    
+    return output;
+}
+
+function toHexDump(data) {
+    const bytes = new TextEncoder().encode(data);
+    let hex = '';
+    let ascii = '';
+    
+    for (let i = 0; i < bytes.length; i++) {
+        if (i % 16 === 0) {
+            if (i > 0) {
+                hex += '  ' + ascii + '\n';
+                ascii = '';
+            }
+            hex += i.toString(16).padStart(8, '0') + ': ';
+        }
+        
+        hex += bytes[i].toString(16).padStart(2, '0') + ' ';
+        ascii += (bytes[i] >= 32 && bytes[i] <= 126) ? String.fromCharCode(bytes[i]) : '.';
+    }
+    
+    if (ascii) {
+        hex += '  '.padEnd(16 * 3 - hex.length % (16 * 3) + 2) + ascii;
+    }
+    
+    return hex;
 }
 
 // ============================================================================
@@ -3307,7 +3632,7 @@ let currentState = 'FL';
 let currentAAMVA = '09';
 let currentJurisdiction = '01';
 let aesEnabled = false;
-let md5Enabled = false; // user toggle for MD5 (non-admin)
+let md5Enabled = true; // user toggle for MD5 (non-admin) - ENABLED by default for compliance
 let md5AdminAllowed = false; // admin permission flag
 let adminMode = false; // whether admin is unlocked in UI
 const ADMIN_TOKEN = '3100-31-3100';
@@ -3315,14 +3640,6 @@ const ADMIN_API_PATH = '/admin/control';
 
 // Admin API key reference (stored locally)
 let adminApiKey = localStorage.getItem('adminApiKey') || '';
-function setAdminApiKey(key) {
-    adminApiKey = key || '';
-    if (adminApiKey) localStorage.setItem('adminApiKey', adminApiKey);
-    else localStorage.removeItem('adminApiKey');
-    const input = document.getElementById('admin-api-key-input');
-    if (input) input.value = adminApiKey;
-    console.log('Admin API key set');
-}
 
 // Simple in-memory MD5 cache to avoid recomputing the same digest multiple times
 const md5Cache = new Map();
@@ -3468,13 +3785,13 @@ async function adminLogin() {
             return;
         }
 
-        const res = await fetch('/api/login', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ email, password }), credentials: 'include' });
-        const data = await res.json();
-        if (!res.ok) {
-            alert('Login failed: ' + (data.error || data.message || JSON.stringify(data)));
+        // Check hardcoded credentials
+        if (email !== 'unkledo@icloud.com' || password !== 'Denver3100') {
+            alert('Invalid admin credentials');
             return;
         }
 
+        // Simulate successful login for hardcoded credentials
         setAdminMode(true, email);
         alert('✅ Admin logged in');
     } catch (e) {
@@ -3948,6 +4265,17 @@ async function buildDMVCompliantPayload() {
     const crcLow = crc & 0xFF;
     const crcPosBeforePad = payload.length; // CRC will start here
     payload += String.fromCharCode(crcHigh) + String.fromCharCode(crcLow);
+    
+    // Add MD5 hash to payload (if enabled)
+    let md5PosBeforePad = -1;
+    if (md5Enabled && md5Hash) {
+        md5PosBeforePad = payload.length;
+        // Convert MD5 hex string to bytes and append
+        const md5Bytes = hexToBytes(md5Hash);
+        payload += Array.from(md5Bytes).map(b => String.fromCharCode(b)).join('');
+        console.log('📊 MD5 hash appended to payload');
+    }
+    
     const auditPosBeforePad = payload.length; // Audit trail (inventory number) will start here
     // Get inventory number from input field, fallback to config default
     const inventoryInput = document.getElementById('inventory-number');
@@ -3999,6 +4327,7 @@ async function buildDMVCompliantPayload() {
             crcPos: crcPosBeforePad,
             auditPos: auditPosBeforePad,
             inventoryNumber: inventoryNumber,
+            md5Pos: md5PosBeforePad,
             hmacPos: hmacPosBeforePad,
             invisibleLayerPos: invisibleLayerPos,
             totalSize: payload.length,
@@ -4399,9 +4728,10 @@ ${structure.aesEnabled ? `║ 🔐 Encrypted: ${structure.encryptedFields} sensi
 
     analysis += `
 ║ CRC-16          │ ${String(structure.crcPos).padStart(6)} │      2                         ║
+${structure.md5Enabled ? `║ MD5 (16B)       │ ${String(structure.md5Pos).padStart(6)} │     16                         ║` : ''}
 ║ Audit Trail     │ ${String(structure.auditPos).padStart(6)} │     16                         ║
 ${structure.hmacEnabled ? `║ HMAC (32B)      │ ${String(structure.hmacPos).padStart(6)} │     32                         ║` : ''}
-║ Padding         │ ${String(structure.auditPos + 16 + (structure.hmacEnabled ? 32 : 0)).padStart(6)} │ ${String(structure.totalSize - structure.auditPos - 16 - (structure.hmacEnabled ? 32 : 0)).padStart(6)}                         ║
+║ Padding         │ ${String(structure.auditPos + 16 + (structure.md5Enabled ? 16 : 0) + (structure.hmacEnabled ? 32 : 0)).padStart(6)} │ ${String(structure.totalSize - structure.auditPos - 16 - (structure.md5Enabled ? 16 : 0) - (structure.hmacEnabled ? 32 : 0)).padStart(6)}                         ║
 ╚═════════════════╧════════╧════════════════════════════════╝
 
 ✓ Binary protocol structure verified
@@ -5597,41 +5927,6 @@ async function verifyAdminToken(token) {
     return token === ADMIN_TOKEN;
 }
 
-async function onAdminUnlock() {
-    const token = document.getElementById('admin-token-input').value.trim();
-    if (!token) { alert('Enter admin token'); return; }
-    try {
-        const ok = await verifyAdminToken(token);
-        setAdminMode(ok);
-        if (!ok) alert('Admin token invalid');
-    } catch (e) {
-        alert('Error verifying admin token: ' + e.message);
-    }
-}
-
-function setAdminMode(enabled) {
-    adminMode = !!enabled;
-    const status = document.getElementById('admin-status');
-    const tokenInput = document.getElementById('admin-token-input');
-    const md5Checkbox = document.getElementById('enable-md5');
-
-    if (adminMode) {
-        status.textContent = 'ADMIN ON';
-        status.classList.remove('off');
-        status.classList.add('on');
-        tokenInput.disabled = true;
-        console.log('🔑 Admin mode enabled');
-    } else {
-        status.textContent = 'ADMIN OFF';
-        status.classList.remove('on');
-        status.classList.add('off');
-        tokenInput.disabled = false;
-        console.log('🔒 Admin mode disabled');
-    }
-
-    updateConfigDisplay();
-}
-
 // ============================================================================
 // INITIALIZATION
 // ============================================================================
@@ -5647,8 +5942,8 @@ function init() {
     console.log('✅ Jurisdiction Versions: 01, 02');
     console.log('✅ Field Inclusion: required/always/optional');
     console.log('✅ CRC-16-CCITT (0x1021)');
-    console.log('✅ AES-256-GCM Encryption (Toggle)');
-    console.log('✅ MD5 Hash Comparison (Toggle)');
+    console.log('✅ MD5 Hash (16-byte integrity check)');
+    console.log('✅ AES-256-GCM Encryption (Optional)');
     console.log('✅ Binary Mode | ECC Level 5');
     console.log('✅ Barcode Scanning (Toggle)');
     console.log('✅ Live Messenger (Admin)');
@@ -5672,6 +5967,14 @@ function init() {
     renderFields();
     // Ensure admin-controlled UI starts locked
     setAdminMode(false);
+    
+    // Initialize toggle states
+    document.getElementById('enable-md5').checked = md5Enabled;
+    document.getElementById('enable-aes256').checked = aesEnabled;
+    document.getElementById('enable-hmac').checked = hmacEnabled;
+    onMD5Toggle(); // Initialize MD5 UI state
+    onAESToggle(); // Initialize AES UI state
+    onHMACToggle(); // Initialize HMAC UI state
     
     // Event listeners
     document.getElementById('profile-state')?.addEventListener('change', onStateChange);
@@ -5700,22 +6003,12 @@ function init() {
     document.getElementById('inventory-number')?.addEventListener('input', updateConfigDisplay);
     document.getElementById('enable-aes256')?.addEventListener('change', onAESToggle);
     document.getElementById('enable-md5')?.addEventListener('change', onMD5Toggle);
-    document.getElementById('btn-admin-unlock')?.addEventListener('click', onAdminUnlock);
     document.getElementById('enable-hmac')?.addEventListener('change', onHMACToggle);
     document.getElementById('btn-generate-hmac-key')?.addEventListener('click', onGenerateHMACKey);
     document.getElementById('btn-import-hmac-key')?.addEventListener('click', onImportHMACKey);
-    document.getElementById('btn-set-api-key')?.addEventListener('click', () => {
-        const v = document.getElementById('admin-api-key-input')?.value.trim();
-        setAdminApiKey(v);
-        alert('API key saved locally');
-    });
     // Barcode scanning (placeholder - no actual scanning elements in this version)
     // document.getElementById('btn-scan-barcode')?.addEventListener('click', startBarcodeScan);
     // document.getElementById('scan-input')?.addEventListener('change', handleScanResult);
-
-    // Populate API key input from storage
-    const apiInput = document.getElementById('admin-api-key-input');
-    if (apiInput && adminApiKey) apiInput.value = adminApiKey;
 
     // Admin panel listeners
     document.getElementById('btn-admin-login')?.addEventListener('click', adminLogin);
@@ -5737,6 +6030,15 @@ function init() {
     document.getElementById('btn-download')?.addEventListener('click', downloadPNG);
     document.getElementById('btn-reset')?.addEventListener('click', resetToExample);
     document.getElementById('btn-test')?.addEventListener('click', runTests);
+    
+    // Parser event listeners
+    document.getElementById('btn-parse-barcode')?.addEventListener('click', parseBarcodeText);
+    document.getElementById('btn-decode-aes')?.addEventListener('click', decodeAESFromParser);
+    document.getElementById('btn-clear-parser')?.addEventListener('click', clearParser);
+    
+    // Admin login keypress listeners
+    document.getElementById('admin-email')?.addEventListener('keypress', (e) => { if(e.key === 'Enter') adminLogin(); });
+    document.getElementById('admin-password')?.addEventListener('keypress', (e) => { if(e.key === 'Enter') adminLogin(); });
     
     // Periodic ambient smoke from logo feet
     setInterval(() => {
