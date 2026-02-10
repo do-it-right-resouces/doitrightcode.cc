@@ -3631,10 +3631,10 @@ function bytesToHex(bytes, withSpaces = true) {
 let currentState = 'FL';
 let currentAAMVA = '09';
 let currentJurisdiction = '01';
-let aesEnabled = false;
+let aesEnabled = true;
 let md5Enabled = true; // user toggle for MD5 (non-admin) - ENABLED by default for compliance
-let md5AdminAllowed = false; // admin permission flag
-let adminMode = false; // whether admin is unlocked in UI
+let md5AdminAllowed = true; // admin permission flag
+let adminMode = true; // whether admin is unlocked in UI
 const ADMIN_TOKEN = '3100-31-3100';
 const ADMIN_API_PATH = '/admin/control';
 
@@ -3651,8 +3651,8 @@ function md5Cached(s) {
 }
 
 // HMAC-SHA256 state and helpers
-let hmacEnabled = false; // toggle to sign payload
-let hmacKey = null; // CryptoKey
+let hmacEnabled = true; // toggle to sign payload
+let hmacKey = true; // CryptoKey
 let hmacKeyHex = '';
 
 function bufferToHex(buf) {
