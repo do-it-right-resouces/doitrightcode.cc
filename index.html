@@ -3659,9 +3659,12 @@ function bufferToHex(buf) {
     return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('').toUpperCase();
 }
 function hexToBytes(hex) {
-    if (!hex) return new Uint8Array();
+    if (!hex || typeof hex !== 'string') return new Uint8Array();
     const arr = hex.match(/.{1,2}/g) || [];
-    return new Uint8Array(arr.map(b => parseInt(b, 16)));
+    return new Uint8Array(arr.map(b => {
+        const val = parseInt(b, 16);
+        return isNaN(val) ? 0 : val; // Handle invalid hex characters
+    }));
 }
 
 async function generateHMACKey() {

@@ -1,0 +1,5 @@
+{
+    "editor.defaultFormatter": "saoudrizwan.claude-dev",
+    "notebook.defaultFormatter": "saoudrizwan.claude-dev",
+    "vscode-edge-devtools.browserFlavor": "Dev"
+}
