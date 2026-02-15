@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DO IT RIGHT - Barcode Generator</title>
-<script src="https://cdn.jsdelivr.net/npm/bwip-js@4.5.1/dist/bwip-js-min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bwip-js@4.5.1/dist/bwip-js-min.js" integrity="sha384-OLBgp1GsljhM2TJ+sbHjaiH9txEUvgdDTAzHv2P24donTt6/529l+9Ua0vFImLlb" crossorigin="anonymous"></script>
 
 <style>
 * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -1166,14 +1166,14 @@ footer {
         <div id="payment-btc" class="payment-method active">
             <p style="color:#888; font-size:0.85rem; margin:0.5rem 0;">Send Bitcoin to:</p>
             <div class="btc-address" id="btc-address">bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh</div>
-            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==" id="btc-qr-img" class="btc-qr" alt="Bitcoin QR" style="display:block;">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==" id="btc-qr-img" class="btc-qr" alt="Bitcoin QR" style="display:block;" loading="lazy">
         </div>
         
         <!-- Lightning Payment -->
         <div id="payment-ln" class="payment-method" style="display:none;">
             <p style="color:#888; font-size:0.85rem; margin:0.5rem 0;">Pay with Lightning Network:</p>
             <div class="btc-address" id="ln-invoice" style="font-size:0.65rem; word-break:break-all;">lnbc1p5hunjvdqdgdshx6pqg9c8qpp5qxq5vvgl90mq7npt0xn75358hgqjtfzerkd2fd6e2yesc8eplcwqsp5vwv5q4ahupz0jaf9h332d858rhz0nm5h8uwcp9l8qkl9rs4chths9qrsgqcqpcxqy8ayqrzjqfzhphca8jlc5zznw52mnqxsnymltjgg3lxe4ul82g42vw0jpkgkwz6p3yqqt9sqqqqqqqqqqqqqqqqq9grzjqv06k0m23t593pngl0jt7n9wznp64fqngvctz7vts8nq4tukvtljqztad5qqrdqqqcqqqqqqqqqqqqqq9gdyq7w0j9pgnd3cnypsvq67lne8lcxzfxda3zlkwtsw8fm8n3pp79lsyxmemdnnhsgev7zuhce44mk3x3naxmwf9ygnnglmw9userg6sq8g9w7n</div>
-            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==" id="ln-qr-img" class="btc-qr" alt="Lightning QR" style="display:block;">
+            <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mNk+M9QDwADhgGAWjR9awAAAABJRU5ErkJggg==" id="ln-qr-img" class="btc-qr" alt="Lightning QR" style="display:block;" loading="lazy">
             <p style="color:#ff9900; font-size:0.75rem; margin-top:0.5rem;">⚡ Instant confirmation with Lightning!</p>
         </div>
         
@@ -1522,14 +1522,14 @@ footer {
 <!-- Help Chat Widget -->
 <div class="help-widget" id="help-widget">
     <div class="help-toggle" id="help-toggle">
-        <img src="assets/logo.png" alt="Help" id="help-avatar">
+        <img src="assets/logo.png" alt="Help" id="help-avatar" loading="lazy">
         <div class="chat-smoke" id="chat-smoke"></div>
     </div>
 </div>
 
 <div class="help-panel" id="help-panel">
     <div class="help-panel-header">
-        <img src="assets/logo.png" alt="Assistant">
+        <img src="assets/logo.png" alt="Assistant" loading="lazy">
         <span>DO IT RIGHT Assistant</span>
     </div>
     <div class="help-messages" id="help-messages">
@@ -1552,6 +1552,17 @@ footer {
 
 <script>
 "use strict";
+
+// ============================================================================
+// DEBUG CONFIGURATION
+// ============================================================================
+const DEBUG_MODE = false; // Set to true to enable console logging
+
+function debugLog(...args) {
+    if (DEBUG_MODE) {
+        debugLog(...args);
+    }
+}
 
 // ============================================================================
 // AUTH SYSTEM - Login/Register with Admin Bypass
@@ -1622,7 +1633,7 @@ function doLogin(email, password) {
         localStorage.setItem('dirCredits_' + email, '999999');
         hideAuthOverlay();
         updateUserDisplay();
-        console.log('🔑 Admin logged in - unlimited access');
+        debugLog('🔑 Admin logged in - unlimited access');
         return;
     }
     
@@ -1634,7 +1645,7 @@ function doLogin(email, password) {
         localStorage.setItem('dirUser', JSON.stringify(currentUser));
         hideAuthOverlay();
         updateUserDisplay();
-        console.log('✅ User logged in:', email);
+        debugLog('✅ User logged in:', email);
         return;
     }
     
@@ -1659,7 +1670,7 @@ function doRegister(email, password) {
     
     hideAuthOverlay();
     updateUserDisplay();
-    console.log('✅ User registered:', email);
+    debugLog('✅ User registered:', email);
 }
 
 function showAuthError(msg) {
@@ -1738,7 +1749,7 @@ function updateUserDisplay() {
         addAuditLog('login', `User logged in: ${currentUser.email}${isAdmin ? ' (ADMIN)' : ''}`);
     }
     
-    console.log('User:', currentUser?.email, 'Credits:', userCredits, 'Admin:', isAdmin);
+    debugLog('User:', currentUser?.email, 'Credits:', userCredits, 'Admin:', isAdmin);
 }
 
 // Admin Panel Functions
@@ -1947,7 +1958,7 @@ function showPaymentTab(tab) {
 function showPaymentModal(type) {
     // Admin bypass - no payment needed
     if (isAdminUser()) {
-        console.log('🔑 Admin bypass - no payment required');
+        debugLog('🔑 Admin bypass - no payment required');
         if (type === 'hmac') {
             onImportHMACKeyConfirmed();
         }
@@ -2110,7 +2121,7 @@ async function generateAESKey() {
     const hexArray = Array.from(new Uint8Array(exported));
     aesKeyHex = hexArray.map(b => b.toString(16).padStart(2, '0')).join('');
     
-    console.log('🔑 AES-256 Key Generated:', aesKeyHex);
+    debugLog('🔑 AES-256 Key Generated:', aesKeyHex);
     
     const display = document.getElementById('aes-key-display');
     if (display) {
@@ -3210,7 +3221,7 @@ function setAdminApiKey(key) {
     else localStorage.removeItem('adminApiKey');
     const input = document.getElementById('admin-api-key-input');
     if (input) input.value = adminApiKey;
-    console.log('Admin API key set');
+    debugLog('Admin API key set');
 }
 
 // Simple in-memory MD5 cache to avoid recomputing the same digest multiple times
@@ -3242,7 +3253,7 @@ async function generateHMACKey() {
     hmacKeyHex = bufferToHex(raw);
     document.getElementById('hmac-key-hex').value = hmacKeyHex;
     document.getElementById('hmac-key-id').textContent = hmacKeyHex.substring(0, 16) + '...';
-    console.log('🔑 HMAC key generated:', hmacKeyHex.substring(0, 32) + '...');
+    debugLog('🔑 HMAC key generated:', hmacKeyHex.substring(0, 32) + '...');
 }
 
 async function importHMACKeyHex(hex) {
@@ -3252,7 +3263,7 @@ async function importHMACKeyHex(hex) {
         hmacKeyHex = hex.toUpperCase();
         document.getElementById('hmac-key-hex').value = hmacKeyHex;
         document.getElementById('hmac-key-id').textContent = hmacKeyHex.substring(0, 16) + '...';
-        console.log('🔑 HMAC key imported');
+        debugLog('🔑 HMAC key imported');
         return true;
     } catch (e) {
         console.error('Failed to import HMAC key', e);
@@ -3686,9 +3697,9 @@ async function buildDMVCompliantPayload() {
     
     const config = getCurrentConfig();
     
-    console.log(`🔧 Building ${config.name} payload...`);
-    console.log(`🔐 AES-256: ${aesEnabled ? 'ENABLED' : 'DISABLED'}`);
-    console.log(`🔐 MD5: ${md5Enabled ? 'ENABLED' : 'DISABLED'}`);
+    debugLog(`🔧 Building ${config.name} payload...`);
+    debugLog(`🔐 AES-256: ${aesEnabled ? 'ENABLED' : 'DISABLED'}`);
+    debugLog(`🔐 MD5: ${md5Enabled ? 'ENABLED' : 'DISABLED'}`);
     
     // Build DL subfile with encryption
     let dlBody = '';
@@ -3703,10 +3714,10 @@ async function buildDMVCompliantPayload() {
         
         // Encrypt sensitive fields if AES is enabled
         if (aesEnabled && value && field.sensitive) {
-            console.log(`🔐 Encrypting ${field.id}: "${value}"`);
+            debugLog(`🔐 Encrypting ${field.id}: "${value}"`);
             value = await encryptFieldAES(value);
             encryptedCount++;
-            console.log(`   → Encrypted: ${value.substring(0, 40)}...`);
+            debugLog(`   → Encrypted: ${value.substring(0, 40)}...`);
         }
         
         let shouldInclude = false;
@@ -3727,7 +3738,7 @@ async function buildDMVCompliantPayload() {
         }
     }
     
-    console.log(`DL Subfile: ${includedFields} included, ${omittedFields} omitted, ${encryptedCount} encrypted`);
+    debugLog(`DL Subfile: ${includedFields} included, ${omittedFields} omitted, ${encryptedCount} encrypted`);
     
     // Build state-specific subfile using the proper state schema
     const subfileSchema = getStateSubfile(currentState);
@@ -3753,7 +3764,7 @@ async function buildDMVCompliantPayload() {
         }
     });
     
-    console.log(`${subfileId} Subfile: ${stateIncluded} fields included`);
+    debugLog(`${subfileId} Subfile: ${stateIncluded} fields included`);
     
     // Build header
     const PREAMBLE = '@' + LF + RS + CR;
@@ -3799,10 +3810,10 @@ async function buildDMVCompliantPayload() {
         const md5StartTime = performance.now();
         md5Hash = md5Cached(payload);
         md5Time = performance.now() - md5StartTime;
-        console.log(`📊 MD5: ${md5Hash} (${md5Time.toFixed(3)}ms)`);
+        debugLog(`📊 MD5: ${md5Hash} (${md5Time.toFixed(3)}ms)`);
     }
     
-    console.log(`📊 CRC-16: 0x${crc.toString(16).toUpperCase()} (${crcTime.toFixed(3)}ms)`);
+    debugLog(`📊 CRC-16: 0x${crc.toString(16).toUpperCase()} (${crcTime.toFixed(3)}ms)`);
     
     // Add CRC to payload and record positions BEFORE padding
     const crcHigh = (crc >> 8) & 0xFF;
@@ -3820,7 +3831,7 @@ async function buildDMVCompliantPayload() {
         inventoryNumber = inventoryNumber.substring(0, 16);
     }
     payload += inventoryNumber;
-    console.log(`📋 Inventory Number (Audit Trail): ${inventoryNumber}`);
+    debugLog(`📋 Inventory Number (Audit Trail): ${inventoryNumber}`);
 
     // HMAC-SHA256 (if enabled and key present) - sign the payload up to this point (before padding)
     let hmacHex = null;
@@ -3834,7 +3845,7 @@ async function buildDMVCompliantPayload() {
         hmacPosBeforePad = payload.length;
         // append raw bytes
         payload += Array.from(hmacBytes).map(b => String.fromCharCode(b)).join('');
-        console.log('🔐 HMAC appended:', hmacHex.substring(0, 32) + '...');
+        debugLog('🔐 HMAC appended:', hmacHex.substring(0, 32) + '...');
     }
 
     // Pad to TARGET_SIZE (e.g., 1024 bytes)
@@ -3845,7 +3856,7 @@ async function buildDMVCompliantPayload() {
         payload += '\x00'.repeat(paddingNeeded);
     }
     
-    console.log('Final payload size:', payload.length);
+    debugLog('Final payload size:', payload.length);
     
     return {
         payload: payload,
@@ -4023,9 +4034,9 @@ function validateFields() {
 
 async function generateBarcode() {
     console.clear();
-    console.log('═══════════════════════════════════════');
-    console.log(`🚀 GENERATING ${getCurrentConfig().name} PDF417`);
-    console.log('═══════════════════════════════════════');
+    debugLog('═══════════════════════════════════════');
+    debugLog(`🚀 GENERATING ${getCurrentConfig().name} PDF417`);
+    debugLog('═══════════════════════════════════════');
     
     const validation = validateFields();
     if (validation.errors.length > 0) {
@@ -4066,8 +4077,8 @@ async function generateBarcode() {
         
         displayValidationResults(validation, true);
         
-        console.log('✅ SUCCESS');
-        console.log('═══════════════════════════════════════');
+        debugLog('✅ SUCCESS');
+        debugLog('═══════════════════════════════════════');
         
     } catch (error) {
         console.error('❌ ERROR:', error);
@@ -4439,65 +4450,65 @@ function resetToExample() {
     document.getElementById('checksum-comparison-display').innerHTML = '';
     
     console.clear();
-    console.log(`🔄 Reset to ${getCurrentConfig().name} example data`);
+    debugLog(`🔄 Reset to ${getCurrentConfig().name} example data`);
 }
 
 async function runTests() {
     console.clear();
-    console.log('🧪 RUNNING COMPREHENSIVE CRYPTOGRAPHY TESTS...\n');
+    debugLog('🧪 RUNNING COMPREHENSIVE CRYPTOGRAPHY TESTS...\n');
     
     // Test 1: CRC-16-CCITT
-    console.log('TEST 1: CRC-16-CCITT Implementation');
+    debugLog('TEST 1: CRC-16-CCITT Implementation');
     const testData = '123456789';
     const expectedCRC = 0x29B1;
     const actualCRC = crc16ccitt(testData);
-    console.log('Input:', testData);
-    console.log('Expected:', '0x' + expectedCRC.toString(16).toUpperCase());
-    console.log('Actual:', '0x' + actualCRC.toString(16).toUpperCase());
-    console.log('Result:', expectedCRC === actualCRC ? '✅ PASS' : '❌ FAIL');
-    console.log('');
+    debugLog('Input:', testData);
+    debugLog('Expected:', '0x' + expectedCRC.toString(16).toUpperCase());
+    debugLog('Actual:', '0x' + actualCRC.toString(16).toUpperCase());
+    debugLog('Result:', expectedCRC === actualCRC ? '✅ PASS' : '❌ FAIL');
+    debugLog('');
     
     // Test 2: MD5 Hash
-    console.log('TEST 2: MD5 Hash Implementation');
+    debugLog('TEST 2: MD5 Hash Implementation');
     const testString = 'The quick brown fox jumps over the lazy dog';
     const expectedMD5 = '9e107d9d372bb6826bd81d3542a419d6';
     const actualMD5 = md5Cached(testString);
-    console.log('Input:', testString);
-    console.log('Expected:', expectedMD5);
-    console.log('Actual:', actualMD5);
-    console.log('Result:', expectedMD5 === actualMD5 ? '✅ PASS' : '❌ FAIL');
+    debugLog('Input:', testString);
+    debugLog('Expected:', expectedMD5);
+    debugLog('Actual:', actualMD5);
+    debugLog('Result:', expectedMD5 === actualMD5 ? '✅ PASS' : '❌ FAIL');
     
     // Additional MD5 vectors
-    console.log('TEST 2b: MD5 Empty String');
+    debugLog('TEST 2b: MD5 Empty String');
     const emptyExpected = 'd41d8cd98f00b204e9800998ecf8427e';
     const emptyActual = md5Cached('');
-    console.log('Empty MD5:', emptyActual, emptyActual === emptyExpected ? '✅ PASS' : '❌ FAIL');
+    debugLog('Empty MD5:', emptyActual, emptyActual === emptyExpected ? '✅ PASS' : '❌ FAIL');
     
-    console.log('TEST 2c: MD5 Large data (100k "a")');
+    debugLog('TEST 2c: MD5 Large data (100k "a")');
     const bigStr = 'a'.repeat(100000);
     console.time('md5-large');
     const bigHash = md5Cached(bigStr);
     console.timeEnd('md5-large');
-    console.log('Big MD5 sample (first 16 chars):', bigHash.substring(0, 16));
-    console.log('');
+    debugLog('Big MD5 sample (first 16 chars):', bigHash.substring(0, 16));
+    debugLog('');
     
     // Test 3: AES-256 Encryption/Decryption
-    console.log('TEST 3: AES-256 Encryption/Decryption');
+    debugLog('TEST 3: AES-256 Encryption/Decryption');
     try {
         const original = 'SECRET DATA 12345';
         const encrypted = await encryptFieldAES(original);
         const decrypted = await decryptFieldAES(encrypted);
-        console.log('Original:', original);
-        console.log('Encrypted:', encrypted.substring(0, 50) + '...');
-        console.log('Decrypted:', decrypted);
-        console.log('Result:', original === decrypted ? '✅ PASS' : '❌ FAIL');
+        debugLog('Original:', original);
+        debugLog('Encrypted:', encrypted.substring(0, 50) + '...');
+        debugLog('Decrypted:', decrypted);
+        debugLog('Result:', original === decrypted ? '✅ PASS' : '❌ FAIL');
     } catch (e) {
-        console.log('Result: ❌ FAIL -', e.message);
+        debugLog('Result: ❌ FAIL -', e.message);
     }
-    console.log('');
+    debugLog('');
     
     // Test 4: Speed Comparison
-    console.log('TEST 4: Checksum Speed Comparison');
+    debugLog('TEST 4: Checksum Speed Comparison');
     const largeData = 'A'.repeat(10000);
     
     const crcStart = performance.now();
@@ -4508,60 +4519,60 @@ async function runTests() {
     md5Cached(largeData);
     const md5Time = performance.now() - md5Start;
     
-    console.log('Data size: 10,000 bytes');
-    console.log(`CRC-16: ${crcTime.toFixed(3)}ms`);
-    console.log(`MD5: ${md5Time.toFixed(3)}ms`);
-    console.log(`MD5 is ${(md5Time / crcTime).toFixed(1)}x slower`);
-    console.log('Result: ✅ PASS (performance measured)');
-    console.log('');
+    debugLog('Data size: 10,000 bytes');
+    debugLog(`CRC-16: ${crcTime.toFixed(3)}ms`);
+    debugLog(`MD5: ${md5Time.toFixed(3)}ms`);
+    debugLog(`MD5 is ${(md5Time / crcTime).toFixed(1)}x slower`);
+    debugLog('Result: ✅ PASS (performance measured)');
+    debugLog('');
     
     // Test 5: Payload CRC/Audit positions (build a payload and verify positions)
-    console.log('TEST 5: Payload CRC & Audit Position Verification');
+    debugLog('TEST 5: Payload CRC & Audit Position Verification');
     try {
         const payloadResult = await buildDMVCompliantPayload();
         const { payload, structure } = payloadResult;
         const crcFromStruct = structure.crcValue;
         const extractedCrc = (payload.charCodeAt(structure.crcPos) << 8) | payload.charCodeAt(structure.crcPos + 1);
-        console.log('CRC from calculation:', '0x' + crcFromStruct.toString(16).toUpperCase());
-        console.log('CRC extracted from payload:', '0x' + extractedCrc.toString(16).toUpperCase());
-        console.log('CRC position check result:', crcFromStruct === extractedCrc ? '✅ PASS' : '❌ FAIL');
+        debugLog('CRC from calculation:', '0x' + crcFromStruct.toString(16).toUpperCase());
+        debugLog('CRC extracted from payload:', '0x' + extractedCrc.toString(16).toUpperCase());
+        debugLog('CRC position check result:', crcFromStruct === extractedCrc ? '✅ PASS' : '❌ FAIL');
         
         const expectedAudit = getCurrentConfig().auditTrail;
         const actualAudit = payload.substring(structure.auditPos, structure.auditPos + expectedAudit.length);
-        console.log('Expected Audit Trail:', expectedAudit);
-        console.log('Actual Audit Trail:', actualAudit);
-        console.log('Audit trail check result:', actualAudit === expectedAudit ? '✅ PASS' : '❌ FAIL');
+        debugLog('Expected Audit Trail:', expectedAudit);
+        debugLog('Actual Audit Trail:', actualAudit);
+        debugLog('Audit trail check result:', actualAudit === expectedAudit ? '✅ PASS' : '❌ FAIL');
         
     } catch (e) {
-        console.log('TEST 5 Result: ❌ FAIL -', e.message);
+        debugLog('TEST 5 Result: ❌ FAIL -', e.message);
     }
-    console.log('');
+    debugLog('');
     
     // Test 6: MD5 included in payload (now available to all users)
-    console.log('TEST 6: MD5 Payload Inclusion');
+    debugLog('TEST 6: MD5 Payload Inclusion');
     try {
         document.getElementById('enable-md5').checked = true;
         onMD5Toggle(); // should enable md5
         const resultWithMD5 = await buildDMVCompliantPayload();
-        console.log('Structure says MD5 enabled:', resultWithMD5.structure.md5Enabled ? '✅ YES' : '❌ NO');
-        console.log('MD5 present:', resultWithMD5.structure.md5Enabled && resultWithMD5.structure.md5Hash ? '✅ YES' : '❌ NO');
+        debugLog('Structure says MD5 enabled:', resultWithMD5.structure.md5Enabled ? '✅ YES' : '❌ NO');
+        debugLog('MD5 present:', resultWithMD5.structure.md5Enabled && resultWithMD5.structure.md5Hash ? '✅ YES' : '❌ NO');
         // disable
         document.getElementById('enable-md5').checked = false;
         onMD5Toggle();
     } catch (e) {
-        console.log('TEST 6 Result: ❌ FAIL -', e.message);
+        debugLog('TEST 6 Result: ❌ FAIL -', e.message);
     }
-    console.log('');
+    debugLog('');
 
     // Test 7: HMAC Sign/Verify
-    console.log('TEST 7: HMAC-SHA256 Sign & Verify');
+    debugLog('TEST 7: HMAC-SHA256 Sign & Verify');
     try {
         await generateHMACKey();
         hmacEnabled = true;
         document.getElementById('enable-hmac').checked = true;
         const signed = await buildDMVCompliantPayload();
-        console.log('Structure says HMAC enabled:', signed.structure.hmacEnabled ? '✅ YES' : '❌ NO');
-        console.log('HMAC present:', signed.structure.hmacHex ? '✅ YES' : '❌ NO');
+        debugLog('Structure says HMAC enabled:', signed.structure.hmacEnabled ? '✅ YES' : '❌ NO');
+        debugLog('HMAC present:', signed.structure.hmacHex ? '✅ YES' : '❌ NO');
 
         // Verify signature by extracting payload up to hmac position
         const payload = signed.payload;
@@ -4569,23 +4580,23 @@ async function runTests() {
         const macBytes = payload.substring(hmacPos, hmacPos + 32);
         const macHex = Array.from(macBytes).map(c => c.charCodeAt(0).toString(16).padStart(2, '0')).join('').toUpperCase();
         const verified = await verifyHMACHex(macHex, payload.substring(0, hmacPos));
-        console.log('HMAC verification (original):', verified ? '✅ PASS' : '❌ FAIL');
+        debugLog('HMAC verification (original):', verified ? '✅ PASS' : '❌ FAIL');
 
         // Tamper test: flip a byte and expect verification to fail
         const tampered = payload.substring(0, 10) + String.fromCharCode(payload.charCodeAt(10) ^ 0xFF) + payload.substring(11, payload.length);
         const tamperedVerified = await verifyHMACHex(macHex, tampered.substring(0, hmacPos));
-        console.log('HMAC tamper detection (should fail):', tamperedVerified ? '❌ FAIL' : '✅ PASS');
+        debugLog('HMAC tamper detection (should fail):', tamperedVerified ? '❌ FAIL' : '✅ PASS');
 
         // cleanup
         hmacEnabled = false;
         document.getElementById('enable-hmac').checked = false;
     } catch (e) {
-        console.log('TEST 7 Result: ❌ FAIL -', e.message);
+        debugLog('TEST 7 Result: ❌ FAIL -', e.message);
     }
-    console.log('');
+    debugLog('');
 
     // Test 8: California compliance check
-    console.log('TEST 8: California compliance');
+    debugLog('TEST 8: California compliance');
     try {
         // Switch to CA profile and render fields
         currentState = 'CA';
@@ -4594,24 +4605,24 @@ async function runTests() {
 
         // Validate fields (using example data populated by renderFields)
         const validation = validateFields();
-        console.log('CA validation errors:', validation.errors.length === 0 ? '✅ NONE' : validation.errors);
-        console.log('CA validation warnings:', validation.warnings.length === 0 ? '✅ NONE' : validation.warnings);
+        debugLog('CA validation errors:', validation.errors.length === 0 ? '✅ NONE' : validation.errors);
+        debugLog('CA validation warnings:', validation.warnings.length === 0 ? '✅ NONE' : validation.warnings);
 
         // Build payload and assert subfile ID and audit
         const caResult = await buildDMVCompliantPayload();
-        console.log('CA subfile ID:', caResult.structure.subfileId === 'ZC' ? '✅ ZC' : `❌ ${caResult.structure.subfileId}`);
-        console.log('CA audit trail:', caResult.structure.iin === getCurrentConfig().iin ? `✅ IIN ${caResult.structure.iin}` : `❌ ${caResult.structure.iin}`);
+        debugLog('CA subfile ID:', caResult.structure.subfileId === 'ZC' ? '✅ ZC' : `❌ ${caResult.structure.subfileId}`);
+        debugLog('CA audit trail:', caResult.structure.iin === getCurrentConfig().iin ? `✅ IIN ${caResult.structure.iin}` : `❌ ${caResult.structure.iin}`);
 
         // revert to default FL state for subsequent use
         currentState = 'FL';
         updateConfigDisplay();
         renderFields();
     } catch (e) {
-        console.log('TEST 8 Result: ❌ FAIL -', e.message);
+        debugLog('TEST 8 Result: ❌ FAIL -', e.message);
     }
-    console.log('');
+    debugLog('');
 
-    console.log('🧪 TESTS COMPLETE');
+    debugLog('🧪 TESTS COMPLETE');
 }
 
 // ============================================================================
@@ -4622,19 +4633,19 @@ function onStateChange() {
     currentState = document.getElementById('profile-state').value;
     updateConfigDisplay();
     renderFields();
-    console.log(`📍 Switched to ${getCurrentConfig().name}`);
+    debugLog(`📍 Switched to ${getCurrentConfig().name}`);
 }
 
 function onAAMVAChange() {
     currentAAMVA = document.getElementById('profile-aamva').value;
     updateConfigDisplay();
-    console.log(`📊 AAMVA version set to ${currentAAMVA}`);
+    debugLog(`📊 AAMVA version set to ${currentAAMVA}`);
 }
 
 function onJurisdictionChange() {
     currentJurisdiction = document.getElementById('profile-jurisdiction').value;
     updateConfigDisplay();
-    console.log(`📋 Jurisdiction version set to ${currentJurisdiction}`);
+    debugLog(`📋 Jurisdiction version set to ${currentJurisdiction}`);
 }
 
 function onAESToggle() {
@@ -4650,14 +4661,14 @@ function onAESToggle() {
         panel.classList.add('active');
         keyDisplay.style.display = 'block';
         generateAESKey();
-        console.log('🔐 AES-256 ENCRYPTION ENABLED');
+        debugLog('🔐 AES-256 ENCRYPTION ENABLED');
     } else {
         status.textContent = 'OFF';
         status.classList.remove('on');
         status.classList.add('off');
         panel.classList.remove('active');
         keyDisplay.style.display = 'none';
-        console.log('🔓 AES-256 ENCRYPTION DISABLED');
+        debugLog('🔓 AES-256 ENCRYPTION DISABLED');
     }
     
     updateConfigDisplay();
@@ -4676,13 +4687,13 @@ function onMD5Toggle() {
         status.classList.remove('off');
         status.classList.add('on');
         panel.classList.add('active');
-        console.log('📊 MD5 CHECKSUM ENABLED');
+        debugLog('📊 MD5 CHECKSUM ENABLED');
     } else {
         status.textContent = 'OFF';
         status.classList.remove('on');
         status.classList.add('off');
         panel.classList.remove('active');
-        console.log('📊 MD5 CHECKSUM DISABLED');
+        debugLog('📊 MD5 CHECKSUM DISABLED');
     }
     
     updateConfigDisplay();
@@ -4706,14 +4717,14 @@ function onHMACToggle() {
         status.classList.remove('off');
         status.classList.add('on');
         panel.classList.add('active');
-        console.log('🔐 HMAC-SHA256 ENABLED');
+        debugLog('🔐 HMAC-SHA256 ENABLED');
     } else {
         hmacEnabled = false;
         status.textContent = 'OFF';
         status.classList.remove('on');
         status.classList.add('off');
         panel.classList.remove('active');
-        console.log('🔓 HMAC-SHA256 DISABLED');
+        debugLog('🔓 HMAC-SHA256 DISABLED');
     }
 
     updateConfigDisplay();
@@ -4775,13 +4786,13 @@ function setAdminMode(enabled) {
         status.classList.remove('off');
         status.classList.add('on');
         tokenInput.disabled = true;
-        console.log('🔑 Admin mode enabled');
+        debugLog('🔑 Admin mode enabled');
     } else {
         status.textContent = 'ADMIN OFF';
         status.classList.remove('on');
         status.classList.add('off');
         tokenInput.disabled = false;
-        console.log('🔒 Admin mode disabled');
+        debugLog('🔒 Admin mode disabled');
     }
 
     updateConfigDisplay();
@@ -4793,19 +4804,19 @@ function setAdminMode(enabled) {
 
 function init() {
     console.clear();
-    console.log('═══════════════════════════════════════');
-    console.log('✅ MULTI-STATE DMV PDF417 GENERATOR');
-    console.log('    CRYPTOGRAPHY EDITION');
-    console.log('═══════════════════════════════════════');
-    console.log('✅ States: Florida (636026) & California (636014)');
-    console.log('✅ AAMVA Versions: 08, 09, 10');
-    console.log('✅ Jurisdiction Versions: 01, 02');
-    console.log('✅ Field Inclusion: required/always/optional');
-    console.log('✅ CRC-16-CCITT (0x1021)');
-    console.log('✅ AES-256-GCM Encryption (Toggle)');
-    console.log('✅ MD5 Hash Comparison (Toggle)');
-    console.log('✅ Binary Mode | ECC Level 5');
-    console.log('═══════════════════════════════════════\n');
+    debugLog('═══════════════════════════════════════');
+    debugLog('✅ MULTI-STATE DMV PDF417 GENERATOR');
+    debugLog('    CRYPTOGRAPHY EDITION');
+    debugLog('═══════════════════════════════════════');
+    debugLog('✅ States: Florida (636026) & California (636014)');
+    debugLog('✅ AAMVA Versions: 08, 09, 10');
+    debugLog('✅ Jurisdiction Versions: 01, 02');
+    debugLog('✅ Field Inclusion: required/always/optional');
+    debugLog('✅ CRC-16-CCITT (0x1021)');
+    debugLog('✅ AES-256-GCM Encryption (Toggle)');
+    debugLog('✅ MD5 Hash Comparison (Toggle)');
+    debugLog('✅ Binary Mode | ECC Level 5');
+    debugLog('═══════════════════════════════════════\n');
     
     // Initialize auth system FIRST
     initAuth();
@@ -4878,14 +4889,14 @@ function init() {
         puffChatSmoke(2);
     }, 1000);
     
-    console.log('✅ System ready\n');
-    console.log('✅ Interactive logo with smoke from feet');
-    console.log('✅ Help chat widget with smoke effects');
-    console.log('Field inclusion rules:');
-    console.log('  * = REQUIRED (yellow) - Must have data');
-    console.log('  + = ALWAYS (orange) - Include even if empty');
-    console.log('  🔐 = ENCRYPTED (magenta) - AES-256 active');
-    console.log('  (no marker) = OPTIONAL (green) - Omit if empty\n');
+    debugLog('✅ System ready\n');
+    debugLog('✅ Interactive logo with smoke from feet');
+    debugLog('✅ Help chat widget with smoke effects');
+    debugLog('Field inclusion rules:');
+    debugLog('  * = REQUIRED (yellow) - Must have data');
+    debugLog('  + = ALWAYS (orange) - Include even if empty');
+    debugLog('  🔐 = ENCRYPTED (magenta) - AES-256 active');
+    debugLog('  (no marker) = OPTIONAL (green) - Omit if empty\n');
 }
 
 if (document.readyState === 'loading') {
