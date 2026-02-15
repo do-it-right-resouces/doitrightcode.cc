@@ -1,0 +1,65 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Jacob Walter Bolden PDF417 Generator</title>
+    <script src="https://cdn.jsdelivr.net/npm/bwip-js@4.5.1/dist/bwip-js-min.js"></script>
+</head>
+<body>
+    <h1>Jacob Walter Bolden PDF417 Barcode</h1>
+    <div id="barcode-container"></div>
+
+    <script>
+        // Load the binary data
+        fetch('jacob_bolden_pdf417.bin')
+            .then(response => response.arrayBuffer())
+            .then(buffer => {
+                const binaryData = new Uint8Array(buffer);
+                console.log('Loaded binary data, length:', binaryData.length);
+
+                // Convert to base64 for bwip-js
+                let binaryString = '';
+                for (let i = 0; i < binaryData.length; i++) {
+                    binaryString += String.fromCharCode(binaryData[i]);
+                }
+                const base64Data = btoa(binaryString);
+
+                // Create canvas
+                const canvas = document.createElement('canvas');
+                document.getElementById('barcode-container').appendChild(canvas);
+
+                // Generate PDF417
+                bwipjs.toCanvas(canvas, {
+                    bcid: 'pdf417',
+                    text: base64Data,
+                    eclevel: 5,
+                    columns: 15,
+                    rows: 0,
+                    scale: 2,
+                    height: 6,
+                    includetext: false,
+                    parsefnc: false,
+                    encoding: 'base256'
+                });
+
+                console.log('PDF417 barcode generated successfully');
+
+                // Add download link
+                const link = document.createElement('a');
+                link.href = canvas.toDataURL('image/png');
+                link.download = 'jacob_bolden_pdf417.png';
+                link.textContent = 'Download PNG';
+                link.style.display = 'block';
+                link.style.marginTop = '20px';
+                link.style.padding = '10px';
+                link.style.background = '#00ff00';
+                link.style.color = '#000';
+                link.style.textDecoration = 'none';
+                document.getElementById('barcode-container').appendChild(link);
+            })
+            .catch(error => {
+                console.error('Error loading binary data:', error);
+                document.getElementById('barcode-container').innerHTML = '<p>Error loading binary data: ' + error.message + '</p>';
+            });
+    </script>
+</body>
+</html>

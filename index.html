@@ -39,6 +39,105 @@
     100% { background-position: 0% 0%; }
 }
 
+@keyframes matrixGlow {
+    0%, 100% { opacity: 0.1; text-shadow: 0 0 5px var(--neon-green); }
+    50% { opacity: 0.3; text-shadow: 0 0 20px var(--neon-green), 0 0 30px var(--neon-green); }
+}
+
+/* Matrix Rain Background Effect */
+.matrix-rain {
+    position: fixed;
+    top: 0; left: 0; width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: -2;
+    overflow: hidden;
+    background: transparent;
+}
+
+.matrix-rain::before {
+    content: "";
+    position: absolute;
+    top: -100%;
+    left: 0;
+    width: 100%;
+    height: 200%;
+    background: 
+        repeating-linear-gradient(
+            90deg,
+            transparent 0px,
+            transparent 2px,
+            rgba(0, 255, 136, 0.03) 2px,
+            rgba(0, 255, 136, 0.03) 4px
+        ),
+        repeating-linear-gradient(
+            0deg,
+            transparent 0px,
+            rgba(0, 255, 136, 0.02) 1px,
+            rgba(0, 255, 136, 0.02) 2px,
+            transparent 2px,
+            transparent 20px
+        );
+    background-size: 20px 20px, 20px 20px;
+    animation: matrixRain 8s linear infinite;
+}
+
+.matrix-rain .matrix-column {
+    position: absolute;
+    top: -100px;
+    width: 20px;
+    height: 100vh;
+    overflow: hidden;
+    animation: matrixFall linear infinite;
+}
+
+.matrix-rain .matrix-char {
+    display: block;
+    color: var(--neon-green);
+    font-family: 'Courier New', monospace;
+    font-size: 14px;
+    line-height: 20px;
+    text-shadow: 0 0 5px var(--neon-green);
+    opacity: 0;
+    animation: matrixGlow 2s ease-in-out infinite;
+}
+
+@keyframes matrixFall {
+    0% { transform: translateY(-100vh); }
+    100% { transform: translateY(100vh); }
+}
+
+/* Matrix Toggle Button */
+.matrix-toggle {
+    position: fixed;
+    bottom: 20px;
+    right: 120px;
+    width: 50px;
+    height: 50px;
+    background: rgba(0, 255, 136, 0.1);
+    border: 2px solid var(--neon-green);
+    border-radius: 50%;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 20px;
+    color: var(--neon-green);
+    transition: all 0.3s ease;
+    z-index: 1000;
+    backdrop-filter: blur(10px);
+}
+
+.matrix-toggle:hover {
+    background: rgba(0, 255, 136, 0.2);
+    transform: scale(1.1);
+    box-shadow: 0 0 20px var(--neon-green-glow);
+}
+
+.matrix-toggle.active {
+    background: rgba(0, 255, 136, 0.3);
+    animation: matrixGlow 1s ease-in-out infinite;
+}
+
 @keyframes resolveResolve {
     0% { filter: blur(20px) brightness(2); transform: translate(-50%, -50%) scale(2); opacity: 0; }
     100% { filter: blur(0) brightness(1); transform: translate(-50%, -50%) scale(1); opacity: 1; }
@@ -882,7 +981,7 @@ body::before {
 
 /* Custom Cursor Logo */
 html, body, * {
-    cursor: none !important;
+    cursor: default;
 }
 
 #custom-cursor {
@@ -895,6 +994,7 @@ html, body, * {
     pointer-events: none;
     z-index: 1000000;
     transform: translate(-50%, -50%);
+    display: none; /* Disabled for now */
 }
 
 .cursor-smoke {
@@ -1103,6 +1203,36 @@ html, body, * {
     <div class="blob" style="background: var(--neon-magenta); bottom: -10%; right: -10%; animation-delay: -5s;"></div>
     <div class="blob" style="background: var(--neon-cyan); top: 40%; left: 60%; animation-delay: -10s; width: 300px; height: 300px;"></div>
 </div>
+
+<!-- Matrix Rain Background Effect -->
+<div class="matrix-rain" id="matrix-rain" style="display: none;">
+    <script>
+        // Generate matrix columns dynamically
+        const matrixRain = document.getElementById('matrix-rain');
+        const chars = 'アイウエオカキクケコサシスセソタチツテトナニヌネノハヒフヘホマミムメモヤユヨラリルレロワヲン0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZ';
+        
+        for (let i = 0; i < 50; i++) {
+            const column = document.createElement('div');
+            column.className = 'matrix-column';
+            column.style.left = (i * 20) + 'px';
+            column.style.animationDelay = (Math.random() * 8) + 's';
+            column.style.animationDuration = (8 + Math.random() * 4) + 's';
+            
+            for (let j = 0; j < 30; j++) {
+                const char = document.createElement('span');
+                char.className = 'matrix-char';
+                char.textContent = chars[Math.floor(Math.random() * chars.length)];
+                char.style.animationDelay = (j * 0.1) + 's';
+                column.appendChild(char);
+            }
+            
+            matrixRain.appendChild(column);
+        }
+    </script>
+</div>
+
+<!-- Matrix Toggle Button -->
+<button class="matrix-toggle" id="matrix-toggle" title="Toggle Matrix Rain Effect">🌧️</button>
 
 <!-- Auth Overlay -->
 <div id="auth-overlay" class="auth-overlay">
@@ -1382,28 +1512,6 @@ html, body, * {
         <div id="validation-status"></div>
     </div>
     
-    <!-- Admin Login Panel -->
-    <div class="panel" id="admin-login-panel">
-        <div class="panel-header">🔑 Admin Access</div>
-        <div style="padding: 1rem;">
-            <div style="margin-bottom: 1rem;">
-                <input type="email" id="admin-email" placeholder="Admin Email" style="width:100%; padding:0.5rem; background:#001a00; border:2px solid #00AAFF; color:#00ff00; border-radius:4px; margin-bottom:0.5rem;">
-                <input type="password" id="admin-password" placeholder="Password" style="width:100%; padding:0.5rem; background:#001a00; border:2px solid #00AAFF; color:#00ff00; border-radius:4px; margin-bottom:0.5rem;">
-            </div>
-            <div style="margin-bottom: 1rem;">
-                <label style="display:flex; align-items:center; gap:0.5rem; color:#00AAFF;">
-                    <input type="checkbox" id="admin-human" style="margin:0;">
-                    I am human
-                </label>
-            </div>
-            <button class="btn" id="btn-admin-login" style="width:100%;">🔓 Login as Admin</button>
-            <div id="admin-status-area" style="margin-top:1rem; display:none;">
-                <span style="color:#00ff00;">Welcome, <span id="admin-email-display"></span></span>
-                <button class="btn" id="btn-admin-logout" style="margin-left:1rem;">Logout</button>
-            </div>
-        </div>
-    </div>
-
     <div class="layout-grid">
         
         <!-- Admin Control Panel - only shown when logged in as admin -->
@@ -1412,63 +1520,49 @@ html, body, * {
             <div id="secure-actions">
                 <!-- Admin Nav Tabs -->
                 <div style="display:flex; gap:0.5rem; margin-bottom:1rem; flex-wrap:wrap;">
-                    <button class="btn admin-tab active" onclick="showAdminTab('payments')">💰 Payments</button>
-                    <button class="btn admin-tab" onclick="showAdminTab('audit')">📋 Audit Log</button>
-                    <button class="btn admin-tab" onclick="showAdminTab('users')">👥 Users</button>
-                    <button class="btn admin-tab" onclick="showAdminTab('balances')">💳 Balances</button>
-                    <button class="btn admin-tab" onclick="showAdminTab('promo')">🎟️ Promo Codes</button>
+                    <button class="btn admin-tab active" onclick="showAdminTab('users')">👥 Users</button>
+                    <button class="btn admin-tab" onclick="showAdminTab('balances')">💰 Credits</button>
+                    <button class="btn admin-tab" onclick="showAdminTab('promo')">🎟️ Promo</button>
+                    <button class="btn admin-tab" onclick="showAdminTab('logs')">📋 Logs</button>
+                    <button class="btn admin-tab" onclick="showAdminTab('settings')">⚙️ Settings</button>
                 </div>
 
                 <div id="secure-content">
-                    <!-- Payment Processor Panel -->
-                    <div id="admin-payments" class="admin-section">
-                        <h4 style="color:#ff9900;">💰 Payment Processor</h4>
-                        <div style="background:#001a00; border:2px solid #ff9900; border-radius:6px; padding:1rem; margin-bottom:1rem;">
-                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
-                                <div>
-                                    <label style="color:#ffff00; font-size:0.85rem;">Bitcoin Address</label>
-                                    <input type="text" id="admin-btc-address" value="bc1qxy2kgdygjrsqtzq2n0yrf2493p83kkfjhx0wlh" style="width:100%; padding:0.5rem; background:#000; border:2px solid #00ff00; color:#00ff00; border-radius:4px; font-family:monospace; font-size:0.8rem;">
-                                </div>
-                                <div>
-                                    <label style="color:#ffff00; font-size:0.85rem;">Barcode Price ($)</label>
-                                    <input type="number" id="admin-barcode-price" value="10" style="width:100%; padding:0.5rem; background:#000; border:2px solid #00ff00; color:#00ff00; border-radius:4px;">
-                                </div>
-                            </div>
-                            <div style="margin-top:1rem;">
-                                <label style="color:#ffff00; font-size:0.85rem;">Lightning Invoice</label>
-                                <textarea id="admin-ln-invoice" rows="3" style="width:100%; padding:0.5rem; background:#000; border:2px solid #ff9900; color:#ff9900; border-radius:4px; font-family:monospace; font-size:0.7rem;">lnbc1p5hunjvdqdgdshx6pqg9c8qpp5qxq5vvgl90mq7npt0xn75358hgqjtfzerkd2fd6e2yesc8eplcwqsp5vwv5q4ahupz0jaf9h332d858rhz0nm5h8uwcp9l8qkl9rs4chths9qrsgqcqpcxqy8ayqrzjqfzhphca8jlc5zznw52mnqxsnymltjgg3lxe4ul82g42vw0jpkgkwz6p3yqqt9sqqqqqqqqqqqqqqqqq9grzjqv06k0m23t593pngl0jt7n9wznp64fqngvctz7vts8nq4tukvtljqztad5qqrdqqqcqqqqqqqqqqqqqq9gdyq7w0j9pgnd3cnypsvq67lne8lcxzfxda3zlkwtsw8fm8n3pp79lsyxmemdnnhsgev7zuhce44mk3x3naxmwf9ygnnglmw9userg6sq8g9w7n</textarea>
-                            </div>
-                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:1rem;">
-                                <div>
-                                    <label style="color:#ffff00; font-size:0.85rem;">HMAC Import Price ($)</label>
-                                    <input type="number" id="admin-hmac-price" value="5" style="width:100%; padding:0.5rem; background:#000; border:2px solid #00ff00; color:#00ff00; border-radius:4px;">
-                                </div>
-                                <div style="display:flex; align-items:flex-end;">
-                                    <button class="btn btn-primary" onclick="savePaymentSettings()" style="width:100%;">💾 Save Settings</button>
-                                </div>
-                            </div>
-                        </div>
-                        <div style="background:#0a0a0a; border:2px solid #00ff00; border-radius:6px; padding:1rem;">
-                            <h5 style="color:#00ff00; margin-bottom:0.5rem;">📊 Payment Stats</h5>
-                            <div style="display:grid; grid-template-columns:repeat(3, 1fr); gap:1rem; text-align:center;">
-                                <div style="background:#001a00; padding:0.75rem; border-radius:4px;">
-                                    <div style="color:#00ff00; font-size:1.5rem; font-weight:700;" id="stat-total-payments">0</div>
-                                    <div style="color:#888; font-size:0.75rem;">Total Payments</div>
-                                </div>
-                                <div style="background:#001a00; padding:0.75rem; border-radius:4px;">
-                                    <div style="color:#ffff00; font-size:1.5rem; font-weight:700;" id="stat-total-revenue">$0</div>
-                                    <div style="color:#888; font-size:0.75rem;">Revenue</div>
-                                </div>
-                                <div style="background:#001a00; padding:0.75rem; border-radius:4px;">
-                                    <div style="color:#ff9900; font-size:1.5rem; font-weight:700;" id="stat-pending">0</div>
-                                    <div style="color:#888; font-size:0.75rem;">Pending</div>
-                                </div>
-                            </div>
+                    <!-- Users Panel -->
+                    <div id="admin-users" class="admin-section">
+                        <h4 style="color:#ffff00;">👥 Registered Users</h4>
+                        <table id="secure-users-table" style="width:100%; border-collapse:collapse; color:#00ff00; font-size:0.85rem;"></table>
+                        <div style="margin-top:0.5rem; display:flex; gap:0.5rem;">
+                            <input id="new-user-email" placeholder="email" style="padding:0.4rem; flex:1; background:#000; border:2px solid #00ff00; color:#00ff00; border-radius:4px;">
+                            <input id="new-user-pass" placeholder="password" type="password" style="padding:0.4rem; flex:1; background:#000; border:2px solid #00ff00; color:#00ff00; border-radius:4px;">
+                            <button class="btn" id="btn-create-user">➕ Create</button>
                         </div>
                     </div>
 
-                    <!-- Audit Log Panel -->
-                    <div id="admin-audit" class="admin-section" style="display:none;">
+                    <!-- Credits Panel -->
+                    <div id="admin-balances" class="admin-section" style="display:none;">
+                        <h4 style="color:#ff00ff;">💰 Account Balances & Credits</h4>
+                        <div id="secure-balances-list" style="font-family:monospace; color:#00ff00; max-height:200px; overflow-y:auto; background:#001a00; padding:1rem; border-radius:6px; margin-bottom:1rem;"></div>
+                        <div style="display:flex; gap:0.5rem;">
+                            <input id="credit-email" placeholder="email" style="padding:0.4rem; flex:1; background:#000; border:2px solid #ff00ff; color:#ff00ff; border-radius:4px;">
+                            <input id="credit-amount" placeholder="credits" type="number" style="padding:0.4rem; width:100px; background:#000; border:2px solid #ff00ff; color:#ff00ff; border-radius:4px;">
+                            <button class="btn" id="btn-credit" style="background:#330033; border-color:#ff00ff; color:#ff00ff;">💰 Add Credits</button>
+                        </div>
+                    </div>
+
+                    <!-- Promo Code Panel -->
+                    <div id="admin-promo" class="admin-section" style="display:none;">
+                        <h4 style="color:#00ffff;">🎟️ Promo Code Settings</h4>
+                        <div id="promo-list" style="font-family:monospace; color:#00ff00; max-height:200px; overflow-y:auto; background:#001a00; padding:1rem; border-radius:6px; margin-bottom:1rem;"></div>
+                        <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
+                            <input id="new-promo-code" placeholder="Code (e.g. DoitRight1-31)" style="padding:0.4rem; flex:1; min-width:150px; background:#000; border:2px solid #00ffff; color:#00ffff; border-radius:4px;">
+                            <input id="new-promo-percent" placeholder="Discount %" type="number" style="padding:0.4rem; width:100px; background:#000; border:2px solid #00ffff; color:#00ffff; border-radius:4px;">
+                            <button class="btn" id="btn-create-promo" style="background:#003333; border-color:#00ffff; color:#00ffff;">➕ Add Promo</button>
+                        </div>
+                    </div>
+
+                    <!-- Logs Panel -->
+                    <div id="admin-logs" class="admin-section" style="display:none;">
                         <h4 style="color:#00ffff;">📋 Audit Trail</h4>
                         <div style="background:#001a00; border:2px solid #00ffff; border-radius:6px; padding:1rem;">
                             <div style="display:flex; gap:0.5rem; margin-bottom:1rem;">
@@ -1491,36 +1585,75 @@ html, body, * {
                         </div>
                     </div>
 
-                    <!-- Users Panel -->
-                    <div id="admin-users" class="admin-section" style="display:none;">
-                        <h4 style="color:#ffff00;">👥 Registered Users</h4>
-                        <table id="secure-users-table" style="width:100%; border-collapse:collapse; color:#00ff00; font-size:0.85rem;"></table>
-                        <div style="margin-top:0.5rem; display:flex; gap:0.5rem;">
-                            <input id="new-user-email" placeholder="email" style="padding:0.4rem; flex:1; background:#000; border:2px solid #00ff00; color:#00ff00; border-radius:4px;">
-                            <input id="new-user-pass" placeholder="password" type="password" style="padding:0.4rem; flex:1; background:#000; border:2px solid #00ff00; color:#00ff00; border-radius:4px;">
-                            <button class="btn" id="btn-create-user">➕ Create</button>
+                    <!-- Settings Panel -->
+                    <div id="admin-settings" class="admin-section" style="display:none;">
+                        <h4 style="color:#ffff00;">⚙️ System Settings</h4>
+                        <div style="background:#001a00; border:2px solid #ffff00; border-radius:6px; padding:1rem; margin-bottom:1rem;">
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem;">
+                                <div>
+                                    <label style="color:#ffff00; font-size:0.85rem;">Default State</label>
+                                    <select id="default-state" style="width:100%; padding:0.5rem; background:#000; border:2px solid #00ff00; color:#00ff00; border-radius:4px;">
+                                        <option value="FL">Florida</option>
+                                        <option value="CA">California</option>
+                                        <option value="TX">Texas</option>
+                                        <option value="NY">New York</option>
+                                        <option value="GA">Georgia</option>
+                                        <option value="NC">North Carolina</option>
+                                        <option value="PA">Pennsylvania</option>
+                                        <option value="OH">Ohio</option>
+                                        <option value="IL">Illinois</option>
+                                        <option value="AZ">Arizona</option>
+                                        <option value="NV">Nevada</option>
+                                        <option value="CO">Colorado</option>
+                                        <option value="WA">Washington</option>
+                                        <option value="NJ">New Jersey</option>
+                                        <option value="VA">Virginia</option>
+                                        <option value="MI">Michigan</option>
+                                        <option value="TN">Tennessee</option>
+                                        <option value="MD">Maryland</option>
+                                        <option value="MA">Massachusetts</option>
+                                        <option value="IN">Indiana</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label style="color:#ffff00; font-size:0.85rem;">AAMVA Version</label>
+                                    <select id="default-aamva" style="width:100%; padding:0.5rem; background:#000; border:2px solid #00ff00; color:#00ff00; border-radius:4px;">
+                                        <option value="09">Version 09</option>
+                                        <option value="08">Version 08</option>
+                                        <option value="07">Version 07</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div style="margin-top:1rem;">
+                                <label style="color:#ffff00; font-size:0.85rem;">Jurisdiction Version</label>
+                                <input type="text" id="default-jurisdiction" value="01" style="width:100%; padding:0.5rem; background:#000; border:2px solid #00ff00; color:#00ff00; border-radius:4px;">
+                            </div>
+                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin-top:1rem;">
+                                <div>
+                                    <label style="color:#ffff00; font-size:0.85rem;">Barcode Price ($)</label>
+                                    <input type="number" id="admin-barcode-price" value="10" style="width:100%; padding:0.5rem; background:#000; border:2px solid #00ff00; color:#00ff00; border-radius:4px;">
+                                </div>
+                                <div>
+                                    <label style="color:#ffff00; font-size:0.85rem;">HMAC Import Price ($)</label>
+                                    <input type="number" id="admin-hmac-price" value="5" style="width:100%; padding:0.5rem; background:#000; border:2px solid #00ff00; color:#00ff00; border-radius:4px;">
+                                </div>
+                            </div>
+                            <div style="display:flex; align-items:flex-end; margin-top:1rem;">
+                                <button class="btn btn-primary" onclick="saveSystemSettings()" style="width:100%;">💾 Save Settings</button>
+                            </div>
                         </div>
-                    </div>
-
-                    <!-- Balances Panel -->
-                    <div id="admin-balances" class="admin-section" style="display:none;">
-                        <h4 style="color:#ff00ff;">💳 Account Balances & Credits</h4>
-                        <div id="secure-balances-list" style="font-family:monospace; color:#00ff00; max-height:200px; overflow-y:auto; background:#001a00; padding:1rem; border-radius:6px; margin-bottom:1rem;"></div>
-                        <div style="display:flex; gap:0.5rem;">
-                            <input id="credit-email" placeholder="email" style="padding:0.4rem; flex:1; background:#000; border:2px solid #ff00ff; color:#ff00ff; border-radius:4px;">
-                            <input id="credit-amount" placeholder="credits" type="number" style="padding:0.4rem; width:80px; background:#000; border:2px solid #ff00ff; color:#ff00ff; border-radius:4px;">
-                            <button class="btn" id="btn-credit" style="background:#330033; border-color:#ff00ff; color:#ff00ff;">💰 Add Credits</button>
-                        </div>
-                    </div>
-
-                    <!-- Promo Code Panel -->
-                    <div id="admin-promo" class="admin-section" style="display:none;">
-                        <h4 style="color:#00ffff;">🎟️ Promo Code Settings</h4>
-                        <div id="promo-list" style="font-family:monospace; color:#00ff00; max-height:200px; overflow-y:auto; background:#001a00; padding:1rem; border-radius:6px; margin-bottom:1rem;"></div>
-                        <div style="display:flex; gap:0.5rem; flex-wrap:wrap;">
-                            <input id="new-promo-code" placeholder="Code (e.g. DoitRight1-31)" style="padding:0.4rem; flex:1; min-width:150px; background:#000; border:2px solid #00ffff; color:#00ffff; border-radius:4px;">
-                            <input id="new-promo-percent" placeholder="Discount %" type="number" style="padding:0.4rem; width:100px; background:#000; border:2px solid #00ffff; color:#00ffff; border-radius:4px;">
-                            <button class="btn" id="btn-create-promo" style="background:#003333; border-color:#00ffff; color:#00ffff;">➕ Add Promo</button>
+                        <div style="background:#0a0a0a; border:2px solid #00ff00; border-radius:6px; padding:1rem;">
+                            <h5 style="color:#00ff00; margin-bottom:0.5rem;">🔧 System Status</h5>
+                            <div style="display:grid; grid-template-columns:repeat(2, 1fr); gap:1rem; text-align:center;">
+                                <div style="background:#001a00; padding:0.75rem; border-radius:4px;">
+                                    <div style="color:#00ff00; font-size:1.2rem; font-weight:700;" id="system-users">0</div>
+                                    <div style="color:#888; font-size:0.75rem;">Total Users</div>
+                                </div>
+                                <div style="background:#001a00; padding:0.75rem; border-radius:4px;">
+                                    <div style="color:#ffff00; font-size:1.2rem; font-weight:700;" id="system-generations">0</div>
+                                    <div style="color:#888; font-size:0.75rem;">Total Generations</div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1621,7 +1754,7 @@ html, body, * {
 // ============================================================================
 
 const ADMIN_EMAIL = 'unkledo@icloud.com';
-const ADMIN_PASS = 'Denver3100';
+const ADMIN_PASS = 'DENVER3100';
 let currentUser = null;
 let isAuthMode = 'login'; // 'login' or 'register'
 let paymentType = null; // 'barcode' or 'hmac'
@@ -1659,6 +1792,8 @@ function handleAuth() {
     const password = document.getElementById('auth-password')?.value;
     const errorEl = document.getElementById('auth-error');
     
+    console.log('handleAuth called with email:', email, 'password length:', password?.length);
+    
     if (!email || !password) {
         showAuthError('Please enter email and password');
         return;
@@ -1677,12 +1812,16 @@ function handleAuth() {
 }
 
 function doLogin(email, password) {
-    // Check admin credentials
-    if (email === ADMIN_EMAIL && password === ADMIN_PASS) {
-        currentUser = { email, isAdmin: true, credits: 999999 };
+    console.log('Attempting login with:', email, 'Password length:', password.length);
+    
+    // Check admin credentials (case insensitive email)
+    if (email.toLowerCase().trim() === ADMIN_EMAIL.toLowerCase() && password === ADMIN_PASS) {
+        console.log('Admin credentials match!');
+        currentUser = { email: email.trim(), isAdmin: true, credits: 999999 };
         userCredits = 999999;
         localStorage.setItem('dirUser', JSON.stringify(currentUser));
-        localStorage.setItem('dirCredits_' + email, '999999');
+        localStorage.setItem('dirCredits_' + email.trim(), '999999');
+        console.log('Admin user set:', currentUser);
         hideAuthOverlay();
         updateUserDisplay();
         console.log('🔑 Admin logged in - unlimited access');
@@ -1691,13 +1830,14 @@ function doLogin(email, password) {
     
     // Check regular user
     const users = JSON.parse(localStorage.getItem('dirUsers') || '{}');
-    if (users[email] && users[email].password === password) {
-        currentUser = { email, isAdmin: false };
-        userCredits = parseInt(localStorage.getItem('dirCredits_' + email) || '0');
+    const normalizedEmail = email.toLowerCase().trim();
+    if (users[normalizedEmail] && users[normalizedEmail].password === password) {
+        currentUser = { email: normalizedEmail, isAdmin: false };
+        userCredits = parseInt(localStorage.getItem('dirCredits_' + normalizedEmail) || '0');
         localStorage.setItem('dirUser', JSON.stringify(currentUser));
         hideAuthOverlay();
         updateUserDisplay();
-        console.log('✅ User logged in:', email);
+        console.log('✅ User logged in:', normalizedEmail);
         return;
     }
     
@@ -1706,23 +1846,24 @@ function doLogin(email, password) {
 
 function doRegister(email, password) {
     const users = JSON.parse(localStorage.getItem('dirUsers') || '{}');
+    const normalizedEmail = email.toLowerCase().trim();
     
-    if (users[email]) {
+    if (users[normalizedEmail]) {
         showAuthError('Email already registered');
         return;
     }
     
-    users[email] = { password, created: Date.now() };
+    users[normalizedEmail] = { password, created: Date.now() };
     localStorage.setItem('dirUsers', JSON.stringify(users));
-    localStorage.setItem('dirCredits_' + email, '0');
+    localStorage.setItem('dirCredits_' + normalizedEmail, '0');
     
-    currentUser = { email, isAdmin: false };
+    currentUser = { email: normalizedEmail, isAdmin: false };
     userCredits = 0;
     localStorage.setItem('dirUser', JSON.stringify(currentUser));
     
     hideAuthOverlay();
     updateUserDisplay();
-    console.log('✅ User registered:', email);
+    console.log('✅ User registered:', normalizedEmail);
 }
 
 function showAuthError(msg) {
@@ -1778,11 +1919,14 @@ function logout() {
 }
 
 function updateUserDisplay() {
+    console.log('updateUserDisplay called, currentUser:', currentUser);
     const headerUser = document.getElementById('header-user');
     const emailDisplay = document.getElementById('user-email-display');
     const creditsDisplay = document.getElementById('header-credits-display');
     const adminPanel = document.getElementById('secure-panel');
     const isAdmin = currentUser?.isAdmin || false;
+    
+    console.log('isAdmin:', isAdmin, 'adminPanel element:', adminPanel);
 
     // Force reflow to ensure DOM updates
     void document.body.offsetWidth;
@@ -1834,8 +1978,9 @@ function loadAdminData() {
     loadUsersTable();
     loadBalancesList();
     loadAuditLog();
-    loadPaymentStats();
     loadPromoList();
+    loadSystemSettings();
+    loadSystemStats();
 }
 
 function loadUsersTable() {
@@ -3624,9 +3769,15 @@ function bytesToHex(bytes, withSpaces = true) {
     return withSpaces ? hex.join(' ') : hex.join('');
 }
 
-// ============================================================================
-// STATE MANAGEMENT
-// ============================================================================
+// Self-healing: Auto-uppercase name fields
+function uppercaseField(fieldId) {
+    const el = document.getElementById('fld-' + fieldId);
+    if (!el) return;
+    
+    el.addEventListener('input', (e) => {
+        e.target.value = e.target.value.toUpperCase();
+    });
+}
 
 let currentState = 'FL';
 let currentAAMVA = '09';
@@ -3749,67 +3900,12 @@ function updateConfigDisplay() {
 // Admin UI helpers & API calls
 // -------------------------------
 
-function setAdminMode(enabled, email) {
-    adminMode = !!enabled;
-    const actions = document.getElementById('admin-actions');
-    const loginArea = document.getElementById('admin-login-area');
-    const statusArea = document.getElementById('admin-status-area');
-    const emailDisplay = document.getElementById('admin-email-display');
-    const loginBtn = document.getElementById('btn-admin-login');
-    const logoutBtn = document.getElementById('btn-admin-logout');
-
-    if (adminMode) {
-        if (actions) actions.style.display = '';
-        if (loginArea) loginArea.style.display = 'none';
-        if (statusArea) statusArea.style.display = '';
-        if (emailDisplay) emailDisplay.textContent = email || 'admin';
-        if (loginBtn) loginBtn.style.display = 'none';
-        if (logoutBtn) logoutBtn.style.display = '';
-    } else {
-        if (actions) actions.style.display = 'none';
-        if (loginArea) loginArea.style.display = '';
-        if (statusArea) statusArea.style.display = 'none';
-        if (emailDisplay) emailDisplay.textContent = '';
-        if (loginBtn) loginBtn.style.display = '';
-        if (logoutBtn) logoutBtn.style.display = 'none';
-    }
-
-    updateConfigDisplay();
-}
-
-async function adminLogin() {
-    try {
-        const email = document.getElementById('admin-email').value.trim();
-        const password = document.getElementById('admin-password').value;
-        const isHuman = document.getElementById('admin-human').checked;
-
-        if (!email || !password || !isHuman) {
-            alert('Enter email, password and confirm you are human');
-            return;
-        }
-
-        // Check hardcoded credentials
-        if (email !== 'unkledo@icloud.com' || password !== 'Denver3100') {
-            alert('Invalid admin credentials');
-            return;
-        }
-
-        // Simulate successful login for hardcoded credentials
-        setAdminMode(true, email);
-        alert('✅ Admin logged in');
-    } catch (e) {
-        console.error('Admin login error', e);
-        alert('Admin login error: ' + e.message);
-    }
-}
-
 async function adminLogout() {
     try {
         await fetch('/api/logout', { method: 'POST', credentials: 'include' });
     } catch (e) {
         console.warn('Logout request failed', e);
     }
-    setAdminMode(false);
     alert('Logged out');
 }
 
@@ -4150,6 +4246,25 @@ async function buildDMVCompliantPayload() {
     console.log(`🔐 AES-256: ${aesEnabled ? 'ENABLED' : 'DISABLED'}`);
     console.log(`🔐 MD5: ${md5Enabled ? 'ENABLED' : 'DISABLED'}`);
     
+    // For Florida, follow the exact IDEMIA protocol structure
+    if (currentState === 'FL') {
+        return await buildFloridaCompliantPayload();
+    }
+    
+    // For other states, use the existing logic
+    return await buildStandardDMVCompliantPayload();
+}
+
+async function buildFloridaCompliantPayload() {
+    const LF = '\x0A';
+    const CR = '\x0D';
+    const RS = '\x1E';
+    const EOT = '\x04';
+    
+    const config = getCurrentConfig();
+    
+    console.log(`🔧 Building Florida IDEMIA-compliant payload...`);
+    
     // Build DL subfile with visible fields only
     let dlBody = '';
     let includedFields = 0;
@@ -4160,7 +4275,7 @@ async function buildDMVCompliantPayload() {
     for (const field of FIELD_SCHEMA) {
         const input = document.getElementById('fld-' + field.id);
         let value = input ? input.value.trim() : '';
-        const includeRule = field.include ? (field.include[currentState] || field.include['FL'] || 'optional') : 'optional';
+        const includeRule = field.include ? (field.include['FL'] || 'optional') : 'optional';
         
         // Encrypt sensitive fields if AES is enabled
         if (aesEnabled && value && field.sensitive) {
@@ -4180,7 +4295,231 @@ async function buildDMVCompliantPayload() {
     
     console.log(`DL Subfile: ${includedFields} included, ${omittedFields} omitted, ${encryptedCount} encrypted`);
     
-    // Build state-specific subfile using the proper state schema
+    // Build ZF subfile using Florida-specific schema
+    const subfileSchema = getStateSubfile('FL');
+    const subfileId = 'ZF'; // Florida uses ZF subfile
+    
+    let zfBody = '';
+    let zfIncluded = 0;
+    
+    subfileSchema.forEach(field => {
+        const input = document.getElementById('fld-' + field.id);
+        let value = input ? input.value.trim() : '';
+        
+        if (!value && field.defaultVal) {
+            value = field.defaultVal;
+        }
+        
+        const includeRule = field.include;
+        const shouldInclude = includeRule === 'required' || includeRule === 'always' || value.length > 0;
+        
+        if (shouldInclude) {
+            zfBody += field.id + value + LF;
+            zfIncluded++;
+        }
+    });
+    
+    console.log(`ZF Subfile: ${zfIncluded} fields included`);
+    
+    // Calculate lengths for designator
+    const dlLength = 'DL'.length + 1 + dlBody.length + 1; // DL + LF + body + CR
+    const zfLength = 'ZF'.length + 1 + zfBody.length + 1; // ZF + LF + body + CR
+    
+    // Calculate offsets using same logic as standard function
+    const PREAMBLE_LEN = 4;
+    const DESIGNATOR_LEN = 20;
+    const HEADER_BASE = 'ANSI '.length + IIN.length + AAMVA_VER.length + JUR_VER.length + ENTRIES.length; // 15 bytes
+    const dlOffset = PREAMBLE_LEN + HEADER_BASE + DESIGNATOR_LEN + 1; // 4 + 15 + 20 + 1 = 40
+    const zfOffset = dlOffset + dlLength;
+    
+    // Build designator with calculated offsets and lengths
+    const designator = 
+        'DL' + String(dlOffset).padStart(4, '0') + String(dlLength).padStart(4, '0') +
+        'ZF' + String(zfOffset).padStart(4, '0') + String(zfLength).padStart(4, '0');
+    
+    // Build header
+    const PREAMBLE = '@' + LF + RS + CR;
+    const IIN = '636026'; // Florida IIN
+    const AAMVA_VER = currentAAMVA;
+    const JUR_VER = currentJurisdiction;
+    const ENTRIES = '02';
+    
+    let header = 'ANSI ' + IIN + AAMVA_VER + JUR_VER + ENTRIES + designator + LF;
+    
+    // Build subfiles with proper terminators
+    const dlSubfile = 'DL' + LF + dlBody + CR;
+    const zfSubfile = 'ZF' + LF + zfBody + CR;
+    
+    // Assemble visible payload (everything before CRC)
+    const visiblePayload = PREAMBLE + header + dlSubfile + zfSubfile + RS + EOT;
+    
+    // Calculate CRC-16-CCITT on the entire visible payload (Big-Endian)
+    const startTime = performance.now();
+    const crc = crc16ccitt(visiblePayload);
+    const crcTime = performance.now() - startTime;
+    
+    let md5Hash = null;
+    let md5Time = 0;
+    
+    if (md5Enabled) {
+        const md5StartTime = performance.now();
+        md5Hash = md5Cached(visiblePayload);
+        md5Time = performance.now() - md5StartTime;
+        console.log(`📊 MD5: ${md5Hash} (${md5Time.toFixed(3)}ms)`);
+    }
+    
+    console.log(`📊 CRC-16: 0x${crc.toString(16).toUpperCase()} (${crcTime.toFixed(3)}ms)`);
+    
+    // Assemble complete payload with visible content first
+    let payload = visiblePayload;
+    
+    // Add invisible layer if there are encrypted fields
+    let invisibleLayerPos = -1;
+    if (aesEnabled && invisibleLayer.length > 0) {
+        invisibleLayerPos = payload.length;
+        payload += FS + 'INVISIBLE' + GS + invisibleLayer + FS;
+        console.log(`🔐 Invisible layer added: ${encryptedCount} fields encrypted`);
+    }
+    
+    // Add CRC to payload (Big-Endian)
+    const crcHigh = (crc >> 8) & 0xFF;
+    const crcLow = crc & 0xFF;
+    const crcPosBeforePad = payload.length;
+    payload += String.fromCharCode(crcHigh) + String.fromCharCode(crcLow);
+    
+    // Add MD5 hash to payload (if enabled)
+    let md5PosBeforePad = -1;
+    if (md5Enabled && md5Hash) {
+        md5PosBeforePad = payload.length;
+        // Convert MD5 hex string to bytes and append
+        const md5Bytes = hexToBytes(md5Hash);
+        payload += Array.from(md5Bytes).map(b => String.fromCharCode(b)).join('');
+        console.log('📊 MD5 hash appended to payload');
+    }
+    
+    // Add audit trail (inventory number) - exactly 16 bytes
+    const auditPosBeforePad = payload.length;
+    let inventoryNumber = document.getElementById('inventory-number')?.value.trim() || config.auditTrail;
+    // Ensure it's exactly 16 characters (pad or truncate)
+    if (inventoryNumber.length < 16) {
+        inventoryNumber = inventoryNumber.padEnd(16, '0');
+    } else if (inventoryNumber.length > 16) {
+        inventoryNumber = inventoryNumber.substring(0, 16);
+    }
+    payload += inventoryNumber;
+    console.log(`📋 Inventory Number (Audit Trail): ${inventoryNumber}`);
+
+    // HMAC-SHA256 (if enabled and key present)
+    let hmacHex = null;
+    let hmacPosBeforePad = -1;
+    let hmacTime = 0;
+    if (hmacEnabled && hmacKey) {
+        const hmacStart = performance.now();
+        hmacHex = await signHMACHex(payload);
+        hmacTime = performance.now() - hmacStart;
+        const hmacBytes = hexToBytes(hmacHex);
+        hmacPosBeforePad = payload.length;
+        payload += Array.from(hmacBytes).map(b => String.fromCharCode(b)).join('');
+        console.log('🔐 HMAC appended:', hmacHex.substring(0, 32) + '...');
+    }
+
+    // Pad to exactly 1024 bytes with null bytes
+    const TARGET_SIZE = 1024;
+    const paddingNeeded = TARGET_SIZE - payload.length;
+    
+    if (paddingNeeded > 0) {
+        payload += '\x00'.repeat(paddingNeeded);
+    } else if (paddingNeeded < 0) {
+        console.warn(`⚠️ Payload exceeds 1024 bytes by ${-paddingNeeded} bytes!`);
+        // Truncate if necessary (though this shouldn't happen with proper field limits)
+        payload = payload.substring(0, TARGET_SIZE);
+    }
+    
+    console.log('Final payload size:', payload.length, 'bytes');
+    
+    return {
+        payload: payload,
+        structure: {
+            preambleLen: PREAMBLE_LEN,
+            headerLen: HEADER_BASE + DESIGNATOR_LEN + 1, // 15 + 20 + 1 = 36
+            dlOffset: dlOffset,
+            dlLength: dlLength,
+            zfOffset: zfOffset,
+            zfLength: zfLength,
+            terminatorPos: visiblePayload.length - 2, // Position of RS+EOT
+            crcPos: crcPosBeforePad,
+            auditPos: auditPosBeforePad,
+            inventoryNumber: inventoryNumber,
+            md5Pos: md5PosBeforePad,
+            hmacPos: hmacPosBeforePad,
+            invisibleLayerPos: invisibleLayerPos,
+            totalSize: payload.length,
+            crcValue: crc,
+            crcHex: '0x' + crc.toString(16).toUpperCase().padStart(4, '0'),
+            crcTime: crcTime,
+            md5Hash: md5Hash,
+            md5Time: md5Time,
+            hmacHex: hmacHex,
+            hmacTime: hmacTime,
+            state: 'FL',
+            subfileId: 'ZF',
+            iin: IIN,
+            aamvaVer: AAMVA_VER,
+            jurVer: JUR_VER,
+            dlFieldsIncluded: includedFields,
+            dlFieldsOmitted: omittedFields,
+            zfFieldsIncluded: zfIncluded,
+            encryptedFields: encryptedCount,
+            aesEnabled: aesEnabled,
+            md5Enabled: md5Enabled,
+            hmacEnabled: hmacEnabled
+        }
+    };
+}
+
+async function buildStandardDMVCompliantPayload() {
+    // Original function logic for non-Florida states
+    const LF = '\x0A';
+    const CR = '\x0D';
+    const RS = '\x1E';
+    const EOT = '\x04';
+    const FS = '\x1C';
+    const GS = '\x1D';
+    const US = '\x1F';
+    
+    const config = getCurrentConfig();
+    
+    console.log(`🔧 Building standard ${config.name} payload...`);
+    
+    // Build DL subfile with visible fields only
+    let dlBody = '';
+    let includedFields = 0;
+    let omittedFields = 0;
+    let encryptedCount = 0;
+    let invisibleLayer = '';
+    
+    for (const field of FIELD_SCHEMA) {
+        const input = document.getElementById('fld-' + field.id);
+        let value = input ? input.value.trim() : '';
+        const includeRule = field.include ? (field.include[currentState] || field.include['FL'] || 'optional') : 'optional';
+        
+        if (aesEnabled && value && field.sensitive) {
+            console.log(`🔐 Encrypting ${field.id}: "${value}"`);
+            const encryptedValue = await encryptFieldAES(value);
+            invisibleLayer += field.id + GS + encryptedValue + FS;
+            encryptedCount++;
+            console.log(`   → Encrypted: ${encryptedValue.substring(0, 40)}...`);
+        } else if (value || includeRule === 'always') {
+            dlBody += field.id + value + LF;
+            includedFields++;
+        } else {
+            omittedFields++;
+        }
+    }
+    
+    console.log(`DL Subfile: ${includedFields} included, ${omittedFields} omitted, ${encryptedCount} encrypted`);
+    
+    // Build state-specific subfile
     const subfileSchema = getStateSubfile(currentState);
     const subfileId = config.subfileId;
     
@@ -4235,7 +4574,7 @@ async function buildDMVCompliantPayload() {
     // Assemble visible payload
     const visiblePayload = PREAMBLE + header + 'DL' + LF + dlBody + CR + subfileId + LF + stateBody + CR + RS + EOT;
     
-    // Calculate checksums - only include visible content (exclude invisible layer)
+    // Calculate checksums
     const startTime = performance.now();
     const crc = crc16ccitt(visiblePayload);
     const crcTime = performance.now() - startTime;
@@ -4252,10 +4591,10 @@ async function buildDMVCompliantPayload() {
     
     console.log(`📊 CRC-16: 0x${crc.toString(16).toUpperCase()} (${crcTime.toFixed(3)}ms)`);
     
-    // Assemble complete payload with visible content first
+    // Assemble complete payload
     let payload = visiblePayload;
     
-    // Add invisible layer if there are encrypted fields
+    // Add invisible layer if encrypted fields exist
     let invisibleLayerPos = -1;
     if (aesEnabled && invisibleLayer.length > 0) {
         invisibleLayerPos = payload.length;
@@ -4263,27 +4602,24 @@ async function buildDMVCompliantPayload() {
         console.log(`🔐 Invisible layer added: ${encryptedCount} fields encrypted`);
     }
     
-    // Add CRC to payload and record positions BEFORE padding
+    // Add CRC
     const crcHigh = (crc >> 8) & 0xFF;
     const crcLow = crc & 0xFF;
-    const crcPosBeforePad = payload.length; // CRC will start here
+    const crcPosBeforePad = payload.length;
     payload += String.fromCharCode(crcHigh) + String.fromCharCode(crcLow);
     
-    // Add MD5 hash to payload (if enabled)
+    // Add MD5 hash
     let md5PosBeforePad = -1;
     if (md5Enabled && md5Hash) {
         md5PosBeforePad = payload.length;
-        // Convert MD5 hex string to bytes and append
         const md5Bytes = hexToBytes(md5Hash);
         payload += Array.from(md5Bytes).map(b => String.fromCharCode(b)).join('');
         console.log('📊 MD5 hash appended to payload');
     }
     
-    const auditPosBeforePad = payload.length; // Audit trail (inventory number) will start here
-    // Get inventory number from input field, fallback to config default
-    const inventoryInput = document.getElementById('inventory-number');
-    let inventoryNumber = inventoryInput ? inventoryInput.value.trim() : config.auditTrail;
-    // Ensure it's exactly 16 characters (pad or truncate)
+    // Add audit trail
+    const auditPosBeforePad = payload.length;
+    let inventoryNumber = document.getElementById('inventory-number')?.value.trim() || config.auditTrail;
     if (inventoryNumber.length < 16) {
         inventoryNumber = inventoryNumber.padEnd(16, '0');
     } else if (inventoryNumber.length > 16) {
@@ -4292,7 +4628,7 @@ async function buildDMVCompliantPayload() {
     payload += inventoryNumber;
     console.log(`📋 Inventory Number (Audit Trail): ${inventoryNumber}`);
 
-    // HMAC-SHA256 (if enabled and key present) - sign the payload up to this point (before padding)
+    // HMAC
     let hmacHex = null;
     let hmacPosBeforePad = -1;
     let hmacTime = 0;
@@ -4302,12 +4638,11 @@ async function buildDMVCompliantPayload() {
         hmacTime = performance.now() - hmacStart;
         const hmacBytes = hexToBytes(hmacHex);
         hmacPosBeforePad = payload.length;
-        // append raw bytes
         payload += Array.from(hmacBytes).map(b => String.fromCharCode(b)).join('');
         console.log('🔐 HMAC appended:', hmacHex.substring(0, 32) + '...');
     }
 
-    // Pad to TARGET_SIZE (e.g., 1024 bytes)
+    // Pad to TARGET_SIZE
     const TARGET_SIZE = 1024;
     const paddingNeeded = TARGET_SIZE - payload.length;
     
@@ -4712,7 +5047,7 @@ ${structure.aesEnabled ? `║ 🔐 AES-256: ${structure.encryptedFields} fields 
 ║ FIELD INCLUSION COUNTS                                    ║
 ╠═══════════════════════════════════════════════════════════╣
 ║ DL Subfile: ${structure.dlFieldsIncluded} included, ${structure.dlFieldsOmitted} omitted            ║
-║ ${structure.subfileId} Subfile: ${structure.stateFieldsIncluded} included                          ║
+║ ${structure.state === 'FL' ? 'ZF' : structure.subfileId} Subfile: ${structure.state === 'FL' ? structure.zfFieldsIncluded : structure.stateFieldsIncluded} included                          ║
 ${structure.aesEnabled ? `║ 🔐 Encrypted: ${structure.encryptedFields} sensitive fields                  ║` : ''}
 ╠═══════════════════════════════════════════════════════════╣
 ║ SECTION         │ OFFSET │ LENGTH                         ║
@@ -4720,7 +5055,7 @@ ${structure.aesEnabled ? `║ 🔐 Encrypted: ${structure.encryptedFields} sensi
 ║ Preamble        │      0 │      4                         ║
 ║ Header          │      4 │ ${String(structure.headerLen).padStart(6)}                         ║
 ║ DL Subfile      │ ${String(structure.dlOffset).padStart(6)} │ ${String(structure.dlLength).padStart(6)}                         ║
-║ ${structure.subfileId} Subfile      │ ${String(structure.stateOffset).padStart(6)} │ ${String(structure.stateLength).padStart(6)}                         ║
+║ ${structure.state === 'FL' ? 'ZF' : structure.subfileId} Subfile      │ ${String(structure.state === 'FL' ? structure.zfOffset : structure.stateOffset).padStart(6)} │ ${String(structure.state === 'FL' ? structure.zfLength : structure.stateLength).padStart(6)}                         ║
 ║ Terminators     │ ${String(structure.terminatorPos).padStart(6)} │      2                         ║`;
 
     if (structure.invisibleLayerPos >= 0) {
@@ -4836,11 +5171,10 @@ function renderFields() {
     html += '<div class="section-divider">🔷 DL SUBFILE (AAMVA Standard)</div>';
     
     FIELD_SCHEMA.forEach(field => {
-        // Get include rule - default to FL rules if state not defined, or 'optional' as fallback
-        let includeRule = 'optional';
-        if (field.include) {
-            includeRule = field.include[currentState] || field.include['FL'] || 'optional';
-        }
+        // Only show fields that are included for the current state
+        let includeRule = field.include ? field.include[currentState] : undefined;
+        if (!includeRule) return; // Skip fields not needed for this state
+        
         const exampleVal = config.exampleData[field.id] || '';
         const isSensitive = aesEnabled && field.sensitive;
         
@@ -5287,7 +5621,7 @@ async function runTests() {
         // Test required fields
         const validation = validateFields();
         const requiredFields = FIELD_SCHEMA.filter(f => {
-            const includeRule = f.include ? (f.include[currentState] || f.include['FL'] || 'optional') : 'optional';
+            const includeRule = f.include ? (f.include[currentState] || 'required') : 'required';
             return includeRule === 'required';
         });
         const missingRequired = requiredFields.filter(f => {
@@ -5615,7 +5949,7 @@ async function runTests() {
             const field = FIELD_SCHEMA.find(f => f.id === fieldId);
             if (!field) return;
             
-            const includeRule = field.include ? (field.include[currentState] || field.include['FL'] || 'optional') : 'optional';
+            const includeRule = field.include ? (field.include[currentState] || 'required') : 'required';
             if (includeRule === 'required' || includeRule === 'always') {
                 const el = document.getElementById('fld-' + fieldId);
                 if (el && el.value.trim()) {
@@ -5969,7 +6303,6 @@ function init() {
     updateConfigDisplay();
     renderFields();
     // Ensure admin-controlled UI starts locked
-    setAdminMode(false);
     
     // Initialize toggle states
     document.getElementById('enable-md5').checked = md5Enabled;
@@ -5982,15 +6315,9 @@ function init() {
     // Event listeners
     document.getElementById('profile-state')?.addEventListener('change', onStateChange);
 
-    // Micro-reward for all inputs
-    FIELD_SCHEMA.forEach(f => {
-        const el = document.getElementById('fld-' + f.id);
-        if (el) {
-            el.addEventListener('blur', () => {
-                if (el.value.trim().length > 0) pulseField(f.id);
-            });
-        }
-    });
+    // Self-healing: Auto-uppercase name fields
+    const nameFields = ['DCS', 'DAC', 'DAD', 'DBO', 'DBP', 'DBQ', 'DBN', 'DCT'];
+    nameFields.forEach(fieldId => uppercaseField(fieldId));
 
     // Chunky button glow bursts
     document.querySelectorAll('.btn').forEach(b => {
@@ -6014,7 +6341,6 @@ function init() {
     // document.getElementById('scan-input')?.addEventListener('change', handleScanResult);
 
     // Admin panel listeners
-    document.getElementById('btn-admin-login')?.addEventListener('click', adminLogin);
     document.getElementById('btn-admin-logout')?.addEventListener('click', adminLogout);
     document.getElementById('btn-load-users')?.addEventListener('click', loadAdminUsers);
     document.getElementById('btn-load-logs')?.addEventListener('click', loadAdminLogs);
@@ -6038,10 +6364,6 @@ function init() {
     document.getElementById('btn-parse-barcode')?.addEventListener('click', parseBarcodeText);
     document.getElementById('btn-decode-aes')?.addEventListener('click', decodeAESFromParser);
     document.getElementById('btn-clear-parser')?.addEventListener('click', clearParser);
-    
-    // Admin login keypress listeners
-    document.getElementById('admin-email')?.addEventListener('keypress', (e) => { if(e.key === 'Enter') adminLogin(); });
-    document.getElementById('admin-password')?.addEventListener('keypress', (e) => { if(e.key === 'Enter') adminLogin(); });
     
     // Periodic ambient smoke from logo feet
     setInterval(() => {
@@ -6086,6 +6408,40 @@ function init() {
         setTimeout(() => exp.remove(), 2000);
     });
     
+    // Matrix Rain Toggle
+    document.getElementById('matrix-toggle')?.addEventListener('click', () => {
+        const matrixRain = document.getElementById('matrix-rain');
+        const button = document.getElementById('matrix-toggle');
+        
+        if (matrixRain.style.display === 'none') {
+            matrixRain.style.display = 'block';
+            button.classList.add('active');
+            button.textContent = '🌧️';
+            button.title = 'Disable Matrix Rain Effect';
+        } else {
+            matrixRain.style.display = 'none';
+            button.classList.remove('active');
+            button.textContent = '🌧️';
+            button.title = 'Enable Matrix Rain Effect';
+        }
+    });
+
+    // Matrix Rain Toggle
+    document.getElementById('matrix-toggle')?.addEventListener('click', () => {
+        const matrixRain = document.getElementById('matrix-rain');
+        const button = document.getElementById('matrix-toggle');
+        
+        if (matrixRain.style.display === 'none') {
+            matrixRain.style.display = 'block';
+            button.classList.add('active');
+            button.title = 'Disable Matrix Rain Effect';
+        } else {
+            matrixRain.style.display = 'none';
+            button.classList.remove('active');
+            button.title = 'Enable Matrix Rain Effect';
+        }
+    });
+
     console.log('✅ System ready\n');
     console.log('✅ Interactive logo with smoke from feet');
     console.log('✅ Help chat widget with smoke effects');
@@ -6145,6 +6501,60 @@ function deletePromo(code) {
     delete promos[code];
     localStorage.setItem('dirPromos', JSON.stringify(promos));
     loadPromoList();
+}
+
+function loadSystemSettings() {
+    const settings = JSON.parse(localStorage.getItem('dirSystemSettings') || '{}');
+    
+    // Load default state
+    const defaultState = document.getElementById('default-state');
+    if (defaultState) defaultState.value = settings.defaultState || 'FL';
+    
+    // Load AAMVA version
+    const defaultAamva = document.getElementById('default-aamva');
+    if (defaultAamva) defaultAamva.value = settings.defaultAamva || '09';
+    
+    // Load jurisdiction version
+    const defaultJurisdiction = document.getElementById('default-jurisdiction');
+    if (defaultJurisdiction) defaultJurisdiction.value = settings.defaultJurisdiction || '01';
+    
+    // Load pricing
+    const barcodePrice = document.getElementById('admin-barcode-price');
+    if (barcodePrice) barcodePrice.value = settings.barcodePrice || 10;
+    
+    const hmacPrice = document.getElementById('admin-hmac-price');
+    if (hmacPrice) hmacPrice.value = settings.hmacPrice || 5;
+}
+
+function loadSystemStats() {
+    const users = JSON.parse(localStorage.getItem('dirUsers') || '{}');
+    const auditLog = JSON.parse(localStorage.getItem('dirAuditLog') || '[]');
+    
+    const totalUsers = Object.keys(users).length;
+    const totalGenerations = auditLog.filter(entry => entry.type === 'generate').length;
+    
+    document.getElementById('system-users').textContent = totalUsers;
+    document.getElementById('system-generations').textContent = totalGenerations;
+}
+
+function saveSystemSettings() {
+    const settings = {
+        defaultState: document.getElementById('default-state')?.value || 'FL',
+        defaultAamva: document.getElementById('default-aamva')?.value || '09',
+        defaultJurisdiction: document.getElementById('default-jurisdiction')?.value || '01',
+        barcodePrice: parseFloat(document.getElementById('admin-barcode-price')?.value) || 10,
+        hmacPrice: parseFloat(document.getElementById('admin-hmac-price')?.value) || 5
+    };
+    
+    localStorage.setItem('dirSystemSettings', JSON.stringify(settings));
+    addAuditLog('admin', 'System settings updated by admin');
+    alert('✅ System settings saved!');
+    
+    // Apply settings immediately
+    currentState = settings.defaultState;
+    currentAAMVA = settings.defaultAamva;
+    currentJurisdiction = settings.defaultJurisdiction;
+    updateConfigDisplay();
 }
 
 function applyPromoCode() {

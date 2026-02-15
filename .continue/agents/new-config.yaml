@@ -1,23 +1,22 @@
-# This is an example configuration file
-# To learn more, see the full config.yaml reference: https://docs.continue.dev/reference
+name: "doitrightcode-agent"
+version: "1.0"
 
-name: Example Config
-version: 1.0.0
-schema: v1
-
-# Define which models can be used
-# https://docs.continue.dev/customization/models
 models:
-  - name: my gpt-5
-    provider: openai
-    model: gpt-5
-    apiKey: YOUR_OPENAI_API_KEY_HERE
-  - uses: ollama/qwen2.5-coder-7b
-  - uses: anthropic/claude-4-sonnet
-    with:
-      ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
+  - id: "qwen25-local"
+    title: "Qwen2.5 7B (Local Backup)"
+    provider: "openai"
+    model: "bartowski_Qwen2.5-Coder-7B-Instruct-abliterated-GGUF_Qwen2.5-Coder-7B-Instruct-abliterated-Q5_K_M.gguf"
+    apiBase: "http://127.0.0.1:8080/v1"
+    contextLength: 8192
+    completionOptions:
+      maxTokens: 512
 
-# MCP Servers that Continue can access
-# https://docs.continue.dev/customization/mcp-tools
-mcpServers:
-  - uses: anthropic/memory-mcp
+tabAutocompleteModel:
+  id: "qwen25-local"
+  title: "Qwen2.5 7B (Local Backup)"
+  provider: "openai"
+  model: bartowski_Qwen2.5-"Coder-7B-Instruct-abliterated-GGUF_Qwen2.5-Coder-7B-Instruct-abliterated-Q5_K_M.gguf"
+  apiBase: "http://127.0.0.1:8080/v1"
+  contextLength: 4096
+  completionOptions:
+    maxTokens: 128
