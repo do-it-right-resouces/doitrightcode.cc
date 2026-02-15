@@ -1158,8 +1158,8 @@ footer {
         
         <!-- Payment Method Tabs -->
         <div style="display:flex; gap:0.5rem; margin:1rem 0;">
-            <button class="payment-tab active" id="tab-btc" onclick="showPaymentTab('btc')">₿ Bitcoin</button>
-            <button class="payment-tab" id="tab-ln" onclick="showPaymentTab('ln')">⚡ Lightning</button>
+            <button class="payment-tab active" id="tab-btc">₿ Bitcoin</button>
+            <button class="payment-tab" id="tab-ln">⚡ Lightning</button>
         </div>
         
         <!-- Bitcoin Payment -->
@@ -1178,8 +1178,8 @@ footer {
         </div>
         
         <p style="color:#888; font-size:0.8rem; margin-top:1rem;">Payment confirms automatically</p>
-        <button class="payment-close" onclick="closePaymentModal()">Close</button>
-        <button class="payment-close" style="background:#003300; border-color:#00ff00; color:#00ff00; margin-left:0.5rem;" onclick="simulatePayment()">I've Paid</button>
+        <button class="payment-close" id="btn-close-payment">Close</button>
+        <button class="payment-close" id="btn-simulate-payment" style="background:#003300; border-color:#00ff00; color:#00ff00; margin-left:0.5rem;">I've Paid</button>
     </div>
 </div>
 
@@ -1392,10 +1392,10 @@ footer {
             <div id="secure-actions">
                 <!-- Admin Nav Tabs -->
                 <div style="display:flex; gap:0.5rem; margin-bottom:1rem; flex-wrap:wrap;">
-                    <button class="btn admin-tab active" onclick="showAdminTab('payments')">💰 Payments</button>
-                    <button class="btn admin-tab" onclick="showAdminTab('audit')">📋 Audit Log</button>
-                    <button class="btn admin-tab" onclick="showAdminTab('users')">👥 Users</button>
-                    <button class="btn admin-tab" onclick="showAdminTab('balances')">💳 Balances</button>
+                    <button class="btn admin-tab active" id="admin-tab-payments">💰 Payments</button>
+                    <button class="btn admin-tab" id="admin-tab-audit">📋 Audit Log</button>
+                    <button class="btn admin-tab" id="admin-tab-users">👥 Users</button>
+                    <button class="btn admin-tab" id="admin-tab-balances">💳 Balances</button>
                 </div>
 
                 <div id="secure-content">
@@ -1423,7 +1423,7 @@ footer {
                                     <input type="number" id="admin-hmac-price" value="5" style="width:100%; padding:0.5rem; background:#000; border:2px solid #00ff00; color:#00ff00; border-radius:4px;">
                                 </div>
                                 <div style="display:flex; align-items:flex-end;">
-                                    <button class="btn btn-primary" onclick="savePaymentSettings()" style="width:100%;">💾 Save Settings</button>
+                                    <button class="btn btn-primary" id="btn-save-payment-settings" style="width:100%;">💾 Save Settings</button>
                                 </div>
                             </div>
                         </div>
@@ -1459,8 +1459,8 @@ footer {
                                     <option value="generate">Generations</option>
                                     <option value="error">Errors</option>
                                 </select>
-                                <button class="btn" onclick="refreshAuditLog()">🔄</button>
-                                <button class="btn" onclick="exportAuditLog()">📥 Export</button>
+                                <button class="btn" id="btn-refresh-audit">🔄</button>
+                                <button class="btn" id="btn-export-audit">📥 Export</button>
                             </div>
                             <div id="audit-log-list" style="max-height:300px; overflow-y:auto; font-family:monospace; font-size:0.8rem; color:#00ff00;">
                                 <div class="audit-entry" style="padding:0.5rem; border-bottom:1px solid #003333;">
@@ -1789,7 +1789,7 @@ function loadUsersTable() {
             <td style="padding:0.5rem; text-align:center;">${credits}</td>
             <td style="padding:0.5rem; text-align:center; color:#888;">${created}</td>
             <td style="padding:0.5rem; text-align:center;">
-                <button class="btn" style="padding:0.2rem 0.5rem; font-size:0.75rem;" onclick="deleteUser('${email}')">🗑️</button>
+                <button class="btn btn-delete-user" data-email="${email}" style="padding:0.2rem 0.5rem; font-size:0.75rem;">🗑️</button>
             </td>
         </tr>`;
     });
@@ -4875,6 +4875,31 @@ function init() {
     document.getElementById('btn-download')?.addEventListener('click', downloadPNG);
     document.getElementById('btn-reset')?.addEventListener('click', resetToExample);
     document.getElementById('btn-test')?.addEventListener('click', runTests);
+    
+    // Payment tab listeners
+    document.getElementById('tab-btc')?.addEventListener('click', () => showPaymentTab('btc'));
+    document.getElementById('tab-ln')?.addEventListener('click', () => showPaymentTab('ln'));
+    document.getElementById('btn-close-payment')?.addEventListener('click', closePaymentModal);
+    document.getElementById('btn-simulate-payment')?.addEventListener('click', simulatePayment);
+    
+    // Admin tab listeners
+    document.getElementById('admin-tab-payments')?.addEventListener('click', () => showAdminTab('payments'));
+    document.getElementById('admin-tab-audit')?.addEventListener('click', () => showAdminTab('audit'));
+    document.getElementById('admin-tab-users')?.addEventListener('click', () => showAdminTab('users'));
+    document.getElementById('admin-tab-balances')?.addEventListener('click', () => showAdminTab('balances'));
+    
+    // Admin action listeners
+    document.getElementById('btn-save-payment-settings')?.addEventListener('click', savePaymentSettings);
+    document.getElementById('btn-refresh-audit')?.addEventListener('click', refreshAuditLog);
+    document.getElementById('btn-export-audit')?.addEventListener('click', exportAuditLog);
+    
+    // Event delegation for dynamically created delete user buttons
+    document.addEventListener('click', (e) => {
+        if (e.target.classList.contains('btn-delete-user')) {
+            const email = e.target.dataset.email;
+            if (email) deleteUser(email);
+        }
+    });
     
     // Periodic ambient smoke from logo feet
     setInterval(() => {
