@@ -4527,7 +4527,7 @@ async function runTests() {
         console.log('CRC position check result:', crcFromStruct === extractedCrc ? '✅ PASS' : '❌ FAIL');
         
         const expectedAudit = getCurrentConfig().auditTrail;
-        const actualAudit = payload.substr(structure.auditPos, expectedAudit.length);
+        const actualAudit = payload.substring(structure.auditPos, structure.auditPos + expectedAudit.length);
         console.log('Expected Audit Trail:', expectedAudit);
         console.log('Actual Audit Trail:', actualAudit);
         console.log('Audit trail check result:', actualAudit === expectedAudit ? '✅ PASS' : '❌ FAIL');
@@ -4566,7 +4566,7 @@ async function runTests() {
         // Verify signature by extracting payload up to hmac position
         const payload = signed.payload;
         const hmacPos = signed.structure.hmacPos;
-        const macBytes = payload.substr(hmacPos, 32);
+        const macBytes = payload.substring(hmacPos, hmacPos + 32);
         const macHex = Array.from(macBytes).map(c => c.charCodeAt(0).toString(16).padStart(2, '0')).join('').toUpperCase();
         const verified = await verifyHMACHex(macHex, payload.substring(0, hmacPos));
         console.log('HMAC verification (original):', verified ? '✅ PASS' : '❌ FAIL');
